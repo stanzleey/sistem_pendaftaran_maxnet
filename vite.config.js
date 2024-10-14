@@ -8,8 +8,8 @@ export default defineConfig({
         laravel({
             input: ['resources/js/app.jsx'],  // Entry point aplikasi
             refresh: true,
-            plugins: [react()],  // Tambahkan plugin React ke laravel-vite-plugin
         }),
+        react(),  // Tambahkan plugin React di luar laravel-vite-plugin
     ],
     build: {
         outDir: 'public/build',  // Output ke dalam folder public/build
