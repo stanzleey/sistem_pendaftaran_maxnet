@@ -1,11 +1,7 @@
 {
     "builds": [
       {
-        "src": "artisan",
-        "use": "@vercel/php"
-      },
-      {
-        "src": "vite.config.js",
+        "src": "package.json",
         "use": "@vercel/static-build",
         "config": {
           "distDir": "public/build"
@@ -14,8 +10,11 @@
     ],
     "routes": [
       {
-        "src": "/(.*)",
-        "dest": "/public/$1"
+        "handle": "filesystem"
+      },
+      {
+        "src": "/.*",
+        "dest": "/public/index.php"
       }
     ]
   }
