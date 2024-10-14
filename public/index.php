@@ -5,51 +5,26 @@ use Illuminate\Http\Request;
 
 define('LARAVEL_START', microtime(true));
 
-/*
-|--------------------------------------------------------------------------
-| Check If The Application Is Under Maintenance
-|--------------------------------------------------------------------------
-|
-| If the application is in maintenance / demo mode via the "down" command
-| we will load this file so that any pre-rendered content can be shown
-| instead of starting the framework, which could cause an exception.
-|
-*/
-
+// Check If The Application Is Under Maintenance
 if (file_exists($maintenance = __DIR__.'/../storage/framework/maintenance.php')) {
-    require $maintenance;
+    require $maintenance; // Load the maintenance file if the app is in maintenance mode
 }
 
-/*
-|--------------------------------------------------------------------------
-| Register The Auto Loader
-|--------------------------------------------------------------------------
-|
-| Composer provides a convenient, automatically generated class loader for
-| this application. We just need to utilize it! We'll simply require it
-| into the script here so we don't need to manually load our classes.
-|
-*/
+// Register The Auto Loader
+require __DIR__.'/../vendor/autoload.php'; // Ensure the autoload file is correctly included
 
-require __DIR__.'/../vendor/autoload.php';
+// Run The Application
+$app = require_once __DIR__.'/../bootstrap/app.php'; // Boot the Laravel application
 
-/*
-|--------------------------------------------------------------------------
-| Run The Application
-|--------------------------------------------------------------------------
-|
-| Once we have the application, we can handle the incoming request using
-| the application's HTTP kernel. Then, we will send the response back
-| to this client's browser, allowing them to enjoy our application.
-|
-*/
+$kernel = $app->make(Kernel::class); // Get the HTTP kernel
 
-$app = require_once __DIR__.'/../bootstrap/app.php';
-
-$kernel = $app->make(Kernel::class);
-
+// Handle the incoming request and send the response
 $response = $kernel->handle(
     $request = Request::capture()
-)->send();
+);
 
+// Send the response to the client
+$response->send();
+
+// Terminate the application (clean up resources)
 $kernel->terminate($request, $response);
