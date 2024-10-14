@@ -1,6 +1,7 @@
 import React from 'react';
 import { useForm } from '@inertiajs/react';
 import Sidebar from '@/Components/Sidebar';
+import Swal from 'sweetalert2';
 
 export default function Edit({ service }) {
     const { data, setData, put, errors } = useForm({
@@ -14,7 +15,33 @@ export default function Edit({ service }) {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        put(route('services.update', service.serv_id));
+        Swal.fire({
+            title: "Do you want to save the changes?",
+            showDenyButton: true,
+            showCancelButton: true,
+            confirmButtonText: "Save",
+            denyButtonText: `Don't save`,
+        }).then((result) => {
+            if (result.isConfirmed) {
+                put(route('services.update', service.serv_id), {
+                    onSuccess: () => {
+                        Swal.fire({
+                            title: "Saved!",
+                            icon: "success",
+                            timer: 2000, // Notifikasi akan hilang setelah 2 detik
+                            showConfirmButton: false, // Menghilangkan tombol "OK"
+                        });
+                    }
+                });
+            } else if (result.isDenied) {
+                Swal.fire({
+                    title: "Changes are not saved",
+                    icon: "info",
+                    timer: 2000,
+                    showConfirmButton: false,
+                });
+            }
+        });
     };
 
     return (

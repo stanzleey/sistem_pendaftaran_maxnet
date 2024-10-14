@@ -1,5 +1,6 @@
 import React from 'react';
 import { useForm } from '@inertiajs/react';
+import Swal from 'sweetalert2';  // Import SweetAlert2
 import Sidebar from '@/Components/Sidebar';
 
 export default function Create() {
@@ -14,7 +15,17 @@ export default function Create() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        post(route('services.store'));
+        post(route('services.store'), {
+            onSuccess: () => {
+                Swal.fire({
+                    position: "center",
+                    icon: "success",
+                    title: "Service has been created successfully",
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+            }
+        });
     };
 
     return (

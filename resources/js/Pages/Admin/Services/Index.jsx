@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, Head } from '@inertiajs/react';
 import { Inertia } from '@inertiajs/inertia';
 import Sidebar from '@/Components/Sidebar';
+import Swal from 'sweetalert2'; // Import SweetAlert2
 
 export default function Index({ services, flash }) {
     const [searchTerm, setSearchTerm] = useState('');
@@ -14,15 +15,40 @@ export default function Index({ services, flash }) {
 
     // Function to handle delete action
     const handleDelete = (serv_id) => {
-        if (confirm("Are you sure you want to delete this service?")) {
-            Inertia.delete(`/Admin/services/${serv_id}`, {
-                onSuccess: () => {
-                    setNotification('Service deleted successfully.'); // Set notification on success
-                }
-            });
-        }
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, delete it!"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Inertia.delete(`/Admin/services/${serv_id}`, {
+                    onSuccess: () => {
+                        // Show success notification after delete
+                        Swal.fire({
+                            title: "Deleted!",
+                            text: "Your service has been deleted.",
+                            icon: "success",
+                            timer: 2000, // Notification will disappear after 2 seconds
+                            showConfirmButton: false // Hide the "OK" button
+                        });
+                    },
+                    onError: () => {
+                        // Handle error if needed
+                        Swal.fire({
+                            title: "Error!",
+                            text: "There was a problem deleting the service.",
+                            icon: "error",
+                            confirmButtonText: "OK"
+                        });
+                    }
+                });
+            }
+        });
     };
-    
 
     // Set initial notification if passed from the server
     React.useEffect(() => {
