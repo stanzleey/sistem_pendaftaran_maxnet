@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, Head } from '@inertiajs/react';
 import { Inertia } from '@inertiajs/inertia';
+import Swal from 'sweetalert2'; // Import SweetAlert2
 import Sidebar from '@/Components/Sidebar';
 
 export default function Index({ users }) {
@@ -13,13 +14,30 @@ export default function Index({ users }) {
 
     // Function to handle delete action
     const handleDelete = (userId) => {
-        if (confirm('Are you sure you want to delete this user?')) {
-            Inertia.delete(`/Admin/users/${userId}`, {
-                onSuccess: () => {
-                    // Optional: Add any success action like a notification
-                },
-            });
-        }
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, delete it!"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Inertia.delete(`/Admin/users/${userId}`, {
+                    onSuccess: () => {
+                        // Show success notification without an OK button
+                        Swal.fire({
+                            title: "Deleted!",
+                            text: "The user has been deleted.",
+                            icon: "success",
+                            showConfirmButton: false, // Hide OK button
+                            timer: 1500 // Optional: Auto close after 1.5 seconds
+                        });
+                    },
+                });
+            }
+        });
     };
 
     return (

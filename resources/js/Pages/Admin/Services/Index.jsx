@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, Head } from '@inertiajs/react';
 import { Inertia } from '@inertiajs/inertia';
 import Sidebar from '@/Components/Sidebar';
@@ -8,14 +8,14 @@ export default function Index({ services, flash }) {
     const [searchTerm, setSearchTerm] = useState('');
     const [notification, setNotification] = useState('');
 
-    // Function to filter services based on search term
+    // Filter services based on search term
     const filteredServices = services.filter(service =>
         service.service_name.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
-    // Function to handle delete action
-    const handleDelete = (serv_id) => {
-        Swal.fire({
+    // Function to handle delete action with async/await
+    const handleDelete = async (serv_id) => {
+        const result = await Swal.fire({
             title: "Are you sure?",
             text: "You won't be able to revert this!",
             icon: "warning",
@@ -23,21 +23,21 @@ export default function Index({ services, flash }) {
             confirmButtonColor: "#3085d6",
             cancelButtonColor: "#d33",
             confirmButtonText: "Yes, delete it!"
-        }).then((result) => {
-            if (result.isConfirmed) {
-                Inertia.delete(`/Admin/services/${serv_id}`, {
+        });
+
+        if (result.isConfirmed) {
+            try {
+                await Inertia.delete(`/Admin/services/${serv_id}`, {
                     onSuccess: () => {
-                        // Show success notification after delete
                         Swal.fire({
                             title: "Deleted!",
                             text: "Your service has been deleted.",
                             icon: "success",
-                            timer: 2000, // Notification will disappear after 2 seconds
-                            showConfirmButton: false // Hide the "OK" button
+                            timer: 2000,
+                            showConfirmButton: false,
                         });
                     },
                     onError: () => {
-                        // Handle error if needed
                         Swal.fire({
                             title: "Error!",
                             text: "There was a problem deleting the service.",
@@ -46,14 +46,28 @@ export default function Index({ services, flash }) {
                         });
                     }
                 });
+            } catch (error) {
+                console.error("Error deleting service:", error);
+                Swal.fire({
+                    title: "Error!",
+                    text: "An unexpected error occurred.",
+                    icon: "error",
+                    confirmButtonText: "OK"
+                });
             }
-        });
+        }
     };
 
-    // Set initial notification if passed from the server
-    React.useEffect(() => {
+    // Set initial notification from flash message
+    useEffect(() => {
         if (flash?.message) {
-            setNotification(flash.message);
+            Swal.fire({
+                title: "Notification",
+                text: flash.message,
+                icon: "info",
+                timer: 3000,
+                showConfirmButton: false
+            });
         }
     }, [flash]);
 
@@ -72,13 +86,6 @@ export default function Index({ services, flash }) {
                             Create New Service
                         </Link>
                     </div>
-
-                    {/* Notification */}
-                    {notification && (
-                        <div className="mb-4 p-3 text-white bg-green-500 rounded">
-                            {notification}
-                        </div>
-                    )}
 
                     {/* Search Bar */}
                     <div className="mb-4">

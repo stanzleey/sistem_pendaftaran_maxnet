@@ -4,6 +4,7 @@ import Sidebar from '@/Components/Sidebar';
 import InputError from '@/Components/InputError';
 import InputLabel from '@/Components/InputLabel';
 import PrimaryButton from '@/Components/PrimaryButton';
+import Swal from 'sweetalert2';
 
 export default function Create() {
     const [name, setName] = useState('');
@@ -28,10 +29,27 @@ export default function Create() {
                 setPassword('');
                 setPasswordConfirmation('');
                 setErrors({}); // Clear any existing errors
+
+                // Show success notification
+                Swal.fire({
+                    position: "center",
+                    icon: "success",
+                    title: "User has been created successfully",
+                    showConfirmButton: false,
+                    timer: 1500
+                });
             },
             onError: (errors) => {
                 // Set errors to state for display
                 setErrors(errors);
+
+                // Show error notification
+                Swal.fire({
+                    icon: "error",
+                    title: "Oops...",
+                    text: "There was an error creating the user!",
+                    footer: `<ul>${Object.values(errors).map(err => `<li>${err}</li>`).join('')}</ul>`,
+                });
             },
         });
     };

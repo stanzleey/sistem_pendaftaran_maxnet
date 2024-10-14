@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Inertia } from '@inertiajs/inertia';
 import Sidebar from '@/Components/Sidebar';
 import { Head, usePage } from '@inertiajs/react';
+import Swal from 'sweetalert2'; // Import SweetAlert
 
 const Create = () => {
     // Retrieve site_id from Inertia props sent from the backend
@@ -30,22 +31,30 @@ const Create = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-
+    
         const form = new FormData();
         for (const key in formData) {
             form.append(key, formData[key]);
         }
-
+    
         Inertia.post(route('sites.store'), form, {
             forceFormData: true,
             onSuccess: () => {
-                console.log('Site created successfully!');
+                // Show success notification
+                Swal.fire({
+                    position: "center",
+                    icon: "success",
+                    title: "Site created successfully!",
+                    showConfirmButton: false,
+                    timer: 1500
+                });
             },
             onError: (errors) => {
                 console.error(errors);
             },
         });
     };
+    
 
     return (
         <div className="flex">

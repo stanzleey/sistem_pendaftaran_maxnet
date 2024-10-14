@@ -26,13 +26,13 @@ export default function Home() {
                         playsInline
                         className="w-full h-full object-cover opacity-30 transition-opacity duration-500"
                     >
-                        <source src="/img/bacvid.mp4" type="video/mp4" />
+                        <source src="/img/video.mp4" type="video/mp4" />
                         Your browser does not support the video tag.
                     </video>
                 </div>
                 <div className="relative mx-auto max-w-screen-xl px-4 py-32 lg:flex lg:h-screen lg:items-center">
                     <div className="mx-auto max-w-3xl text-center">
-                        <h1 className="bg-gradient-to-r from-indigo-500 via-purple-600 to-pink-500 bg-clip-text text-4xl font-extrabold text-transparent sm:text-6xl font-archivo shadow-lg animate-slide-in">
+                        <h1 className="bg-gradient-to-r from-indigo-500 via-purple-600 to-pink-500 bg-clip-text text-4xl font-extrabold text-transparent sm:text-6xl font-archivo animate-slide-in">
                             Koneksi Internet Tanpa Batas
                             <span className="sm:block"> Kecepatan dan Stabilitas untuk Setiap Kebutuhan. </span>
                         </h1>

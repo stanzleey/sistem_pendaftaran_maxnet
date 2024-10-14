@@ -4,6 +4,7 @@ import { Inertia } from '@inertiajs/inertia';
 import Sidebar from '@/Components/Sidebar';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Swal from 'sweetalert2'; // Import SweetAlert2
 
 export default function Index({ sites }) {
     const [searchTerm, setSearchTerm] = useState('');
@@ -89,23 +90,39 @@ export default function Index({ sites }) {
 
     // Function to confirm and handle deletion
     const handleDelete = (siteId) => {
-        const confirmDelete = window.confirm('Are you sure you want to delete this site?');
-        if (confirmDelete) {
-            Inertia.delete(`/Admin/sites/${siteId}`, {
-                onSuccess: () => handleSuccess('deleted'),
-                onError: () => {
-                    toast.error('Failed to delete site!', {
-                        style: {
-                            background: 'linear-gradient(45deg, #ff416c, #ff4b2b)',
-                            color: '#fff',
-                            padding: '15px',
-                            borderRadius: '10px',
-                            boxShadow: '0 0 15px rgba(0, 0, 0, 0.3)',
-                        },
-                    });
-                },
-            });
-        }
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, delete it!",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Inertia.delete(`/Admin/sites/${siteId}`, {
+                    onSuccess: () => {
+                        handleSuccess('deleted');
+                        Swal.fire({
+                            title: "Deleted!",
+                            text: "Your file has been deleted.",
+                            icon: "success",
+                        });
+                    },
+                    onError: () => {
+                        toast.error('Failed to delete site!', {
+                            style: {
+                                background: 'linear-gradient(45deg, #ff416c, #ff4b2b)',
+                                color: '#fff',
+                                padding: '15px',
+                                borderRadius: '10px',
+                                boxShadow: '0 0 15px rgba(0, 0, 0, 0.3)',
+                            },
+                        });
+                    },
+                });
+            }
+        });
     };
 
     const handleEdit = (siteId) => {
@@ -194,14 +211,14 @@ export default function Index({ sites }) {
                                             </td>
                                             <td className="py-3 px-4 border-b">
                                                 <div className="flex space-x-2">
-                                                    <button
-                                                        onClick={() => handleEdit(site.site_id)}
-                                                        className="bg-yellow-500 text-white py-1 px-3 rounded-lg hover:bg-yellow-600 transition duration-300"
+                                                    <button 
+                                                        onClick={() => handleEdit(site.site_id)} 
+                                                        className="bg-yellow-500 text-white py-1 px-3 rounded-lg hover:bg-green-700 transition duration-300"
                                                     >
                                                         Edit
                                                     </button>
-                                                    <button
-                                                        onClick={() => handleDelete(site.site_id)}
+                                                    <button 
+                                                        onClick={() => handleDelete(site.site_id)} 
                                                         className="bg-red-600 text-white py-1 px-3 rounded-lg hover:bg-red-700 transition duration-300"
                                                     >
                                                         Delete
@@ -212,7 +229,7 @@ export default function Index({ sites }) {
                                     ))
                                 ) : (
                                     <tr>
-                                        <td colSpan="10" className="py-4 text-center text-gray-600">No sites found</td>
+                                        <td colSpan="10" className="py-3 px-4 text-center text-gray-700">No sites found.</td>
                                     </tr>
                                 )}
                             </tbody>

@@ -2,6 +2,7 @@ import React from 'react';
 import { useForm } from '@inertiajs/react';
 import Sidebar from '@/Components/Sidebar';
 import { Head } from '@inertiajs/react';
+import Swal from 'sweetalert2';
 
 export default function Edit({ site }) {
     const { data, setData, put, errors } = useForm({
@@ -14,30 +15,46 @@ export default function Edit({ site }) {
         site_address: site.site_address || '',
         site_port_capacity: site.site_port_capacity || '',
         site_picture: null, // New field for the picture, optional
-       
     });
 
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        const formDataToSend = new FormData();
-        Object.keys(data).forEach(key => {
-            formDataToSend.append(key, data[key]);
-        });
+        // Show confirmation dialog using SweetAlert2
+        Swal.fire({
+            title: "Do you want to save the changes?",
+            showDenyButton: true,
+            showCancelButton: true,
+            confirmButtonText: "Save",
+            denyButtonText: `Don't save`
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // If confirmed, create FormData and submit the form
+                const formDataToSend = new FormData();
+                Object.keys(data).forEach(key => {
+                    formDataToSend.append(key, data[key]);
+                });
 
-        // Send a PUT request to update the site
-        put(route('sites.update', site.site_id), {
-            data: formDataToSend,
-            onSuccess: () => {
-                console.log("Site updated successfully");
-                // Optionally redirect or show a success message
-            },
-            onError: (errors) => {
-                console.error("Update failed:", errors);
+                // Send a PUT request to update the site
+                put(route('sites.update', site.site_id), {
+                    data: formDataToSend,
+                    onSuccess: () => {
+                        Swal.fire({
+                            title: "Saved!",
+                            icon: "success",
+                            showConfirmButton: false,
+                            timer: 2000 // Automatically closes after 2 seconds
+                        });
+                    },
+                    onError: (errors) => {
+                        Swal.fire("Update failed!", "Please check the form and try again.", "error");
+                    }
+                });
+            } else if (result.isDenied) {
+                Swal.fire("Changes are not saved", "", "info");
             }
         });
     };
-
     return (
         <div className="flex">
             {/* Sidebar */}

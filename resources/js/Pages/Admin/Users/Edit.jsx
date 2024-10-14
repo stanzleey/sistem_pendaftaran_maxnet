@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Inertia } from '@inertiajs/inertia';
+import Swal from 'sweetalert2';
 import Sidebar from '@/Components/Sidebar';
 
 export default function Edit({ user }) {
@@ -15,27 +16,51 @@ export default function Edit({ user }) {
         setEmail(user.email || '');
     }, [user]); // Runs when the 'user' prop changes
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
-        Inertia.put(route('users.update', user.id), {
-            name,
-            email,
-            password,
-            password_confirmation: passwordConfirmation,
-        }, {
-            onSuccess: () => {
-                // Clear all input fields on success
-                setName('');
-                setEmail('');
-                setPassword('');
-                setPasswordConfirmation('');
-                setErrors({});
-            },
-            onError: (errors) => {
-                setErrors(errors);
-            },
+        // Show confirmation dialog
+        const result = await Swal.fire({
+            title: "Do you want to save the changes?",
+            showDenyButton: true,
+            showCancelButton: true,
+            confirmButtonText: "Save",
+            denyButtonText: `Don't save`
         });
+
+        if (result.isConfirmed) {
+            // Proceed with updating the user
+            Inertia.put(route('users.update', user.id), {
+                name,
+                email,
+                password,
+                password_confirmation: passwordConfirmation,
+            }, {
+                onSuccess: () => {
+                    // Clear all input fields on success
+                    setName('');
+                    setEmail('');
+                    setPassword('');
+                    setPasswordConfirmation('');
+                    setErrors({});
+                    
+                    // Show success notification without OK button
+                    Swal.fire({
+                        title: "Saved!",
+                        text: "",
+                        icon: "success",
+                        showConfirmButton: false, // Hide the OK button
+                        timer: 1500 // Duration before the notification disappears (in milliseconds)
+                    });
+                },
+                onError: (errors) => {
+                    setErrors(errors);
+                },
+            });
+        } else if (result.isDenied) {
+            // Inform the user that changes are not saved
+            Swal.fire("Changes are not saved", "", "info");
+        }
     };
 
     return (
