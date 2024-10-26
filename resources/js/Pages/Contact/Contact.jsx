@@ -68,7 +68,7 @@ export default function Contact({ success }) {
 
     return (
         <AppLayout>
-            <Title/>
+            <Title />
             <ToastContainer
                 position="top-center"
                 autoClose={5000}
@@ -101,7 +101,7 @@ export default function Contact({ success }) {
                     </div>
 
                     {/* Form Section */}
-                    <div className="lg:w-1/2 p-8 bg-white flex flex-col justify-center">
+                    <div className="lg:w-1/2 p-6 sm:p-8 flex flex-col justify-center">
                         <h2 className="text-3xl font-semibold text-gray-800 mb-6">Contact Us</h2>
                         <form onSubmit={handleSubmit} className="space-y-6">
                             <div>

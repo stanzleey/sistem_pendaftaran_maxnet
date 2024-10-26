@@ -226,7 +226,7 @@ export default function Lokasi() {
     <AuthenticatedLayout>
       <AppLayout>
         <Title/>
-        <div className="min-h-screen bg-gray-100 text-gray-800 px-4 sm:px-6 lg:px-8 transition duration-500 ease-in-out transform hover:scale-105">
+        <div className="min-h-screen bg-gray-100 text-gray-800 px-4 sm:px-6 lg:px-8">
           <div className="container mx-auto py-12 text-center">
             <h1 className="text-4xl sm:text-5xl font-bold mb-6 animate-pulse">
               Cek Apakah Lokasi Anda Termasuk Dalam Jangkauan Kami
@@ -234,17 +234,17 @@ export default function Lokasi() {
             <p className="text-lg mb-8">
               Masukkan Alamat Pemasangan Anda (Disarankan menggunakan Titik Koordinat Atau URL Lokasi Anda)
             </p>
-            <div className="relative mb-6">
-              <div className="absolute left-3 top-3 text-gray-400">
-                <FaSearch /> {/* Icon from react-icons */}
-              </div>
-              <input
-                type="text"
-                value={searchTerm}
-                onChange={handleSearch}
-                placeholder="Cari alamat..."
-                className="pl-10 pr-4 py-3 rounded-lg border border-gray-300 shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200 w-full bg-white hover:shadow-xl"
-              />
+            <div className="relative mb-6 max-w-2xl mx-auto">  {/* Changed max-w-lg to max-w-xl */}
+              <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-xl"> {/* Adjusted positioning and size */}
+                  <FaSearch /> {/* Icon from react-icons */}
+                </div>
+                <input
+                  type="text"
+                  value={searchTerm}
+                  onChange={handleSearch}
+                  placeholder="Cari alamat..."
+                  className="pl-10 pr-4 py-3 rounded-lg border border-gray-300 shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200 w-full bg-white hover:shadow-xl"
+                />
               {searchResults.length > 0 && (
                 <ul className="bg-white shadow-lg rounded-lg max-h-60 overflow-y-auto absolute z-10 w-full mt-1">
                   {searchResults.map((result) => (
@@ -270,7 +270,7 @@ export default function Lokasi() {
             </div>
             <div id="map" className="w-full h-64 rounded-lg shadow-lg mb-6"></div>
               {nearestLocation && (
-                <div className="bg-white p-6 rounded-lg shadow-lg mb-4 transition-transform duration-300 hover:scale-105">
+                <div className="bg-white p-6 rounded-lg shadow-lg mb-4">
                   <h3 className="text-2xl font-bold mb-2 text-center">
                     <FaMapMarkerAlt className="inline mr-2 text-blue-600" />
                     Detail Lokasi:
@@ -306,11 +306,11 @@ export default function Lokasi() {
                   )}
                 </div>
               )}
-<form onSubmit={handleSubmit} className="flex justify-center">
-      <button
+              <form onSubmit={handleSubmit} className="flex justify-center">
+            <button
                 type="submit"
                 disabled={isDisabled}
-                className={`w-full max-w-xs py-3 rounded-lg font-bold text-white transition duration-300 ${
+                className={`w-full max-w-xs py-3 rounded-lg font-bold text-white ${
                     isDisabled
                         ? 'bg-gray-400 cursor-not-allowed'
                         : 'bg-green-500 hover:bg-green-600'
