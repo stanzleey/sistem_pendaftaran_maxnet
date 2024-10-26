@@ -308,71 +308,70 @@ export default function Home() {
             </section>
             {/* Section: Cara Berlangganan */}
             <section className="py-16 text-center relative" data-aos="fade-up">
-    <div className="absolute inset-0 z-0 opacity-20">
-        <div className="animate-pulse h-full w-full bg-white-to-r from-indigo-200 via-purple-200 to-blue-300"></div>
-    </div>
-    <div className="container mx-auto px-6 md:px-12 relative z-10">
-        <h2 className="text-3xl font-bold text-gray-900 mb-8">Cara Berlangganan di Maxnet</h2>
-        <p className="mb-12 text-lg text-gray-600">Tiga langkah mudah untuk menggunakan layanan dari kami</p>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {/* Step 1: Registrasi */}
-            <div className="relative block overflow-hidden bg-white p-8 rounded-xl shadow-lg transition-transform transform hover:scale-105 hover:shadow-2xl" data-aos="fade-up">
-                <div className="flex justify-center mb-4">
-                    <div className="p-4 rounded-full transition-transform transform hover:rotate-12 hover:scale-110">
-                        <i className="fas fa-user-plus fa-4x text-blue-500 animate-bounce"></i>
-                    </div>
+                <div className="absolute inset-0 z-0 opacity-20">
+                    <div className="animate-pulse h-full w-full bg-white-to-r from-indigo-200 via-purple-200 to-blue-300"></div>
                 </div>
-                <h3 className="text-lg font-bold text-gray-800">Registrasi</h3>
-                <p className="text-gray-600">Lengkapi formulir pendaftaran dan pilih paket layanan yang Anda inginkan.</p>
-            </div>
+                <div className="container mx-auto px-6 md:px-12 relative z-10">
+                    <h2 className="text-3xl font-bold text-gray-900 mb-8">Cara Berlangganan di Maxnet</h2>
+                    <p className="mb-12 text-lg text-gray-600">Tiga langkah mudah untuk menggunakan layanan dari kami</p>
 
-            {/* Step 2: Verifikasi */}
-            <div className="relative block overflow-hidden bg-white p-8 rounded-xl shadow-lg transition-transform transform hover:scale-105 hover:shadow-2xl" data-aos="fade-up">
-                <div className="flex justify-center mb-4">
-                    <div className="p-4 rounded-full transition-transform transform hover:rotate-12 hover:scale-110">
-                        <i className="fas fa-check fa-4x text-blue-500 animate-bounce"></i>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        {/* Step 1: Registrasi */}
+                        <div className="relative block overflow-hidden bg-white p-8 rounded-xl shadow-lg transition-transform transform hover:scale-105 hover:shadow-2xl" data-aos="fade-up">
+                            <div className="flex justify-center mb-4">
+                                <div className="p-4 rounded-full transition-transform transform hover:rotate-12 hover:scale-110">
+                                    <i className="fas fa-user-plus fa-4x text-blue-500 animate-bounce"></i>
+                                </div>
+                            </div>
+                            <h3 className="text-lg font-bold text-gray-800">Registrasi</h3>
+                            <p className="text-gray-600">Lengkapi formulir pendaftaran dan pilih paket layanan yang Anda inginkan.</p>
+                        </div>
+
+                        {/* Step 2: Verifikasi */}
+                        <div className="relative block overflow-hidden bg-white p-8 rounded-xl shadow-lg transition-transform transform hover:scale-105 hover:shadow-2xl" data-aos="fade-up">
+                            <div className="flex justify-center mb-4">
+                                <div className="p-4 rounded-full transition-transform transform hover:rotate-12 hover:scale-110">
+                                    <i className="fas fa-check fa-4x text-blue-500 animate-bounce"></i>
+                                </div>
+                            </div>
+                            <h3 className="text-lg font-bold text-gray-800">Verifikasi</h3>
+                            <p className="text-gray-600">Tunggu hingga verifikasi selesai dan layanan siap digunakan.</p>
+                        </div>
+
+                        {/* Step 3: Aktivasi */}
+                        <div className="relative block overflow-hidden bg-white p-8 rounded-xl shadow-lg transition-transform transform hover:scale-105 hover:shadow-2xl" data-aos="fade-up">
+                            <div className="flex justify-center mb-4">
+                                <div className="p-4 rounded-full transition-transform transform hover:rotate-12 hover:scale-110">
+                                    <i className="fas fa-wifi fa-4x text-blue-500 animate-bounce"></i>
+                                </div>
+                            </div>
+                            <h3 className="text-lg font-bold text-gray-800">Aktivasi</h3>
+                            <p className="text-gray-600">Layanan internet Anda aktif dan siap digunakan kapan pun Anda butuhkan.</p>
+                        </div>
                     </div>
+
+                    {/* Mobile Styling */}
+                    <style>{`
+                        @media (max-width: 768px) {
+                            .grid {
+                                grid-template-columns: 1fr; /* Stack vertically on mobile */
+                            }
+
+                            h2 {
+                                font-size: 2.5rem; /* Adjust title size for mobile */
+                            }
+
+                            .fa-4x {
+                                font-size: 3rem; /* Adjust icon size for mobile */
+                            }
+
+                            p {
+                                font-size: 1rem; /* Adjust paragraph size for mobile */
+                            }
+                        }
+                    `}</style>
                 </div>
-                <h3 className="text-lg font-bold text-gray-800">Verifikasi</h3>
-                <p className="text-gray-600">Tunggu hingga verifikasi selesai dan layanan siap digunakan.</p>
-            </div>
-
-            {/* Step 3: Aktivasi */}
-            <div className="relative block overflow-hidden bg-white p-8 rounded-xl shadow-lg transition-transform transform hover:scale-105 hover:shadow-2xl" data-aos="fade-up">
-                <div className="flex justify-center mb-4">
-                    <div className="p-4 rounded-full transition-transform transform hover:rotate-12 hover:scale-110">
-                        <i className="fas fa-wifi fa-4x text-blue-500 animate-bounce"></i>
-                    </div>
-                </div>
-                <h3 className="text-lg font-bold text-gray-800">Aktivasi</h3>
-                <p className="text-gray-600">Layanan internet Anda aktif dan siap digunakan kapan pun Anda butuhkan.</p>
-            </div>
-        </div>
-
-        {/* Mobile Styling */}
-        <style jsx>{`
-            @media (max-width: 768px) {
-                .grid {
-                    grid-template-columns: 1fr; /* Stack vertically on mobile */
-                }
-
-                h2 {
-                    font-size: 2.5rem; /* Adjust title size for mobile */
-                }
-
-                .fa-4x {
-                    font-size: 3rem; /* Adjust icon size for mobile */
-                }
-
-                p {
-                    font-size: 1rem; /* Adjust paragraph size for mobile */
-                }
-            }
-        `}</style>
-    </div>
-</section>
-
+            </section>
         </AppLayout>      
     );
 }
