@@ -3,7 +3,7 @@ import { Inertia } from '@inertiajs/inertia';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import AppLayout from '@/Layouts/AppLayout';
 import L from 'leaflet';
-import 'leaflet/dist/leaflet.css';
+import 'leaflet/dist/leaflet.css'; 
 import { ToastContainer, toast, Slide } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { FaMapMarkerAlt, FaExclamationTriangle, FaCheckCircle, FaTimesCircle, FaSearch } from 'react-icons/fa';
@@ -121,37 +121,28 @@ export default function Lokasi() {
 
       const isOutOfReach = nearestDistance > 300;
       setIsDisabled(isOutOfReach); // Disable tombol jika tidak terjangkau
-
-      const toastMessage = isOutOfReach
+        const toastMessage = isOutOfReach
         ? `Jarak ke lokasi terdekat: ${nearestDistance.toFixed(2)} meter (Terlalu Jauh!)`
         : `Jarak ke lokasi terdekat: ${nearestDistance.toFixed(2)} meter (Terjangkau!)`;
-
+      
       const toastStyle = isOutOfReach
         ? { background: 'linear-gradient(45deg, #ff416c, #ff4b2b)' }
         : { background: 'linear-gradient(45deg, #56ab2f, #a8e063)' };
-
+      
       toast[isOutOfReach ? 'error' : 'success'](toastMessage, {
         style: {
           ...toastStyle,
           color: '#fff',
-          padding: '15px',
-          borderRadius: '10px',
-          boxShadow: '0 0 15px rgba(0, 0, 0, 0.3)',
+          padding: window.innerWidth < 640 ? '8px 10px' : '15px', // Smaller padding for mobile
+          fontSize: window.innerWidth < 640 ? '12px' : '16px', // Smaller font for mobile
+          borderRadius: '8px', // Slightly smaller border radius for mobile
+          boxShadow: '0 0 10px rgba(0, 0, 0, 0.3)', // Adjusted shadow for a more subtle effect
+          maxWidth: window.innerWidth < 640 ? '90%' : 'auto', // Limit width on mobile
+          margin: '0 auto', // Center the toast on the screen
         },
-      });
-    } else {
-      toast.error('Tidak ada lokasi provider terdekat.', {
-        style: {
-          background: 'linear-gradient(45deg, #ff416c, #ff4b2b)',
-          color: '#fff',
-          padding: '15px',
-          borderRadius: '10px',
-          boxShadow: '0 0 15px rgba(0, 0, 0, 0.3)',
-        },
-      });
+      });      
     }
-  };
-
+  }; 
   const handleSelectLocation = async (lat, lon, displayName) => {
     if (!lat || !lon) {
       toast.error('Koordinat tidak valid');
@@ -226,52 +217,56 @@ export default function Lokasi() {
     <AuthenticatedLayout>
       <AppLayout>
         <Title/>
-        <div className="min-h-screen bg-gray-100 text-gray-800 px-4 sm:px-6 lg:px-8">
-          <div className="container mx-auto py-12 text-center">
-            <h1 className="text-4xl sm:text-5xl font-bold mb-6 animate-pulse">
-              Cek Apakah Lokasi Anda Termasuk Dalam Jangkauan Kami
-            </h1>
-            <p className="text-lg mb-8">
-              Masukkan Alamat Pemasangan Anda (Disarankan menggunakan Titik Koordinat Atau URL Lokasi Anda)
-            </p>
-            <div className="relative mb-6 max-w-2xl mx-auto">  {/* Changed max-w-lg to max-w-xl */}
-              <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-xl"> {/* Adjusted positioning and size */}
-                  <FaSearch /> {/* Icon from react-icons */}
+          <div className="min-h-screen bg-gray-100 text-gray-800 px-4 sm:px-6 lg:px-8">
+            <div className="container mx-auto py-8 md:py-12 text-center">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 md:mb-6 animate-pulse">
+                Cek Apakah Lokasi Anda Termasuk Dalam Jangkauan Kami
+              </h1>
+              <p className="text-base md:text-lg mb-6 md:mb-8">
+                Masukkan Alamat Pemasangan Anda (Disarankan menggunakan Titik Koordinat Atau URL Lokasi Anda)
+              </p>
+
+              <div className="relative mb-4 md:mb-6 max-w-sm md:max-w-lg mx-auto">
+                <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-xl">
+                  <FaSearch />
                 </div>
                 <input
                   type="text"
                   value={searchTerm}
                   onChange={handleSearch}
                   placeholder="Cari alamat..."
-                  className="pl-10 pr-4 py-3 rounded-lg border border-gray-300 shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200 w-full bg-white hover:shadow-xl"
+                  className="pl-10 pr-4 py-3 rounded-lg border border-gray-300 shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 w-full bg-white hover:shadow-lg transition duration-200"
                 />
-              {searchResults.length > 0 && (
-                <ul className="bg-white shadow-lg rounded-lg max-h-60 overflow-y-auto absolute z-10 w-full mt-1">
-                  {searchResults.map((result) => (
-                    <li
-                      key={result.place_id}
-                      className="flex items-center p-3 hover:bg-blue-100 cursor-pointer transition duration-200"
-                      onClick={() => handleSelectLocation(result.lat, result.lon, result.display_name)}
-                    >
-                      <FaMapMarkerAlt className="text-blue-500 mr-3" />
-                      <span className="font-semibold text-gray-800">{result.display_name}</span>
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
-            <div className="flex justify-center my-4">
-              <button
-                onClick={handleUseCurrentLocation}
-                className="bg-gradient-to-r from-purple-600 to-blue-600 text-white font-semibold px-6 py-3 rounded-lg shadow-md hover:shadow-lg hover:scale-105 transition duration-300 transform"
-              >
-                Gunakan Lokasi Saya
-              </button>
-            </div>
-            <div id="map" className="w-full h-64 rounded-lg shadow-lg mb-6"></div>
+                {searchResults.length > 0 && (
+                  <ul className="bg-white shadow-lg rounded-lg max-h-60 overflow-y-auto absolute z-20 w-full mt-1">
+                    {searchResults.map((result) => (
+                      <li
+                        key={result.place_id}
+                        className="flex items-center p-3 hover:bg-blue-100 cursor-pointer transition duration-200"
+                        onClick={() => handleSelectLocation(result.lat, result.lon, result.display_name)}
+                      >
+                        <FaMapMarkerAlt className="text-blue-500 mr-3" />
+                        <span className="font-semibold text-gray-800">{result.display_name}</span>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+
+              <div className="flex justify-center my-4">
+                <button
+                  onClick={handleUseCurrentLocation}
+                  className="bg-gradient-to-r from-purple-600 to-blue-600 text-white font-semibold px-4 sm:px-6 py-2 sm:py-3 rounded-lg shadow-md hover:shadow-lg hover:scale-105 transition duration-300 transform"
+                >
+                  Gunakan Lokasi Saya
+                </button>
+              </div>
+
+              <div id="map" className="w-full h-48 sm:h-64 rounded-lg shadow-lg mb-4 sm:mb-6 z-10 relative"></div>
+
               {nearestLocation && (
-                <div className="bg-white p-6 rounded-lg shadow-lg mb-4">
-                  <h3 className="text-2xl font-bold mb-2 text-center">
+                <div className="bg-white p-4 sm:p-6 rounded-lg shadow-lg mb-4 sm:mb-6">
+                  <h3 className="text-xl sm:text-2xl font-bold mb-2 text-center">
                     <FaMapMarkerAlt className="inline mr-2 text-blue-600" />
                     Detail Lokasi:
                   </h3>
@@ -306,28 +301,29 @@ export default function Lokasi() {
                   )}
                 </div>
               )}
+
               <form onSubmit={handleSubmit} className="flex justify-center">
-            <button
-                type="submit"
-                disabled={isDisabled}
-                className={`w-full max-w-xs py-3 rounded-lg font-bold text-white ${
+                <button
+                  type="submit"
+                  disabled={isDisabled}
+                  className={`w-full max-w-xs py-3 rounded-lg font-bold text-white ${
                     isDisabled
-                        ? 'bg-gray-400 cursor-not-allowed'
-                        : 'bg-green-500 hover:bg-green-600'
-                } flex items-center justify-center`}
-            >
-                {isDisabled ? (
+                      ? 'bg-gray-400 cursor-not-allowed'
+                      : 'bg-green-500 hover:bg-green-600'
+                  } flex items-center justify-center transition-transform transform duration-200`}
+                >
+                  {isDisabled ? (
                     <>
-                        <FaExclamationTriangle className="mr-2" />
-                        Lokasi Tidak Valid
+                      <FaExclamationTriangle className="mr-2" />
+                      Lokasi Tidak Valid
                     </>
-                ) : (
+                  ) : (
                     <>
-                        <FaCheckCircle className="mr-2" />
-                        Lanjutkan ke Paket Layanan
+                      <FaCheckCircle className="mr-2" />
+                      Lanjutkan ke Paket Layanan
                     </>
-                )}
-            </button>
+                  )}
+                </button>
               </form>
             </div>
           <ToastContainer

@@ -199,7 +199,7 @@ export default function Home() {
                     </div>
                 </div>
             </section>
-{/* Solusi Internet Section */}
+            {/* Solusi Internet Section */}
             <section className="py-16 bg-gray-50 relative" data-aos="fade-up">
                 <div className="container mx-auto px-6 md:px-12 relative z-10">
                     <h2 className="text-4xl font-bold text-center mb-8 text-gray-900 flex items-center justify-center animate-fade-in">

@@ -13,7 +13,6 @@ export default function Contact({ success }) {
         message: '',
     });
 
-    // Handle input changes
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData((prevData) => ({
@@ -22,7 +21,6 @@ export default function Contact({ success }) {
         }));
     };
 
-    // Handle form submission
     const handleSubmit = (e) => {
         e.preventDefault();
         Inertia.post('/messages', formData, {
@@ -80,100 +78,97 @@ export default function Contact({ success }) {
                 pauseOnHover
                 style={{ zIndex: 9999 }}
             />
-            <section className="flex items-center justify-center bg-gray-100 py-12">
-                <div className="bg-white rounded-lg shadow-lg overflow-hidden lg:flex w-full max-w-6xl" style={{ height: 'calc(100vh - 5rem)' }}>
-                    {/* Image Section */}
-                    <div className="lg:w-1/2 relative">
-                        <img src="/img/Contact.jpeg" alt="Contact Us" className="w-full h-full object-cover" />
-                        <div className="absolute inset-0 bg-black opacity-40"></div>
-                        <div className="absolute inset-0 flex flex-col justify-center items-center text-center text-white px-6 z-10">
-                            <h2 className="text-4xl font-bold">Get in Touch</h2>
-                            <p className="mt-4 text-lg">
-                                Kami selalu siap sedia untuk kenyamanan dan kepuasan dalam melayani anda dalam menjelajah internet. Silahkan hubungi kami jika ada kendala
-                            </p>
-                            <a href="tel:+62-271-340-6262" className="mt-4 text-2xl font-bold text-pink-400 hover:underline">
-                                +62-271-340-6262
-                            </a>
-                            <address className="mt-2 text-gray-200 not-italic">
-                                Ruko Puri Indrasta No.1, Jl. Mangesti Raya, Gentan, Solo
-                            </address>
-                        </div>
-                    </div>
+<section className="flex flex-col lg:flex-row items-stretch justify-center bg-gray-100 py-10 lg:space-x-6 px-4">
+    <div className="lg:w-1/2 w-full relative max-w-lg h-[80vh] overflow-hidden"> {/* Mengatur tinggi dan overflow */}
+        <img src="/img/Contact.jpeg" alt="Contact Us" className="w-full h-full object-cover rounded-lg" />
+        <div className="absolute inset-0 bg-black opacity-40 rounded-lg"></div>
+        <div className="absolute inset-0 flex flex-col justify-center items-center text-center text-white px-4 z-10">
+            <h2 className="text-3xl font-bold">Get in Touch</h2>
+            <p className="mt-3 text-base">
+                Kami selalu siap sedia untuk kenyamanan dan kepuasan dalam melayani anda dalam menjelajah internet. Silahkan hubungi kami jika ada kendala.
+            </p>
+            <a href="tel:+62-271-340-6262" className="mt-3 text-xl font-bold text-pink-400 hover:underline">
+                +62-271-340-6262
+            </a>
+            <address className="mt-1 text-gray-200 not-italic text-sm">
+                Ruko Puri Indrasta No.1, Jl. Mangesti Raya, Gentan, Solo
+            </address>
+        </div>
+    </div>
 
-                    {/* Form Section */}
-                    <div className="lg:w-1/2 p-6 sm:p-8 flex flex-col justify-center">
-                        <h2 className="text-3xl font-semibold text-gray-800 mb-6">Contact Us</h2>
-                        <form onSubmit={handleSubmit} className="space-y-6">
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700" htmlFor="name">Name</label>
-                                <input
-                                    className="mt-1 w-full border border-gray-300 rounded-lg p-3 text-sm focus:ring focus:ring-blue-200 transition duration-200"
-                                    placeholder="Name"
-                                    type="text"
-                                    id="name"
-                                    name="name"
-                                    value={formData.name}
-                                    onChange={handleChange}
-                                    required
-                                />
-                            </div>
+    <div className="lg:w-2/5 w-full p-8 bg-white rounded-lg shadow-lg flex flex-col justify-center max-w-lg"> {/* Mengatur tinggi tanpa overflow */}
+        <h2 className="text-3xl font-semibold text-gray-800 mb-6">Contact Us</h2>
+        <form onSubmit={handleSubmit} className="space-y-6">
+            <div>
+                <label className="block text-sm font-medium text-gray-700" htmlFor="name">Name</label>
+                <input
+                    className="mt-1 w-full border border-gray-300 rounded-lg p-4 text-sm focus:ring focus:ring-blue-200 transition duration-200"
+                    placeholder="Your Name"
+                    type="text"
+                    id="name"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleChange}
+                    required
+                />
+            </div>
 
-                            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700" htmlFor="email">Email</label>
-                                    <input
-                                        className="mt-1 w-full border border-gray-300 rounded-lg p-3 text-sm focus:ring focus:ring-blue-200 transition duration-200"
-                                        placeholder="Email address"
-                                        type="email"
-                                        id="email"
-                                        name="email"
-                                        value={formData.email}
-                                        onChange={handleChange}
-                                        required
-                                    />
-                                </div>
-
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700" htmlFor="phone">Phone</label>
-                                    <input
-                                        className="mt-1 w-full border border-gray-300 rounded-lg p-3 text-sm focus:ring focus:ring-blue-200 transition duration-200"
-                                        placeholder="Phone Number"
-                                        type="tel"
-                                        id="phone"
-                                        name="phone"
-                                        value={formData.phone}
-                                        onChange={handleChange}
-                                        required
-                                    />
-                                </div>
-                            </div>
-
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700" htmlFor="message">Message</label>
-                                <textarea
-                                    className="mt-1 w-full border border-gray-300 rounded-lg p-3 text-sm focus:ring focus:ring-blue-200 transition duration-200"
-                                    placeholder="Message"
-                                    rows="6"
-                                    id="message"
-                                    name="message"
-                                    value={formData.message}
-                                    onChange={handleChange}
-                                    required
-                                ></textarea>
-                            </div>
-
-                            <div>
-                                <button
-                                    type="submit"
-                                    className="w-full rounded-lg bg-gradient-to-r from-blue-500 to-purple-600 px-5 py-3 font-medium text-white hover:bg-blue-700 transition duration-200"
-                                >
-                                    Kirim Pesan
-                                </button>
-                            </div>
-                        </form>
-                    </div>
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+                <div>
+                    <label className="block text-sm font-medium text-gray-700" htmlFor="email">Email</label>
+                    <input
+                        className="mt-1 w-full border border-gray-300 rounded-lg p-4 text-sm focus:ring focus:ring-blue-200 transition duration-200"
+                        placeholder="Your Email"
+                        type="email"
+                        id="email"
+                        name="email"
+                        value={formData.email}
+                        onChange={handleChange}
+                        required
+                    />
                 </div>
-            </section>
+
+                <div>
+                    <label className="block text-sm font-medium text-gray-700" htmlFor="phone">Phone</label>
+                    <input
+                        className="mt-1 w-full border border-gray-300 rounded-lg p-4 text-sm focus:ring focus:ring-blue-200 transition duration-200"
+                        placeholder="Your Phone Number"
+                        type="tel"
+                        id="phone"
+                        name="phone"
+                        value={formData.phone}
+                        onChange={handleChange}
+                        required
+                    />
+                </div>
+            </div>
+
+            <div>
+                <label className="block text-sm font-medium text-gray-700" htmlFor="message">Message</label>
+                <textarea
+                    className="mt-1 w-full border border-gray-300 rounded-lg p-4 text-sm focus:ring focus:ring-blue-200 transition duration-200"
+                    placeholder="Your Message"
+                    rows="4"
+                    id="message"
+                    name="message"
+                    value={formData.message}
+                    onChange={handleChange}
+                    required
+                ></textarea>
+            </div>
+
+            <div>
+                <button
+                    type="submit"
+                    className="w-full rounded-lg bg-gradient-to-r from-blue-500 to-purple-600 px-5 py-3 font-medium text-white hover:bg-blue-700 transition duration-200"
+                >
+                    Kirim Pesan
+                </button>
+            </div>
+        </form>
+    </div>
+</section>
+
         </AppLayout>
     );
 }

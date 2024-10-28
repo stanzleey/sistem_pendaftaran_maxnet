@@ -100,7 +100,7 @@ export default function AppLayout({ children }) {
                     </button>
                     {/* Menu Items */}
                     <div className="flex flex-col items-start py-4 space-y-2 px-4 mt-12">
-                        {['/', '/locations', '/contact', '/login'].map((route, index) => (
+                        {['/', '/locations', '/contact'].map((route, index) => (
                             <Link 
                                 key={index}
                                 href={route}
@@ -111,10 +111,19 @@ export default function AppLayout({ children }) {
                                 {route === '/' && <FaHome className="inline mr-2 text-xl" />}
                                 {route === '/locations' && <FaServicestack className="inline mr-2 text-xl" />}
                                 {route === '/contact' && <FaPhoneAlt className="inline mr-2 text-xl" />}
-                                {route === '/login' && <FaSignInAlt className="inline mr-2 text-xl" />}
-                                {route === '/' ? 'Home' : route === '/locations' ? 'Layanan' : route === '/contact' ? 'Kontak' : 'Customer Login'}
+                                {route === '/' ? 'Home' : route === '/locations' ? 'Layanan' : 'Kontak'}
                             </Link>
                         ))}
+
+                        {/* Customer Login Button */}
+                        <Link 
+                            href="/login" 
+                            className="bg-gradient-to-r from-purple-600 to-blue-600 text-white px-4 py-2 rounded transition-colors duration-300 hover:bg-purple-700 shadow-lg hover:shadow-xl text-lg flex items-center"
+                            style={{ textDecoration: 'none' }}
+                            onClick={() => setIsOpen(false)} // Optional: close the menu when clicked
+                        >
+                            <FaSignInAlt className="inline mr-2 text-xl" /> Customer Login
+                        </Link>
                     </div>
                     {/* Footer Section */}
                     <div className="border-t mt-4 px-4 py-4 text-center text-sm text-gray-600">
