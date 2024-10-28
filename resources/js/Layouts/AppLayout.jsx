@@ -150,7 +150,7 @@ export default function AppLayout({ children }) {
                 {children}
             </main>
             {/* Footer */}
-            <footer className="bg-slate-500 lg:grid lg:grid-cols-5">
+            <footer className="bg-slate-800 lg:grid lg:grid-cols-5">
                 {/* Google Map Section */}
                 <div className="relative h-48 sm:h-64 md:h-80 lg:col-span-2 lg:h-full">
                     <iframe
