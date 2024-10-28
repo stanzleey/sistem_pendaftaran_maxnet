@@ -121,28 +121,28 @@ export default function Lokasi() {
 
       const isOutOfReach = nearestDistance > 300;
       setIsDisabled(isOutOfReach); // Disable tombol jika tidak terjangkau
-        const toastMessage = isOutOfReach
-        ? `Jarak ke lokasi terdekat: ${nearestDistance.toFixed(2)} meter (Terlalu Jauh!)`
-        : `Jarak ke lokasi terdekat: ${nearestDistance.toFixed(2)} meter (Terjangkau!)`;
-      
-      const toastStyle = isOutOfReach
-        ? { background: 'linear-gradient(45deg, #ff416c, #ff4b2b)' }
-        : { background: 'linear-gradient(45deg, #56ab2f, #a8e063)' };
-      
-      toast[isOutOfReach ? 'error' : 'success'](toastMessage, {
-        style: {
-          ...toastStyle,
-          color: '#fff',
-          padding: window.innerWidth < 640 ? '8px 10px' : '15px', // Smaller padding for mobile
-          fontSize: window.innerWidth < 640 ? '12px' : '16px', // Smaller font for mobile
-          borderRadius: '8px', // Slightly smaller border radius for mobile
-          boxShadow: '0 0 10px rgba(0, 0, 0, 0.3)', // Adjusted shadow for a more subtle effect
-          maxWidth: window.innerWidth < 640 ? '90%' : 'auto', // Limit width on mobile
-          margin: '0 auto', // Center the toast on the screen
-        },
-      });      
-    }
-  }; 
+      const toastMessage = isOutOfReach
+      ? `Jarak ke lokasi terdekat: ${nearestDistance.toFixed(2)} meter (Terlalu Jauh!)`
+      : `Jarak ke lokasi terdekat: ${nearestDistance.toFixed(2)} meter (Terjangkau!)`;
+    
+    const toastStyle = isOutOfReach
+      ? { background: 'linear-gradient(45deg, #ff416c, #ff4b2b)' }
+      : { background: 'linear-gradient(45deg, #56ab2f, #a8e063)' };
+    
+    toast[isOutOfReach ? 'error' : 'success'](toastMessage, {
+      style: {
+        ...toastStyle,
+        color: '#fff',
+        padding: window.innerWidth < 640 ? '8px 10px' : '15px', // Smaller padding for mobile
+        fontSize: window.innerWidth < 640 ? '12px' : '16px', // Smaller font for mobile
+        borderRadius: '8px', // Slightly smaller border radius for mobile
+        boxShadow: '0 0 10px rgba(0, 0, 0, 0.3)', // Adjusted shadow for a more subtle effect
+        maxWidth: window.innerWidth < 640 ? '90%' : 'auto', // Limit width on mobile
+        margin: '0 auto', // Center the toast on the screen
+      },
+    });      
+  }
+}; 
   const handleSelectLocation = async (lat, lon, displayName) => {
     if (!lat || !lon) {
       toast.error('Koordinat tidak valid');
