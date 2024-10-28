@@ -70,13 +70,15 @@ export default function AppLayout({ children }) {
                                 {route === '/' ? 'Home' : route === '/locations' ? 'Layanan' : 'Hubungi Kami'}
                             </Link>
                         ))}
-                        <Link 
-                            href="/login" 
+                        <a 
+                            href="https://customer.maxnetplus.id/login" 
+                            target="_blank" 
+                            rel="noopener noreferrer"
                             className="bg-gradient-to-r from-purple-600 to-blue-600 text-white px-4 py-2 rounded transition-colors duration-300 hover:bg-purple-700 shadow-lg hover:shadow-xl text-lg flex items-center"
                             style={{ textDecoration: 'none' }}
                         >
                             <FaSignInAlt className="inline mr-2 text-xl" /> Customer Login
-                        </Link>
+                        </a>
                     </div>
                 </div>
                 {/* Dropdown Menu Mobile */}
@@ -116,14 +118,16 @@ export default function AppLayout({ children }) {
                         ))}
 
                         {/* Customer Login Button */}
-                        <Link 
-                            href="/login" 
+                        <a 
+                            href="https://customer.maxnetplus.id/login" 
+                            target="_blank" 
+                            rel="noopener noreferrer"
                             className="bg-gradient-to-r from-purple-600 to-blue-600 text-white px-4 py-2 rounded transition-colors duration-300 hover:bg-purple-700 shadow-lg hover:shadow-xl text-lg flex items-center"
                             style={{ textDecoration: 'none' }}
                             onClick={() => setIsOpen(false)} // Optional: close the menu when clicked
                         >
                             <FaSignInAlt className="inline mr-2 text-xl" /> Customer Login
-                        </Link>
+                        </a>
                     </div>
                     {/* Footer Section */}
                     <div className="border-t mt-4 px-4 py-4 text-center text-sm text-gray-600">

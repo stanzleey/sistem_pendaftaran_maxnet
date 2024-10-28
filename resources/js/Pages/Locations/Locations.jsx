@@ -30,20 +30,22 @@ export default function Lokasi() {
     try {
       const response = await fetch('/api/sites');
       const data = await response.json();
-      const processedLocations = data.map(site => {
-        const coordinates = site.site_location_maps.split(',');
-        return {
-          site_name: site.site_name,
-          site_address: site.site_address,
-          lat: parseFloat(coordinates[0]),
-          lon: parseFloat(coordinates[1]),
-        };
-      });
+      const processedLocations = data
+        .filter(site => site.site_name.includes("ODP")) // Filter locations containing "ODP"
+        .map(site => {
+          const coordinates = site.site_location_maps.split(',');
+          return {
+            site_name: site.site_name,
+            site_address: site.site_address,
+            lat: parseFloat(coordinates[0]),
+            lon: parseFloat(coordinates[1]),
+          };
+        });
       setLocations(processedLocations);
     } catch (error) {
       console.error('Error fetching locations:', error);
     }
-  };
+  };  
 
   const handleSearch = async (event) => {
     const query = event.target.value;
