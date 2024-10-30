@@ -35,8 +35,9 @@ export default function Home() {
                     <div className="mx-auto max-w-3xl text-center">
                         {/* Title */}
                         <h1 className="bg-gradient-to-r from-indigo-500 via-purple-600 to-pink-500 bg-clip-text text-3xl font-extrabold text-white sm:text-5xl lg:text-6xl font-archivo animate-slide-in leading-tight">
-                            Koneksi Internet Tanpa Batas
-                            <span className="block sm:inline">Kecepatan dan Stabilitas untuk Setiap Kebutuhan.</span>
+                            Koneksi Internet Tanpa Batas 
+                            <span className="block mt-2 sm:inline"> 
+                                Kecepatan dan Stabilitas untuk Setiap Kebutuhan.</span>
                         </h1>
                         {/* Subtitle */}
                         <p className="mx-auto mt-4 max-w-md sm:max-w-xl text-base sm:text-lg lg:text-xl text-gray-300 font-archivo animate-fade-in">
