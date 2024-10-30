@@ -36,9 +36,11 @@ export default function Home() {
                         {/* Title */}
                         <h1 className="bg-gradient-to-r from-indigo-500 via-purple-600 to-pink-500 bg-clip-text text-3xl font-extrabold text-white sm:text-5xl lg:text-6xl font-archivo animate-slide-in leading-tight">
                             Koneksi Internet Tanpa Batas 
-                            <span className="block mt-2 sm:inline"> 
-                                Kecepatan dan Stabilitas untuk Setiap Kebutuhan.</span>
                         </h1>
+                        <h2 className="bg-gradient-to-r from-indigo-500 via-purple-600 to-pink-500 bg-clip-text text-3xl font-extrabold text-white sm:text-5xl lg:text-6xl font-archivo animate-slide-in leading-tight">
+                            Kecepatan dan Stabilitas untuk Setiap Kebutuhan
+                            
+                        </h2>
                         {/* Subtitle */}
                         <p className="mx-auto mt-4 max-w-md sm:max-w-xl text-base sm:text-lg lg:text-xl text-gray-300 font-archivo animate-fade-in">
                             Nikmati pengalaman Internetan tanpa hambatan, dengan layanan internet yang dirancang untuk rumah dan bisnis Anda.

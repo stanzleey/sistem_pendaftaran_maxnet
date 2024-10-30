@@ -40,16 +40,16 @@ export default function AppLayout({ children }) {
             <nav className="bg-white shadow-lg sticky top-0 z-50">
                 <div className="container mx-auto px-6 py-2 flex justify-between items-center">
                     {/* Logo */}
-                    <div className={`block ${isOpen ? 'hidden' : ''} md:block`}>
+                    <div className={`block ${isOpen ? 'hidden' : ''} lg:block`}>
                         <img 
                             src="/img/maxnetlogo.png" 
                             alt="Maxnet Logo" 
-                            className="h-14 w-auto" // Increased size to h-14
+                            className="h-10 w-auto lg:h-14" // Responsive logo size
                         />
                     </div>
 
                     {/* Mobile Menu Button */}
-                    <div className="md:hidden flex justify-end w-full absolute right-0 pr-6">
+                    <div className="lg:hidden flex justify-end w-full absolute right-0 pr-6">
                         <button
                             onClick={() => setIsOpen(!isOpen)}
                             className="text-purple-600 focus:outline-none flex items-center"
@@ -60,8 +60,8 @@ export default function AppLayout({ children }) {
                         </button>
                     </div>
 
-                    {/* Desktop Menu */}
-                    <div className="hidden md:flex items-center space-x-8 ml-auto">
+                    {/* Desktop and Tablet Menu */}
+                    <div className="hidden lg:flex items-center space-x-8 ml-auto">
                         {['/', '/locations', '/contact'].map((route, index) => (
                             <Link 
                                 key={index}
@@ -70,7 +70,6 @@ export default function AppLayout({ children }) {
                                 aria-current={isActive(route) ? 'page' : undefined}
                                 style={{ textDecoration: 'none' }}
                             >
-                                {/* Icons are vertically aligned using flex */}
                                 <div className="flex items-center">
                                     {route === '/' && <FaHome className="mr-2 text-xl" />}
                                     {route === '/locations' && <FaServicestack className="mr-2 text-xl" />}
@@ -91,13 +90,13 @@ export default function AppLayout({ children }) {
                     </div>
                 </div>
 
-                {/* Dropdown Menu for Mobile */}
-                <div className={`md:hidden fixed top-0 right-0 h-full w-3/4 bg-white shadow-lg transition-transform duration-300 transform ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}>
+                {/* Mobile Dropdown Menu */}
+                <div className={`lg:hidden fixed top-0 right-0 h-full w-3/4 sm:w-1/2 bg-white shadow-lg transition-transform duration-300 transform ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}>
                     <div className="flex items-center justify-start px-4 py-4 border-b">
                         <img 
                             src="/img/maxnetlogo.png" 
                             alt="Maxnet Logo" 
-                            className="h-10 w-auto" // Increased size to h-10
+                            className="h-10 w-auto"
                         />
                     </div>
                     <button
