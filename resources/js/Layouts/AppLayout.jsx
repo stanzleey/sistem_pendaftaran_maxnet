@@ -141,73 +141,81 @@ export default function AppLayout({ children }) {
             <main>{children}</main>
 
             {/* Footer */}
-            <footer className="bg-slate-50 py-8">
-              <div className="container mx-auto max-w-screen-lg px-4">
+            <footer className="bg-slate-900 py-12 mt-20">
+                <div className="container mx-auto max-w-screen-lg px-4 lg:px-8">
+                    <div className="lg:flex lg:items-start lg:justify-between">
+                        
+                        {/* Logo Section */}
+                        <div className="lg:w-1/5 text-center lg:text-left mb-10 lg:mb-0">
+                            <img src="/img/maxnetlogo.png" alt="Maxnet Logo" className="h-16 w-auto mx-auto lg:mx-0" />
+                            <p className="mt-4 text-slate-400 text-sm leading-relaxed max-w-md mx-auto lg:mx-0">
+                                MaxNet Internet Service Provider (ISP) Terpercaya & Berkualitas.
+                            </p>
+                        </div>
 
-                  <div className="lg:flex lg:items-start lg:justify-between">
-                      {/* Contact Info Section */}
-                      <div className="lg:w-1/2 mb-6 lg:mb-0 text-center lg:text-left">
-                          <img src="/img/maxnetlogo.png" alt="Maxnet Logo" className="h-16 w-auto mx-auto lg:mx-0" />
-                          <p className="mt-4 text-gray-600 text-base leading-relaxed max-w-md mx-auto lg:mx-0">
-                              MaxNet Internet Service Provider (ISP) Terpercaya & Berkualitas.
-                          </p>
+                        {/* Links Section */}
+                        <div className="lg:w-3/5 lg:flex lg:justify-center lg:space-x-12">
+                            <div className="text-center lg:text-left mb-10 lg:mb-0">
+                                <h3 className="text-slate-100 font-semibold mb-3">About Us</h3>
+                                <ul className="space-y-2">
+                                    <li><a href="#" className="text-slate-400 hover:text-teal-400 transition-colors duration-200 no-underline">Company History</a></li>
+                                    <li><a href="#" className="text-slate-400 hover:text-teal-400 transition-colors duration-200 no-underline">Meet the Team</a></li>
+                                    <li><a href="#" className="text-slate-400 hover:text-teal-400 transition-colors duration-200 no-underline">Employee Handbook</a></li>
+                                    <li><a href="#" className="text-slate-400 hover:text-teal-400 transition-colors duration-200 no-underline">Careers</a></li>
+                                </ul>
+                            </div>
 
-                          <div className="mt-4 text-gray-700">
-                              <p className="text-base font-semibold">Contact Us</p>
-                              <p className="mt-1 text-base">
-                                  <span className="font-medium">Phone: </span>
-                                  <a href="tel:+622713406262" className="no-underline hover:text-teal-600">
-                                      +62-271-340-6262
-                                  </a>
-                              </p>
-                              <p className="mt-1 text-base">
-                                  <span className="font-medium">Business Hours:</span>
-                              </p>
-                              <ul className="text-sm space-y-1 pl-2 lg:pl-4">
-                                  <li>Monday to Friday: 08.00 - 17.00 WIB</li>
-                                  <li>Saturday: 08.00 - 14.00 WIB</li>
-                              </ul>
-                              
-                              {/* Social Media Icons Centered */}
-                              <div className="mt-4 flex justify-center space-x-3">
-                                  <a href="#" className="text-teal-600 hover:text-gray-500">
-                                      <span className="sr-only">Facebook</span>
-                                      <FaFacebookF className="w-5 h-5" />
-                                  </a>
-                                  <a href="#" className="text-teal-600 hover:text-gray-500">
-                                      <span className="sr-only">Instagram</span>
-                                      <FaInstagram className="w-5 h-5" />
-                                  </a>
-                                  <a href="https://wa.me/622713406262" target="_blank" rel="noopener noreferrer" className="text-teal-600 hover:text-gray-500">
-                                      <span className="sr-only">Whatsapp</span>
-                                      <FaWhatsapp className="w-5 h-5" />
-                                  </a>
-                              </div>
-                          </div>
-                      </div>
+                            <div className="text-center lg:text-left mb-10 lg:mb-0">
+                                <h3 className="text-slate-100 font-semibold mb-3">Our Services</h3>
+                                <ul className="space-y-2">
+                                    <li><a href="#" className="text-slate-400 hover:text-teal-400 transition-colors duration-200 no-underline">Web Development</a></li>
+                                    <li><a href="#" className="text-slate-400 hover:text-teal-400 transition-colors duration-200 no-underline">Web Design</a></li>
+                                    <li><a href="#" className="text-slate-400 hover:text-teal-400 transition-colors duration-200 no-underline">Marketing</a></li>
+                                    <li><a href="#" className="text-slate-400 hover:text-teal-400 transition-colors duration-200 no-underline">Google Ads</a></li>
+                                </ul>
+                            </div>
 
-                      {/* Google Maps Embed Section */}
-                      <div className="lg:w-1/2 mt-4 lg:mt-0">
-                          <h3 className="text-base font-semibold text-gray-800 mb-2 text-center lg:text-left">Lokasi Kami</h3>
-                          <div className="rounded-lg overflow-hidden shadow-md p-2 bg-white">
-                              <iframe
-                                  title="PT Lingkar Kabel Telekomunikasi Location"
-                                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3952.2803077526454!2d110.765559!3d-7.5801076!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e7a15ecaee94319%3A0x59e2a27e5aebb1bf!2sKabel%20Telekom%20-%20PT.%20LINGKAR%20KABEL%20TELEKOMUNIKASI!5e0!3m2!1sen!2sid!4v1696338538232!5m2!1sen!2sid"
-                                  width="100%"
-                                  height="240"
-                                  allowFullScreen=""
-                                  loading="lazy"
-                                  className="rounded-lg border"
-                              ></iframe>
-                          </div>
-                      </div>
+                            <div className="text-center lg:text-left">
+                                <h3 className="text-slate-100 font-semibold mb-3">Contact Us</h3>
+                                <ul className="space-y-2">
+                                    <li><a href="mailto:john@doe.com" className="text-slate-400 hover:text-teal-400 transition-colors duration-200 no-underline">john@doe.com</a></li>
+                                    <li><a href="tel:0123456789" className="text-slate-400 hover:text-teal-400 transition-colors duration-200 no-underline">0123456789</a></li>
+                                    <li className="text-slate-400">213 Lane, London, United Kingdom</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        {/* Map Section */}
+                        <div className="lg:w-1/5 mt-10 lg:mt-0 text-center lg:text-right">
+                            <div className="rounded-lg overflow-hidden shadow-md p-1 bg-slate-800">
+                                <iframe
+                                    title="PT Lingkar Kabel Telekomunikasi Location"
+                                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3952.2803077526454!2d110.765559!3d-7.5801076!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e7a15ecaee94319%3A0x59e2a27e5aebb1bf!2sKabel%20Telekom%20-%20PT.%20LINGKAR%20KABEL%20TELEKOMUNIKASI!5e0!3m2!1sen!2sid!4v1696338538232!5m2!1sen!2sid"
+                                    width="100%"
+                                    height="250"
+                                    allowFullScreen=""
+                                    loading="lazy"
+                                    className="rounded-lg border"
+                                ></iframe>
+                            </div>
+                        </div>
                     </div>
-                  <p className="mt-8 text-center text-xs text-gray-500">
-                      &copy; 2024 MaxNet. All rights reserved.
-                  </p>
-              </div>
-          </footer>
 
+                    {/* Footer Bottom */}
+                    <div className="mt-10 text-center">
+                        <div className="flex justify-center space-x-4 mb-3">
+                            <a href="#" className="text-teal-500 hover:text-teal-400"><i className="fab fa-facebook"></i></a>
+                            <a href="#" className="text-teal-500 hover:text-teal-400"><i className="fab fa-instagram"></i></a>
+                            <a href="#" className="text-teal-500 hover:text-teal-400"><i className="fab fa-twitter"></i></a>
+                            <a href="#" className="text-teal-500 hover:text-teal-400"><i className="fab fa-github"></i></a>
+                            <a href="#" className="text-teal-500 hover:text-teal-400"><i className="fab fa-dribbble"></i></a>
+                        </div>
+                        <p className="text-xs text-slate-500">
+                            &copy; 2024 MaxNet. All rights reserved. <a href="#" className="text-teal-500 hover:text-teal-400 no-underline">Terms & Conditions</a> · <a href="#" className="text-teal-500 hover:text-teal-400 no-underline">Privacy Policy</a>
+                        </p>
+                    </div>
+                </div>
+            </footer>
         </div>
     );
 }
