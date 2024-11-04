@@ -154,7 +154,7 @@ export default function AppLayout({ children }) {
 
                     {/* Logo Section */}
                     <div className="lg:w-1/5 flex flex-col items-center lg:items-start mb-10 lg:mb-0 mt-28"> {/* Adjusted for alignment */}
-                        <img src="/img/MAXNETout.png" alt="Maxnet Logo" className="h-20 w-auto mb-4" />
+                        <img src="/img/MAXNETout.png" alt="Maxnet Logo" className="h-18 w-auto mb-4" />
                         <p className="text-slate-400 text-sm leading-relaxed max-w-md mt-4">
                         MaxNet Internet Service Provider (ISP) Terpercaya & Berkualitas.
                         </p>
