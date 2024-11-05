@@ -149,99 +149,100 @@ export default function AppLayout({ children }) {
 
             {/* Footer */}
             <footer className="bg-slate-900 py-12 mt-20">
-                <div className="container mx-auto max-w-screen-lg px-4 lg:px-8">
-                    <div className="lg:flex lg:items-start lg:justify-between gap-8 text-center lg:text-left">
-
-                    {/* Logo Section */}
-                    <div className="lg:w-1/5 flex flex-col items-center lg:items-start mb-10 lg:mb-0 mt-28"> {/* Adjusted for alignment */}
-                        <img src="/img/MAXNETout.png" alt="Maxnet Logo" className="h-18 w-auto mb-4" />
-                        <p className="text-slate-400 text-sm leading-relaxed max-w-md mt-4">
-                        MaxNet Internet Service Provider (ISP) Terpercaya & Berkualitas.
-                        </p>
-                    </div>
-
-                    {/* About Us Section */}
-                    <div className="flex flex-col items-center lg:items-start mb-10 lg:mb-0">
-                        <h3 className="text-slate-100 font-semibold mb-3">About Us</h3>
-                        <ul className="space-y-3">
-                        <li>
-                            <a href="#" className="text-slate-400 hover:text-teal-400 transition-colors duration-200 no-underline flex items-center gap-2">
+    <div className="container mx-auto max-w-screen-lg px-4 lg:px-8">
+        <div className="lg:flex lg:items-start lg:justify-between gap-8 text-center lg:text-left">
+            
+            {/* Logo Section */}
+            <div className="lg:w-1/5 flex flex-col items-center lg:items-start mb-12 lg:mb-0 text-center">
+                <img src="/img/MAXNETout.png" alt="Maxnet Logo" className="h-18 w-auto mb-4" />
+                <p className="text-slate-400 text-sm leading-relaxed max-w-md mt-4">
+                    MaxNet Internet Service Provider (ISP) Terpercaya & Berkualitas.
+                </p>
+            </div>
+            
+            {/* About Us Section */}
+            <div className="flex flex-col items-center lg:items-start mb-12 lg:mb-0 text-center">
+                <h3 className="text-slate-100 font-semibold mb-4 pl-10">About Us</h3>
+                <ul className="space-y-3">
+                    <li>
+                        <a href="#" className="text-slate-400 hover:text-teal-400 transition-colors duration-200 flex items-center justify-center lg:justify-start gap-2 no-underline">
                             <FaHistory /> Company History
-                            </a>
-                        </li>
-                        </ul>
-                    </div>
-
-                    {/* Services Section */}
-                    <div className="flex flex-col items-center lg:items-start mb-10 lg:mb-0">
-                        <h3 className="text-slate-100 font-semibold mb-3">Our Services</h3>
-                        <ul className="space-y-3">
-                        <li>
-                            <a href="#" className="text-slate-400 hover:text-teal-400 transition-colors duration-200 no-underline flex items-center gap-2">
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            
+            {/* Services Section */}
+            <div className="flex flex-col items-center lg:items-start mb-12 lg:mb-0 text-center">
+                <h3 className="text-slate-100 font-semibold mb-4 pl-4">Our Services</h3>
+                <ul className="space-y-3">
+                    <li>
+                        <a href="#" className="text-slate-400 hover:text-teal-400 transition-colors duration-200 flex items-center justify-center lg:justify-start gap-2 no-underline">
                             <FaBusinessTime /> Business SOHO
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#" className="text-slate-400 hover:text-teal-400 transition-colors duration-200 no-underline flex items-center gap-2">
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" className="text-slate-400 hover:text-teal-400 transition-colors duration-200 flex items-center justify-center lg:justify-start gap-2 no-underline">
                             <FaHome /> Home Internet
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#" className="text-slate-400 hover:text-teal-400 transition-colors duration-200 no-underline flex items-center gap-2">
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" className="text-slate-400 hover:text-teal-400 transition-colors duration-200 flex items-center justify-center lg:justify-start gap-2 no-underline">
                             <FaHeadset /> Service Support 24/7
-                            </a>
-                        </li>
-                        </ul>
-                    </div>
-
-                    {/* Contact Us Section */}
-                    <div className="flex flex-col items-center lg:items-start mb-10 lg:mb-0">
-                        <h3 className="text-slate-100 font-semibold mb-3">Contact Us</h3>
-                        <ul className="space-y-3">
-                        <li>
-                            <a href="mailto:info@maxnetplus.id" className="text-slate-400 hover:text-teal-400 transition-colors duration-200 no-underline flex items-center gap-2">
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            
+            {/* Contact Us Section */}
+            <div className="flex flex-col items-center lg:items-start mb-12 lg:mb-0 text-center">
+                <h3 className="text-slate-100 font-semibold mb-4 pl-10">Contact Us</h3>
+                <ul className="space-y-3">
+                    <li>
+                        <a href="mailto:info@maxnetplus.id" className="text-slate-400 hover:text-teal-400 transition-colors duration-200 flex items-center justify-center lg:justify-start gap-2 no-underline">
                             <FaEnvelope /> info@maxnetplus.id
-                            </a>
-                        </li>
-                        <li>
-                            <a href="tel:+622713406262" className="text-slate-400 hover:text-teal-400 transition-colors duration-200 no-underline flex items-center gap-2">
+                        </a>
+                    </li>
+                    <li>
+                        <a href="tel:+622713406262" className="text-slate-400 hover:text-teal-400 transition-colors duration-200 flex items-center justify-center lg:justify-start gap-2 no-underline">
                             <FaPhone /> +62-271-340-6262
-                            </a>
-                        </li>
-                        </ul>
-                    </div>
-
-                    {/* Map Section */}
-                    <div className="lg:w-1/5 flex flex-col items-center lg:items-end mt-10 lg:mt-0">
-                        <div className="rounded-lg overflow-hidden shadow-md p-1 bg-slate-800 w-full lg:w-auto">
-                        <iframe
-                            title="PT Lingkar Kabel Telekomunikasi Location"
-                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3952.2803077526454!2d110.765559!3d-7.5801076!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e7a15ecaee94319%3A0x59e2a27e5aebb1bf!2sKabel%20Telekom%20-%20PT.%20LINGKAR%20KABEL%20TELEKOMUNIKASI!5e0!3m2!1sen!2sid!4v1696338538232!5m2!1sen!2sid"
-                            width="100%"
-                            height="250"
-                            allowFullScreen=""
-                            loading="lazy"
-                            className="rounded-lg border"
-                        ></iframe>
-                        </div>
-                    </div>
-                    </div>
-
-                    {/* Footer Bottom */}
-                    <div className="mt-10 text-center">
-                    <div className="flex justify-center space-x-4 mb-3">
-                        <a href="#" className="text-teal-500 hover:text-teal-400"><FaFacebook /></a>
-                        <a href="#" className="text-teal-500 hover:text-teal-400"><FaInstagram /></a>
-                        <a href="#" className="text-teal-500 hover:text-teal-400"><FaTwitter /></a>
-                        <a href="#" className="text-teal-500 hover:text-teal-400"><FaGithub /></a>
-                        <a href="#" className="text-teal-500 hover:text-teal-400"><FaDribbble /></a>
-                    </div>
-                    <p className="text-xs text-slate-500">
-                        &copy; 2024 MaxNet. All rights reserved. <a href="#" className="text-teal-500 hover:text-teal-400 no-underline">Terms & Conditions</a> · <a href="#" className="text-teal-500 hover:text-teal-400 no-underline">Privacy Policy</a>
-                    </p>
-                    </div>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            
+            {/* Map Section */}
+            <div className="lg:w-1/5 flex flex-col items-center lg:items-end mt-10 lg:mt-0 text-center">
+                <div className="rounded-lg overflow-hidden shadow-md p-1 bg-slate-800 w-full lg:w-auto">
+                    <iframe
+                        title="PT Lingkar Kabel Telekomunikasi Location"
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3952.2803077526454!2d110.765559!3d-7.5801076!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e7a15ecaee94319%3A0x59e2a27e5aebb1bf!2sKabel%20Telekom%20-%20PT.%20LINGKAR%20KABEL%20TELEKOMUNIKASI!5e0!3m2!1sen!2sid!4v1696338538232!5m2!1sen!2sid"
+                        width="100%"
+                        height="250"
+                        allowFullScreen=""
+                        loading="lazy"
+                        className="rounded-lg border"
+                    ></iframe>
                 </div>
-            </footer>
+            </div>
+        </div>
+
+        {/* Footer Bottom */}
+        <div className="mt-10 text-center">
+            <div className="flex justify-center space-x-4 mb-3">
+                <a href="#" className="text-teal-500 hover:text-teal-400 no-underline"><FaFacebook /></a>
+                <a href="#" className="text-teal-500 hover:text-teal-400 no-underline"><FaInstagram /></a>
+                <a href="#" className="text-teal-500 hover:text-teal-400 no-underline"><FaTwitter /></a>
+                <a href="#" className="text-teal-500 hover:text-teal-400 no-underline"><FaGithub /></a>
+                <a href="#" className="text-teal-500 hover:text-teal-400 no-underline"><FaDribbble /></a>
+            </div>
+            <p className="text-xs text-slate-500">
+                &copy; 2024 MaxNet. All rights reserved. <a href="#" className="text-teal-500 hover:text-teal-400 no-underline">Terms & Conditions</a> · <a href="#" className="text-teal-500 hover:text-teal-400 no-underline">Privacy Policy</a>
+            </p>
+        </div>
+    </div>
+</footer>
+
         </div>
     );
 }
