@@ -38,11 +38,11 @@ class CustomerController extends Controller
             'house_photo' => 'required|file|image|max:2048',
             'service_name' => 'required|exists:services,service_name',
         ]);
-
+    
         // Store the images
         $ktpPhotoPath = $request->file('ktp_photo')->store('ktp_photos', 'public');
         $housePhotoPath = $request->file('house_photo')->store('house_photos', 'public');
-
+    
         // Create a new customer instance
         $customer = Customer::create([
             'name' => $request->name,
@@ -56,15 +56,26 @@ class CustomerController extends Controller
             'house_photo' => $housePhotoPath,
             'service_name' => $request->service_name,
         ]);
-
+    
         // Log activity
         $this->logActivity('created', 'Customer', $customer->name);
-
-        // Send Telegram notification
-        $this->telegramNotificationService->sendMessage("New customer created: <b>{$customer->name}</b> (Email: {$customer->email})");
-
+    
+        // Generate the detail URL for the new customer
+        $customerDetailUrl = "http://127.0.0.1:8000/Admin/customers/{$customer->id}";
+    
+        // Format the Telegram message
+        $telegramMessage = "New Customer Request:\n" .
+                           "<b>Name:</b> {$customer->name}\n" .
+                           "<b>Installation Address:</b> {$customer->installation_address}\n" .
+                           "<b>Location URL:</b> {$customer->location_maps}\n\n" .
+                           "{$customerDetailUrl}";
+    
+        // Send the notification to Telegram
+        $this->telegramNotificationService->sendMessage($telegramMessage);
+    
         return redirect()->route('customers')->with('success', 'Customer created successfully.');
-    }
+    }    
+    
 
     public function destroy(Customer $customer)
     {
