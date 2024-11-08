@@ -24,14 +24,14 @@ export default function Lokasi() {
     totalDistance: '',
     detailedAddress: '',
   });
-  const [isDisabled, setIsDisabled] = useState(true); // State untuk tombol
+  const [isDisabled, setIsDisabled] = useState(true);
 
   const fetchLocations = async () => {
     try {
       const response = await fetch('/api/sites');
       const data = await response.json();
       const processedLocations = data
-        .filter(site => site.site_name.includes("ODP")) // Filter locations containing "ODP"
+        .filter(site => site.site_name.includes("ODP"))
         .map(site => {
           const coordinates = site.site_location_maps.split(',');
           return {
@@ -45,7 +45,7 @@ export default function Lokasi() {
     } catch (error) {
       console.error('Error fetching locations:', error);
     }
-  };  
+  };
 
   const handleSearch = async (event) => {
     const query = event.target.value;
@@ -61,33 +61,27 @@ export default function Lokasi() {
     }
   };
 
-  const getAddressFromCoordinates = async (lat, lon) => {
-    try {
-      const response = await fetch(
-        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`
-      );
-      const data = await response.json();
-      return data.display_name; // Mengembalikan alamat
-    } catch (error) {
-      console.error('Error fetching address:', error);
-      return null;
-    }
-  };
-
   const calculateDistanceAndUpdateMap = async (lat, lon, displayName) => {
     const selectedCoords = [lat, lon];
     map.setView(selectedCoords, 13);
+  
+    // Check if there is an existing marker and circle, and remove them if they exist
     if (marker) {
       map.removeLayer(marker);
     }
-
-    const newMarker = L.marker(selectedCoords).addTo(map).bindPopup(displayName).openPopup();
-    setMarker(newMarker);
     if (polygon) {
       map.removeLayer(polygon);
     }
-
-    const radius = 300;
+  
+    // Create a new draggable marker at the new location
+    const newMarker = L.marker(selectedCoords, { draggable: true })
+      .addTo(map)
+      .bindPopup(displayName)
+      .openPopup();
+    setMarker(newMarker);
+  
+    // Add a circle with a 300m radius around the marker
+    const radius = 300; // Define coverage radius
     const newPolygon = L.circle(selectedCoords, {
       color: 'red',
       fillColor: '#f03',
@@ -95,56 +89,98 @@ export default function Lokasi() {
       radius: radius,
     }).addTo(map);
     setPolygon(newPolygon);
-
+  
+    // Find the nearest location
     let nearestDistance = Infinity;
     let nearestLocation = null;
-
+  
     locations.forEach((location) => {
       if (location.lat && location.lon) {
         const providerLatLng = L.latLng(location.lat, location.lon);
         const selectedLatLng = L.latLng(lat, lon);
         const distanceToProvider = providerLatLng.distanceTo(selectedLatLng);
+  
         if (distanceToProvider < nearestDistance) {
           nearestDistance = distanceToProvider;
           nearestLocation = location;
         }
       }
     });
-
-    if (nearestLocation) {
-      setDistance(nearestDistance);
-      setNearestLocation(nearestLocation);
-
-      setFormData({
-        coordinates: `${lat}, ${lon}`,
-        totalDistance: nearestDistance.toFixed(2),
-        detailedAddress: displayName,
-      });
-
-      const isOutOfReach = nearestDistance > 300;
-      setIsDisabled(isOutOfReach); // Disable tombol jika tidak terjangkau
-      const toastMessage = isOutOfReach
+  
+    // Update formData and nearestLocation based on the new location
+    setFormData({
+      coordinates: `${lat}, ${lon}`,
+      totalDistance: nearestDistance.toFixed(2),
+      detailedAddress: displayName,
+    });
+    setNearestLocation(nearestLocation);
+  
+    // Set isDisabled based on the distance
+    const isOutOfReach = nearestDistance > radius;
+    setIsDisabled(isOutOfReach);
+  
+    // Toast notification based on whether the location is within range
+    const toastMessage = isOutOfReach
       ? `Jarak ke lokasi terdekat: ${nearestDistance.toFixed(2)} meter (Terlalu Jauh!)`
       : `Jarak ke lokasi terdekat: ${nearestDistance.toFixed(2)} meter (Terjangkau!)`;
-    
+  
     const toastStyle = isOutOfReach
       ? { background: 'linear-gradient(45deg, #ff416c, #ff4b2b)' }
       : { background: 'linear-gradient(45deg, #56ab2f, #a8e063)' };
-    
+  
     toast[isOutOfReach ? 'error' : 'success'](toastMessage, {
       style: {
         ...toastStyle,
         color: '#fff',
-        padding: window.innerWidth < 640 ? '8px 10px' : '15px', // Smaller padding for mobile
-        fontSize: window.innerWidth < 640 ? '12px' : '16px', // Smaller font for mobile
-        borderRadius: '8px', // Slightly smaller border radius for mobile
-        boxShadow: '0 0 10px rgba(0, 0, 0, 0.3)', // Adjusted shadow for a more subtle effect
-        maxWidth: window.innerWidth < 640 ? '90%' : 'auto', // Limit width on mobile
-        margin: '0 auto', // Center the toast on the screen
+        padding: window.innerWidth < 640 ? '8px 10px' : '15px',
+        fontSize: window.innerWidth < 640 ? '12px' : '16px',
+        borderRadius: '8px',
+        boxShadow: '0 0 10px rgba(0, 0, 0, 0.3)',
+        maxWidth: window.innerWidth < 640 ? '90%' : 'auto',
+        margin: '0 auto',
       },
-    });      
-  }
-}; 
+    });
+  
+    // Add event listener to handle drag and update marker position
+    newMarker.on("dragend", async (event) => {
+      const newLatLng = event.target.getLatLng();
+      const updatedLat = newLatLng.lat;
+      const updatedLon = newLatLng.lng;
+  
+      // Reverse geocode to get the updated display name for the dragged location
+      const updatedDisplayName = await getAddressFromCoordinates(updatedLat, updatedLon);
+  
+      // Call calculateDistanceAndUpdateMap to update location, marker, and radius circle
+      await calculateDistanceAndUpdateMap(updatedLat, updatedLon, updatedDisplayName || 'Lokasi Tidak Dikenali');
+    });
+    
+    // Add event listener to handle clicks on the map and move marker to clicked location
+    map.on("click", async (e) => {
+      const clickedLat = e.latlng.lat;
+      const clickedLon = e.latlng.lng;
+  
+      // Reverse geocode to get the display name for the clicked location
+      const clickedDisplayName = await getAddressFromCoordinates(clickedLat, clickedLon);
+  
+      // Update the marker and circle to the clicked location
+      await calculateDistanceAndUpdateMap(clickedLat, clickedLon, clickedDisplayName || 'Lokasi Tidak Dikenali');
+    });
+  };
+  
+  // Reverse geocoding function to get the address based on coordinates
+  const getAddressFromCoordinates = async (lat, lon) => {
+    try {
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`
+      );
+      const data = await response.json();
+      return data.display_name;
+    } catch (error) {
+      console.error('Error fetching address:', error);
+      return null;
+    }
+  };  
+   
   const handleSelectLocation = async (lat, lon, displayName) => {
     if (!lat || !lon) {
       toast.error('Koordinat tidak valid');
@@ -159,8 +195,18 @@ export default function Lokasi() {
       navigator.geolocation.getCurrentPosition(
         async (position) => {
           const { latitude, longitude } = position.coords;
-          const address = await getAddressFromCoordinates(latitude, longitude); // Mendapatkan alamat
-          await calculateDistanceAndUpdateMap(latitude, longitude, address || 'Lokasi Saat Ini'); // Gunakan alamat atau default
+          
+          // Validate coordinates before proceeding
+          if (isNaN(latitude) || isNaN(longitude)) {
+            toast.error('Koordinat lokasi saat ini tidak valid.');
+            return;
+          }
+  
+          // Fetch address based on the current coordinates
+          const address = await getAddressFromCoordinates(latitude, longitude);
+  
+          // Call distance calculation and map update function
+          await calculateDistanceAndUpdateMap(latitude, longitude, address || 'Lokasi Saat Ini');
         },
         (error) => {
           toast.error('Gagal mendapatkan lokasi: ' + error.message, {
@@ -178,10 +224,10 @@ export default function Lokasi() {
       toast.error('Geolokasi tidak didukung oleh browser Anda.');
     }
   };
-
+  
   useEffect(() => {
     if (!map) {
-      const initialMap = L.map('map').setView([-7.5801076, 110.765559], 13); // Set view ke koordinat awal
+      const initialMap = L.map('map').setView([-7.5801076, 110.765559], 13);
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
       }).addTo(initialMap);
@@ -194,8 +240,8 @@ export default function Lokasi() {
     e.preventDefault();
     if (distance <= 300 && formData.coordinates) {
       Inertia.visit('/packages', {
-        state: { from: '/locations' } // Pass the state to indicate navigation source
-    }); 
+        state: { from: '/locations' },
+      });
     } else {
       toast.error('Lokasi tidak valid atau jarak terlalu jauh, Anda tidak bisa melanjutkan ke paket layanan.', {
         style: {
@@ -209,11 +255,14 @@ export default function Lokasi() {
     }
   };
 
-  // Function to open Google Maps with the search term
   const openGoogleMaps = () => {
     const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(searchTerm)}`;
     window.open(googleMapsUrl, '_blank');
   };
+
+
+
+
 
   return (
     <AuthenticatedLayout>
@@ -221,13 +270,14 @@ export default function Lokasi() {
         <Title/>
           <div className="min-h-screen bg-gray-100 text-gray-800 px-4 sm:px-6 lg:px-8">
             <div className="container mx-auto py-8 md:py-12 text-center">
-              <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 md:mb-6 animate-pulse">
-                Cek Apakah Lokasi Anda Termasuk Dalam Jangkauan Kami
-              </h1>
-              <p className="text-base md:text-lg mb-6 md:mb-8">
-                Masukkan Alamat Pemasangan Anda (Disarankan menggunakan Titik Koordinat Atau URL Lokasi Anda)
-              </p>
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold mb-4 md:mb-6 text-gray-800 relative">
+              <span className="relative z-10">Cek Apakah Lokasi Anda Termasuk Dalam Jangkauan Kami</span>
+              <span className="absolute inset-0 bg-gradient-to-r from-indigo-500 to-purple-500 opacity-20 blur-lg"></span>
+            </h1>
 
+            <p className="text-base md:text-lg mb-6 md:mb-8 text-gray-700 hover:text-gray-900 transition duration-300 transform hover:scale-105">
+              Masukkan Alamat Pemasangan Anda (Disarankan menggunakan Titik Koordinat Atau URL Lokasi Anda)
+            </p>
               <div className="relative mb-4 md:mb-6 max-w-sm md:max-w-lg mx-auto">
                 <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-xl">
                   <FaSearch />
@@ -264,46 +314,45 @@ export default function Lokasi() {
                 </button>
               </div>
 
-              <div id="map" className="w-full h-48 sm:h-64 rounded-lg shadow-lg mb-4 sm:mb-6 z-10 relative"></div>
+              <div id="map" className="w-full h-64 sm:h-80 md:h-96 rounded-lg shadow-lg mb-4 sm:mb-6 z-10 relative"></div>
 
               {nearestLocation && (
-                <div className="bg-white p-4 sm:p-6 rounded-lg shadow-lg mb-4 sm:mb-6">
-                  <h3 className="text-xl sm:text-2xl font-bold mb-2 text-center">
-                    <FaMapMarkerAlt className="inline mr-2 text-blue-600" />
+                <div className="bg-white p-3 sm:p-6 rounded-lg shadow-lg mb-4 sm:mb-6 text-center">
+                  <h3 className="text-lg sm:text-xl font-bold mb-2 flex items-center justify-center">
+                    <FaMapMarkerAlt className="text-blue-600 mr-2" />
                     Detail Lokasi:
                   </h3>
-                  <p className="mb-1 text-center">
-                    <strong>Alamat:</strong> {nearestLocation.site_address}
+                  <p className="text-sm sm:text-base mb-1">
+                    <strong>Alamat:</strong> {formData.detailedAddress || nearestLocation.site_address}
                   </p>
-                  <p className="mb-1 text-center">
+                  <p className="text-sm sm:text-base mb-1">
                     <strong>Koordinat:</strong> {formData.coordinates}
                   </p>
-                  <p className="mb-1 text-center">
+                  <p className="text-sm sm:text-base mb-1">
                     <strong>Total Jarak:</strong> {formData.totalDistance} meter
                   </p>
-                  <p className="flex items-center justify-center mb-2">
+                  <p className="flex items-center justify-center mb-2 text-sm sm:text-base">
                     <strong>Keterangan:</strong>
                     {isDisabled ? (
-                      <span className="text-red-600 ml-2">
-                        <FaTimesCircle className="inline mr-1" />
+                      <span className="text-red-600 ml-2 flex items-center">
+                        <FaTimesCircle className="mr-1" />
                         Alamat tidak dapat dijangkau.
                       </span>
                     ) : (
-                      <span className="text-green-600 ml-2">
-                        <FaCheckCircle className="inline mr-1" />
+                      <span className="text-green-600 ml-2 flex items-center">
+                        <FaCheckCircle className="mr-1" />
                         Alamat dapat dijangkau.
                       </span>
                     )}
                   </p>
                   {isDisabled && (
-                    <p className="mt-2 text-center">
+                    <p className="mt-2 text-sm sm:text-base">
                       Silakan hubungi kami untuk informasi lebih lanjut.
                       <a href="/contact" className="ml-2 text-blue-500 underline font-semibold">Hubungi Kami</a>
                     </p>
                   )}
-                </div>
+                </div>            
               )}
-
               <form onSubmit={handleSubmit} className="flex justify-center">
                 <button
                   type="submit"
