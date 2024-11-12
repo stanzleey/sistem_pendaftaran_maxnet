@@ -14,9 +14,7 @@ export default function Lokasi() {
   const [searchTerm, setSearchTerm] = useState('');
   const [searchResults, setSearchResults] = useState([]);
   const [map, setMap] = useState(null);
-  const [marker, setMarker] = useState(null);
   const [locations, setLocations] = useState([]);
-  const [polygon, setPolygon] = useState(null);
   const [nearestLocation, setNearestLocation] = useState(null);
   const [formData, setFormData] = useState({
     coordinates: '',
@@ -60,124 +58,6 @@ export default function Lokasi() {
     }
   };
 
-// Variabel untuk menyimpan marker dan polygon aktif
-let activeMarker = null;
-let activePolygon = null;
-
-const calculateDistanceAndUpdateMap = async (lat, lon, displayName) => {
-  const selectedCoords = [lat, lon];
-
-  // Set view peta ke lokasi yang baru
-  map.setView(selectedCoords, 13);
-
-  // Periksa apakah marker sudah ada
-  if (activeMarker) {
-    // Jika marker sudah ada, cukup perbarui lokasinya
-    activeMarker.setLatLng(selectedCoords);
-    activeMarker.setPopupContent(displayName).openPopup();
-  } else {
-    // Jika marker belum ada, buat yang baru
-    activeMarker = L.marker(selectedCoords, { draggable: true })
-      .addTo(map)
-      .bindPopup(displayName)
-      .openPopup();
-
-    // Tambahkan event listener untuk dragend pada marker
-    activeMarker.on("dragend", async (event) => {
-      const newLatLng = event.target.getLatLng();
-      const updatedLat = newLatLng.lat;
-      const updatedLon = newLatLng.lng;
-
-      // Reverse geocode untuk mendapatkan nama lokasi terbaru
-      const updatedDisplayName = await getAddressFromCoordinates(updatedLat, updatedLon);
-
-      // Panggil fungsi ini lagi dengan lokasi terbaru
-      await calculateDistanceAndUpdateMap(updatedLat, updatedLon, updatedDisplayName || 'Lokasi Tidak Dikenali');
-    });
-  }
-
-  // Periksa apakah polygon sudah ada
-  if (activePolygon) {
-    // Jika polygon sudah ada, perbarui posisinya
-    activePolygon.setLatLng(selectedCoords);
-  } else {
-    // Jika polygon belum ada, buat polygon baru
-    const radius = 300;
-    activePolygon = L.circle(selectedCoords, {
-      color: 'red',
-      fillColor: '#f03',
-      fillOpacity: 0.5,
-      radius: radius,
-    }).addTo(map);
-  }
-
-  // Logika untuk menghitung jarak ke lokasi terdekat
-  let nearestDistance = Infinity;
-  let nearestLocation = null;
-
-  locations.forEach((location) => {
-    if (location.lat && location.lon) {
-      const providerLatLng = L.latLng(location.lat, location.lon);
-      const selectedLatLng = L.latLng(lat, lon);
-      const distanceToProvider = providerLatLng.distanceTo(selectedLatLng);
-
-      if (distanceToProvider < nearestDistance) {
-        nearestDistance = distanceToProvider;
-        nearestLocation = location;
-      }
-    }
-  });
-
-  // Perbarui formData dan nearestLocation berdasarkan lokasi baru
-  setFormData({
-    coordinates: `${lat}, ${lon}`,
-    totalDistance: nearestDistance.toFixed(2),
-    detailedAddress: displayName,
-  });
-  setNearestLocation(nearestLocation);
-
-  // Set isDisabled berdasarkan jarak
-  const isOutOfReach = nearestDistance > 300; // Radius 300m
-  setIsDisabled(isOutOfReach);
-
-  // Tampilkan notifikasi toast berdasarkan jangkauan lokasi
-  const toastMessage = isOutOfReach
-    ? `Jarak ke lokasi terdekat: ${nearestDistance.toFixed(2)} meter (Terlalu Jauh!)`
-    : `Jarak ke lokasi terdekat: ${nearestDistance.toFixed(2)} meter (Terjangkau!)`;
-
-  const toastStyle = isOutOfReach
-    ? { background: 'linear-gradient(45deg, #ff416c, #ff4b2b)' }
-    : { background: 'linear-gradient(45deg, #56ab2f, #a8e063)' };
-
-  toast[isOutOfReach ? 'error' : 'success'](toastMessage, {
-    style: {
-      ...toastStyle,
-      color: '#fff',
-      padding: window.innerWidth < 640 ? '8px 10px' : '15px',
-      fontSize: window.innerWidth < 640 ? '12px' : '16px',
-      borderRadius: '8px',
-      boxShadow: '0 0 10px rgba(0, 0, 0, 0.3)',
-      maxWidth: window.innerWidth < 640 ? '90%' : 'auto',
-      margin: '0 auto',
-    },
-  });
-
-  // Pastikan hanya ada satu event listener pada map
-  map.off("click");  // Hapus event listener click lama
-  map.on("click", async (e) => {
-    const clickedLat = e.latlng.lat;
-    const clickedLon = e.latlng.lng;
-
-    // Reverse geocode untuk mendapatkan nama lokasi yang diklik
-    const clickedDisplayName = await getAddressFromCoordinates(clickedLat, clickedLon);
-
-    // Panggil fungsi ini lagi dengan lokasi yang diklik
-    await calculateDistanceAndUpdateMap(clickedLat, clickedLon, clickedDisplayName || 'Lokasi Tidak Dikenali');
-  });
-};
-
-
-  
   const getAddressFromCoordinates = async (lat, lon) => {
     try {
       const response = await fetch(
@@ -191,12 +71,88 @@ const calculateDistanceAndUpdateMap = async (lat, lon, displayName) => {
     }
   };
 
+  const clearExistingLayers = () => {
+    // Remove any existing markers and polygons
+    map.eachLayer((layer) => {
+      if (layer instanceof L.Marker || layer instanceof L.Circle) {
+        map.removeLayer(layer);
+      }
+    });
+  };
+
+  const updateMapLocation = async (lat, lon, displayName) => {
+    const selectedCoords = [lat, lon];
+
+    // Clear any existing marker and polygon layers
+    clearExistingLayers();
+
+    // Create new marker
+    const newMarker = L.marker(selectedCoords, { draggable: true })
+      .addTo(map)
+      .bindPopup(displayName)
+      .openPopup();
+
+    // Add dragend event to update location on drag
+    newMarker.on("dragend", async (event) => {
+      const newLatLng = event.target.getLatLng();
+      const updatedLat = newLatLng.lat;
+      const updatedLon = newLatLng.lng;
+      const updatedDisplayName = await getAddressFromCoordinates(updatedLat, updatedLon);
+      await updateMapLocation(updatedLat, updatedLon, updatedDisplayName || 'Lokasi Tidak Dikenali');
+    });
+
+    // Create new polygon
+    L.circle(selectedCoords, {
+      color: 'red',
+      fillColor: '#f03',
+      fillOpacity: 0.5,
+      radius: 300,
+    }).addTo(map);
+
+    // Calculate nearest location
+    let nearestDistance = Infinity;
+    let nearestLoc = null;
+
+    locations.forEach((location) => {
+      const locationLatLng = L.latLng(location.lat, location.lon);
+      const selectedLatLng = L.latLng(lat, lon);
+      const distance = locationLatLng.distanceTo(selectedLatLng);
+      if (distance < nearestDistance) {
+        nearestDistance = distance;
+        nearestLoc = location;
+      }
+    });
+
+    setFormData({
+      coordinates: `${lat}, ${lon}`,
+      totalDistance: nearestDistance.toFixed(2),
+      detailedAddress: displayName,
+    });
+    setNearestLocation(nearestLoc);
+
+    // Show toast notification based on distance
+    const isOutOfReach = nearestDistance > 300;
+    setIsDisabled(isOutOfReach);
+    toast[isOutOfReach ? 'error' : 'success'](
+      `Jarak ke lokasi terdekat: ${nearestDistance.toFixed(2)} meter (${isOutOfReach ? 'Terlalu Jauh!' : 'Terjangkau!'})`,
+      {
+        style: {
+          background: isOutOfReach ? 'linear-gradient(45deg, #ff416c, #ff4b2b)' : 'linear-gradient(45deg, #56ab2f, #a8e063)',
+          color: '#fff',
+          padding: '15px',
+          borderRadius: '10px',
+          boxShadow: '0 0 10px rgba(0, 0, 0, 0.3)',
+        },
+      }
+    );
+  };
+
   const handleSelectLocation = async (lat, lon, displayName) => {
     if (!lat || !lon) {
       toast.error('Koordinat tidak valid');
       return;
     }
-    await calculateDistanceAndUpdateMap(lat, lon, displayName);
+    await updateMapLocation(lat, lon, displayName);
     setSearchResults([]);
   };
 
@@ -205,14 +161,12 @@ const calculateDistanceAndUpdateMap = async (lat, lon, displayName) => {
       navigator.geolocation.getCurrentPosition(
         async (position) => {
           const { latitude, longitude } = position.coords;
-
           if (isNaN(latitude) || isNaN(longitude)) {
             toast.error('Koordinat lokasi saat ini tidak valid.');
             return;
           }
-
           const address = await getAddressFromCoordinates(latitude, longitude);
-          await calculateDistanceAndUpdateMap(latitude, longitude, address || 'Lokasi Saat Ini');
+          await updateMapLocation(latitude, longitude, address || 'Lokasi Saat Ini');
         },
         (error) => {
           toast.error('Gagal mendapatkan lokasi: ' + error.message, {
@@ -239,6 +193,13 @@ const calculateDistanceAndUpdateMap = async (lat, lon, displayName) => {
       }).addTo(initialMap);
       setMap(initialMap);
       fetchLocations();
+
+      initialMap.on("click", async (e) => {
+        const clickedLat = e.latlng.lat;
+        const clickedLon = e.latlng.lng;
+        const clickedDisplayName = await getAddressFromCoordinates(clickedLat, clickedLon);
+        await updateMapLocation(clickedLat, clickedLon, clickedDisplayName || 'Lokasi Tidak Dikenali');
+      });
     }
   }, [map]);
 
@@ -260,17 +221,6 @@ const calculateDistanceAndUpdateMap = async (lat, lon, displayName) => {
       });
     }
   };
-
-  const openGoogleMaps = () => {
-    try {
-      const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(searchTerm)}`;
-      window.open(googleMapsUrl, '_blank');
-    } catch (error) {
-      console.error('Failed to open Google Maps:', error);
-      alert('Could not open Google Maps. Please check if it’s blocked by an extension.');
-    }
-  };
-
   return (
     <AuthenticatedLayout>
       <AppLayout>
@@ -283,7 +233,7 @@ const calculateDistanceAndUpdateMap = async (lat, lon, displayName) => {
             </h1>
 
             <p className="text-base md:text-lg mb-6 md:mb-8 text-gray-700 hover:text-gray-900">
-              Masukkan Alamat Pemasangan Anda (Disarankan menggunakan Titik Koordinat Atau URL Lokasi Anda)
+              Masukkan Alamat Pemasangan Anda (Disarankan menggunakan Titik Koordinat Lokasi Anda)
             </p>
               <div className="relative mb-4 md:mb-6 max-w-sm md:max-w-lg mx-auto">
                 <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-xl">
