@@ -5,8 +5,9 @@
         "build": "vite build"
     },
     "devDependencies": {
+        "@esbuild-plugins/node-globals-polyfill": "^0.2.3",
         "@headlessui/react": "^1.4.2",
-        "@inertiajs/react": "^1.0.0",
+        "@inertiajs/react": "^1.2.0",
         "@tailwindcss/forms": "^0.5.3",
         "@vitejs/plugin-react": "^4.2.0",
         "autoprefixer": "^10.4.12",
@@ -24,9 +25,12 @@
         "@fortawesome/react-fontawesome": "^0.2.2",
         "@heroicons/react": "^2.1.5",
         "@inertiajs/inertia": "^0.11.1",
-        "@inertiajs/react": "^1.2.0",
         "aos": "^2.3.4",
         "bootstrap": "^5.3.3",
+        "dompurify": "^3.2.0",
+        "draft-js": "^0.11.7",
+        "font-awesome": "^4.7.0",
+        "html-react-parser": "^5.1.18",
         "leaflet": "^1.9.4",
         "leaflet-routing-machine": "^3.2.12",
         "react-helmet": "^6.1.0",
@@ -36,7 +40,9 @@
         "react-paginate": "^8.2.0",
         "react-router-dom": "^6.26.2",
         "react-toastify": "^10.0.5",
+        "react-trix": "^0.10.2",
         "sweetalert2": "^11.14.3",
-        "swiper": "^11.1.14"
+        "swiper": "^11.1.14",
+        "trix": "^2.1.8"
     }
 }

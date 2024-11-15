@@ -11,6 +11,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\PrivacyPolicyController;
 use App\Models\Service;
 use App\Http\Controllers\Auth;
 
@@ -48,6 +49,17 @@ Route::get('/contact', function () {
     ]);
 })->name('contact');
 
+Route::get('/privacy-policy', function () {
+    // $privacyPolicies = PrivacyPolicy::all(); // Fetch all policies
+    return Inertia::render('PrivacyPolicy/PrivacyPolicy', [
+    ]);
+})->name('privacy-policy');
+
+Route::get('/api/privacy-policy', function () {
+    $privacyPolicies = PrivacyPolicy::all(); // Fetch all policies
+    return response()->json($privacyPolicies);
+});
+
 // API route for fetching visible services
 Route::get('/api/services', function () {
     return Service::select('service_name', 'service_speed', 'service_price')
@@ -59,8 +71,18 @@ Route::get('/api/site-id', [SiteController::class, 'getLatestSiteId']);
 
 Route::post('/admin/customers', [CustomerController::class, 'store']);
 Route::post('/messages', [MessageController::class, 'store']);
+// Route::get('privacy-policy', [PrivacyPolicyController::class, 'show']);
+Route::post('/privacy-policy', [PrivacyPolicyController::class, 'store']);
+Route::get('/admin/privacy-policy', [PrivacyPolicyController::class, 'index'])->name('privacy-policy.index');
+Route::get('/privacy-policy/content', [PrivacyPolicyController::class, 'getContent']);
+// Route::get('/privacy-policy/{id}/edit', [PrivacyPolicyController::class, 'edit'])->name('privacy-policy.edit');
+// Route::get('/privacy-policy/{id}/edit', [PrivacyPolicyController::class, 'edit'])->name('privacy-policy.edit');
+Route::put('/privacy-policy/{id}', [PrivacyPolicyController::class, 'update'])->name('privacy-policy.update');
+Route::delete('/privacy-policy/{id}', [PrivacyPolicyController::class, 'destroy'])->name('privacy-policy.destroy');
 
 
+
+// Route::get('/privacy-policy', [PrivacyPolicyController::class, 'index']);
 // Authenticated routes
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
@@ -76,6 +98,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::resource('customers', CustomerController::class)->only(['index', 'destroy','show', 'store']);
         Route::resource('messages', MessageController::class);
         Route::resource('users', UserController::class)->only(['index', 'edit', 'update', 'destroy','create','store']);
+        Route::resource('privacy-policy', PrivacyPolicyController::class);
     });
 
     // Logout route

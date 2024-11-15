@@ -7,7 +7,8 @@ import {
     FaEnvelope,
     FaUserCheck,
     FaBars,
-    FaTimes
+    FaTimes,
+    FaShieldAlt  // Import an icon for Privacy Policy
 } from 'react-icons/fa';
 import { useState } from 'react';
 
@@ -32,13 +33,14 @@ export default function Sidebar() {
                 </div>
                 <nav className="mt-8">
                     <ul>
-                        {[
+                        {[ 
                             { href: "/dashboard", icon: <FaTachometerAlt />, label: "Dashboard" },
                             { href: "/Admin/services", icon: <FaSignal />, label: "Services" },
                             { href: "/Admin/sites", icon: <FaMapMarkedAlt />, label: "Sites" },
                             { href: "/Admin/customers", icon: <FaUsers />, label: "Customers" },
                             { href: "/Admin/messages", icon: <FaEnvelope />, label: "Messages" },
-                            { href: "/Admin/users", icon: <FaUserCheck />, label: "Users" }
+                            { href: "/Admin/users", icon: <FaUserCheck />, label: "Users" },
+                            { href: "/Admin/privacy-policy", icon: <FaShieldAlt />, label: "Privacy Policy" }  // Added Privacy Policy
                         ].map(({ href, icon, label }) => (
                             <li key={href}>
                                 <Link 

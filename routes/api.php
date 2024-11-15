@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 // use App\Http\Controllers\LocationController;
 use App\Http\Controllers\SiteController;
 use App\Http\Controllers\ServicesController;
+use App\Http\Controllers\PrivacyPolicyController;
 // use App\Http\Controllers\CustomerController;
 // use App\Http\Controllers\MessageController;
 /*
@@ -27,6 +28,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::get('/sites', [SiteController::class, 'getSites']);
 Route::get('/services', [ServicesController::class, 'showServices']);
 Route::get('/api/site-id', [SiteController::class, 'getLatestSiteId']);
+Route::get('/privacy-policy', [PrivacyPolicyController::class, 'getContent']);
 
 // Route::post('/messages', [MessageController::class, 'store']);
 // Route::post('/register-package', [CustomerController::class, 'store']);
