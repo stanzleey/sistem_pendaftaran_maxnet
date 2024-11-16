@@ -3,18 +3,18 @@ import axios from "axios";
 import { Inertia } from "@inertiajs/inertia";
 import AppLayout from "@/Layouts/AppLayout";
 
-const PrivacyPolicy = () => {
-    const [privacyPolicy, setPrivacyPolicy] = useState("");
+const TermsAndConditions = () => {
+    const [termsAndConditions, setTermsAndConditions] = useState("");
     const [error, setError] = useState(null); // Define the error state
 
     useEffect(() => {
-        // Fetch the privacy policy content from the API
-        axios.get('/privacy-policy/content')
+        // Fetch the terms and conditions content from the API
+        axios.get('/terms-and-conditions/content')
             .then(response => {
-                setPrivacyPolicy(response.data.content || 'Privacy policy not available.');
+                setTermsAndConditions(response.data.content || 'Terms and conditions not available.');
             })
             .catch(() => {
-                setError('Privacy policy not available.');
+                setError('Terms and conditions not available.');
             });
     }, []);
 
@@ -27,19 +27,19 @@ const PrivacyPolicy = () => {
             <div className="min-h-screen bg-gradient-to-b from-white to-gray-50 text-gray-800">
                 <div className="max-w-4xl mx-auto py-12 px-6 md:px-10">
                     <h1 className="text-5xl font-bold mb-6 text-center text-gray-800">
-                        Kebijakan Privasi
+                        Syarat & Ketentuan
                     </h1>
 
                     <div className="prose prose-lg mx-auto bg-white shadow-md rounded-lg p-6 md:p-10">
                         {error ? (
                             <p className="text-red-600 font-semibold">{error}</p>
-                        ) : privacyPolicy ? (
+                        ) : termsAndConditions ? (
                             <div
-                                dangerouslySetInnerHTML={{ __html: privacyPolicy }}
+                                dangerouslySetInnerHTML={{ __html: termsAndConditions }}
                             />
                         ) : (
                             <p className="animate-pulse text-gray-500">
-                                Loading privacy policy...
+                                Loading terms and conditions...
                             </p>
                         )}
                     </div>
@@ -49,4 +49,4 @@ const PrivacyPolicy = () => {
     );
 };
 
-export default PrivacyPolicy;
+export default TermsAndConditions;

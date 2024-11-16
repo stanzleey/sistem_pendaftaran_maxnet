@@ -12,6 +12,7 @@ use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PrivacyPolicyController;
+use App\Http\Controllers\TermsAndConditionsController;
 use App\Models\Service;
 use App\Http\Controllers\Auth;
 
@@ -60,6 +61,12 @@ Route::get('/api/privacy-policy', function () {
     return response()->json($privacyPolicies);
 });
 
+Route::get('/terms-and-conditions', function () {
+    // $privacyPolicies = PrivacyPolicy::all(); // Fetch all policies
+    return Inertia::render('TermsConditions/TermsConditions', [
+    ]);
+})->name('terms-and-conditions');
+
 // API route for fetching visible services
 Route::get('/api/services', function () {
     return Service::select('service_name', 'service_speed', 'service_price')
@@ -71,27 +78,25 @@ Route::get('/api/site-id', [SiteController::class, 'getLatestSiteId']);
 
 Route::post('/admin/customers', [CustomerController::class, 'store']);
 Route::post('/messages', [MessageController::class, 'store']);
-// Route::get('privacy-policy', [PrivacyPolicyController::class, 'show']);
+
 Route::post('/privacy-policy', [PrivacyPolicyController::class, 'store']);
 Route::get('/admin/privacy-policy', [PrivacyPolicyController::class, 'index'])->name('privacy-policy.index');
 Route::get('/privacy-policy/content', [PrivacyPolicyController::class, 'getContent']);
-// Route::get('/privacy-policy/{id}/edit', [PrivacyPolicyController::class, 'edit'])->name('privacy-policy.edit');
-// Route::get('/privacy-policy/{id}/edit', [PrivacyPolicyController::class, 'edit'])->name('privacy-policy.edit');
 Route::put('/privacy-policy/{id}', [PrivacyPolicyController::class, 'update'])->name('privacy-policy.update');
 Route::delete('/privacy-policy/{id}', [PrivacyPolicyController::class, 'destroy'])->name('privacy-policy.destroy');
 
+Route::post('/terms-and-conditions', [TermsAndConditionsController::class, 'store']);
+// Route::get('/Admin/terms-and-conditions', [TermsAndConditionsController::class, 'index'])->name('terms-and-conditions.index');
+Route::get('/terms-and-conditions/content', [TermsAndConditionsController::class, 'getContent']);
+Route::put('/terms-and-conditions/{id}', [TermsAndConditionsController::class, 'update'])->name('terms-and-conditions.update');
+Route::delete('/terms-and-conditions/{id}', [TermsAndConditionsController::class, 'destroy'])->name('terms-and-conditions.destroy');
 
-
-// Route::get('/privacy-policy', [PrivacyPolicyController::class, 'index']);
-// Authenticated routes
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-  
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    // Admin routes with prefix
     Route::prefix('Admin')->group(function () {
         Route::resource('services', ServicesController::class);
         Route::resource('sites', SiteController::class);
@@ -99,16 +104,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::resource('messages', MessageController::class);
         Route::resource('users', UserController::class)->only(['index', 'edit', 'update', 'destroy','create','store']);
         Route::resource('privacy-policy', PrivacyPolicyController::class);
+        Route::resource('terms-and-conditions', TermsAndConditionsController::class);
     });
 
-    // Logout route
+ 
     Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 });
 
-// Catch-all for undefined routes (Fallback)
-// Route::fallback(function () {
-//     return Inertia::render('Errors/404');
-// })->name('fallback');
 
-// Authentication routes
 require __DIR__.'/auth.php';

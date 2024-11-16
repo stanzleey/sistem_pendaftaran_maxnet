@@ -8,7 +8,8 @@ import {
     FaUserCheck,
     FaBars,
     FaTimes,
-    FaShieldAlt  // Import an icon for Privacy Policy
+    FaShieldAlt,
+    FaGavel
 } from 'react-icons/fa';
 import { useState } from 'react';
 
@@ -40,7 +41,8 @@ export default function Sidebar() {
                             { href: "/Admin/customers", icon: <FaUsers />, label: "Customers" },
                             { href: "/Admin/messages", icon: <FaEnvelope />, label: "Messages" },
                             { href: "/Admin/users", icon: <FaUserCheck />, label: "Users" },
-                            { href: "/Admin/privacy-policy", icon: <FaShieldAlt />, label: "Privacy Policy" }  // Added Privacy Policy
+                            { href: "/Admin/privacy-policy", icon: <FaShieldAlt />, label: "Privacy Policy" }, 
+                            { href: "/Admin/terms-and-conditions", icon: <FaGavel />, label: "Terms and Conditions" }
                         ].map(({ href, icon, label }) => (
                             <li key={href}>
                                 <Link 
