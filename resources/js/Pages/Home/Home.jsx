@@ -34,12 +34,11 @@ export default function Home() {
                 <div className="relative mx-auto max-w-screen-xl px-4 py-24 sm:py-32 lg:py-32 lg:flex lg:h-screen lg:items-center">
                     <div className="mx-auto max-w-3xl text-center">
                         {/* Title */}
-                        <h1 className="bg-gradient-to-r from-indigo-500 via-purple-600 to-pink-500 bg-clip-text text-3xl font-extrabold text-white sm:text-5xl lg:text-6xl font-archivo animate-slide-in leading-tight">
+                        <h1 className="bg-gradient-to-r from-indigo-500 via-purple-600 to-pink-500 bg-clip-text text-4xl font-extrabold text-white sm:text-6xl lg:text-7xl font-archivo animate-slide-in leading-tight">
                             Internet Cepat
                         </h1>
-                        <h2 className="bg-gradient-to-r from-indigo-500 via-purple-600 to-pink-500 bg-clip-text text-3xl font-extrabold text-white sm:text-5xl lg:text-6xl font-archivo animate-slide-in leading-tight">
+                        <h2 className="bg-gradient-to-r from-indigo-500 via-purple-600 to-pink-500 bg-clip-text text-4xl font-extrabold text-white sm:text-6xl lg:text-7xl font-archivo animate-slide-in leading-tight">
                             Anti Lemot
-                            
                         </h2>
                         {/* Subtitle */}
                         <p className="mx-auto mt-4 max-w-md sm:max-w-xl text-base sm:text-lg lg:text-xl text-gray-300 font-archivo animate-fade-in">
