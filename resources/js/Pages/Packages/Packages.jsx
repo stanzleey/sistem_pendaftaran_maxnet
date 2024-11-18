@@ -37,10 +37,21 @@ const Packages = () => {
         fetchServices();
     }, []);
 
+    // Get the coordinates from the query params (passed from LocationPage)
+    const [locationMaps, setLocationMaps] = useState('');
+    useEffect(() => {
+        const params = new URLSearchParams(window.location.search);
+        const location = params.get('location_maps');
+        if (location) {
+            setLocationMaps(location); // Set coordinates from URL
+        }
+    }, []);
+
     // Handle selecting a package
     const handleSelectPackage = (service) => {
         setSelectedPackage(service);
-        Inertia.visit(`/customers?package=${service.service_name}`);
+        // Redirect to the Customers page with the package and coordinates in query params
+        Inertia.visit(`/customers?package=${service.service_name}&location_maps=${encodeURIComponent(locationMaps)}`);
     };
 
     // Handle page change
@@ -126,7 +137,7 @@ const Packages = () => {
                     onPageChange={handlePageChange}
                     containerClassName={'flex justify-center mt-8 sm:mt-12 space-x-2'}
                     activeClassName={'bg-purple-700 text-white font-bold shadow-lg'}
-                    pageClassName={
+                    pageClassName={ 
                         'py-2 px-3 bg-white text-gray-900 rounded-lg shadow-md hover:bg-gray-100 transition duration-200'
                     }
                     previousLinkClassName={
@@ -143,4 +154,5 @@ const Packages = () => {
         </AppLayout>
     );
 };
+
 export default Packages;

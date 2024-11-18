@@ -22,9 +22,14 @@ const Customers = () => {
     useEffect(() => {
         const params = new URLSearchParams(window.location.search);
         const selectedPackage = params.get('package');
-        
+        const selectedLocation = params.get('location_maps');
+
         if (selectedPackage) {
             setData('service_name', selectedPackage);
+        }
+
+        if (selectedLocation) {
+            setData('location_maps', selectedLocation);  // Set coordinates in the form
         }
     }, []);
 
@@ -221,7 +226,18 @@ const Customers = () => {
                         </form>
                     </div>
                 </div>
-                <ToastContainer transition={Slide} />
+                 <ToastContainer
+                    position="top-center"
+                    autoClose={5000}
+                    transition={Slide}
+                    hideProgressBar={false}
+                    newestOnTop={false}
+                    closeOnClick
+                    rtl={false}
+                    pauseOnFocusLoss
+                    draggable
+                    pauseOnHover
+                    />
             </div>
         </AppLayout>
     );
