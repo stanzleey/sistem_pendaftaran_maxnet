@@ -35,10 +35,10 @@ export default function Home() {
                     <div className="mx-auto max-w-3xl text-center">
                         {/* Title */}
                         <h1 className="bg-gradient-to-r from-indigo-500 via-purple-600 to-pink-500 bg-clip-text text-3xl font-extrabold text-white sm:text-5xl lg:text-6xl font-archivo animate-slide-in leading-tight">
-                            Koneksi Internet Tanpa Batas 
+                            Internet Cepat
                         </h1>
                         <h2 className="bg-gradient-to-r from-indigo-500 via-purple-600 to-pink-500 bg-clip-text text-3xl font-extrabold text-white sm:text-5xl lg:text-6xl font-archivo animate-slide-in leading-tight">
-                            Kecepatan dan Stabilitas untuk Setiap Kebutuhan
+                            Anti Lemot
                             
                         </h2>
                         {/* Subtitle */}

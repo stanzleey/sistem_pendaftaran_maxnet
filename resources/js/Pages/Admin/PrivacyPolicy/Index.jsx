@@ -4,7 +4,6 @@ import { Inertia } from "@inertiajs/inertia";
 import Sidebar from "@/Components/Sidebar";
 import { Head } from "@inertiajs/react";
 
-
 const IndexPage = ({ privacyPolicies, flash }) => {
     const [policies, setPolicies] = useState(privacyPolicies);
 
@@ -31,20 +30,20 @@ const IndexPage = ({ privacyPolicies, flash }) => {
     };
 
     return (
-        <div className="flex min-h-screen bg-gray-100">
+        <div className="flex min-h-screen bg-white-100 items-center justify-start ml-40">
             <Sidebar />
-            <div className="flex-1 p-8 bg-white shadow-xl rounded-lg mx-auto">
+            <div className="p-8 mx-auto w-full max-w-6xl rounded-lg">
                 <Head title="Privacy Policies" />
 
-                <div className="max-w-5xl mx-auto">
+                <div className="max-w-4xl mx-auto w-full">
                     {/* Title */}
-                    <div className="mb-6 flex items-center justify-between">
+                    <div className="mb-6 flex items-center justify-between flex-wrap">
                         <h1 className="text-3xl font-bold text-gray-900">
                             Privacy Policies
                         </h1>
                         <Link
                             href="/Admin/privacy-policy/create"
-                            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-300"
+                            className="mt-4 sm:mt-0 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-300"
                         >
                             Create New Policy
                         </Link>

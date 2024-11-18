@@ -30,7 +30,7 @@ const TermsIndexPage = ({ termsAndConditions, flash }) => {
     };
 
     return (
-        <div className="flex min-h-screen bg-gray-100">
+        <div className="flex min-h-screen bg-white-100 items-center justify-start ml-60">
             <Sidebar />
             <div className="flex-1 p-8 bg-white shadow-xl rounded-lg mx-auto">
                 <Head title="Terms and Conditions" />
@@ -39,7 +39,7 @@ const TermsIndexPage = ({ termsAndConditions, flash }) => {
                     {/* Title */}
                     <div className="mb-6 flex items-center justify-between">
                         <h1 className="text-3xl font-bold text-gray-900">
-                            Terms and Conditions
+                            Syarat & Ketentuan
                         </h1>
                         <Link
                             href="/Admin/terms-and-conditions/create"
