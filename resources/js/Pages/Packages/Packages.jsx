@@ -29,6 +29,7 @@ const Packages = () => {
         const fetchServices = async () => {
             try {
                 const response = await axios.get('http://127.0.0.1:8000/api/services');
+                console.log('Fetched Services:', response.data); // Debugging log
                 setServices(response.data);
             } catch (error) {
                 console.error('Error fetching services:', error);
@@ -36,23 +37,39 @@ const Packages = () => {
         };
         fetchServices();
     }, []);
-
+    
     // Get the coordinates from the query params (passed from LocationPage)
     const [locationMaps, setLocationMaps] = useState('');
     useEffect(() => {
         const params = new URLSearchParams(window.location.search);
         const location = params.get('location_maps');
+        console.log('Initial Location Maps:', location); // Debugging log
         if (location) {
             setLocationMaps(location); // Set coordinates from URL
         }
-    }, []);
+    }, []);    
+
+    //  useEffect(() => {
+    //     if (selectedPackage) {
+    //         console.log("Selected Package: ", selectedPackage);
+    //         // Redirect to the Customers page with the package and coordinates in query params
+    //         Inertia.visit(`/customers?package=${selectedPackage.service_name}&location_maps=${encodeURIComponent(locationMaps)}`);
+    //     }
+    // }, [selectedPackage]); 
 
     // Handle selecting a package
     const handleSelectPackage = (service) => {
-        setSelectedPackage(service);
-        // Redirect to the Customers page with the package and coordinates in query params
-        Inertia.visit(`/customers?package=${service.service_name}&location_maps=${encodeURIComponent(locationMaps)}`);
-    };
+        console.log('Selected Service:', service.service_name); // Debugging log
+        console.log('Location Maps:', locationMaps); // Debugging log
+    
+        // Redirect ke halaman Customers
+        if (service.service_name && locationMaps) {
+            Inertia.visit(`/customers?package=${encodeURIComponent(service.service_name)}&location_maps=${encodeURIComponent(locationMaps)}`);
+        } else {
+            console.error('Service Name or Location Maps missing!');
+        }
+    };    
+    
 
     // Handle page change
     const handlePageChange = ({ selected }) => {
@@ -117,7 +134,7 @@ const Packages = () => {
                                     {/* Package selection button */}
                                     <button
                                         type="button"
-                                        onClick={() => handleSelectPackage(service)}
+                                        onClick={() => handleSelectPackage(service)} // Ensure correct service is passed
                                         className="w-full rounded-lg bg-gradient-to-r from-purple-600 to-blue-600 px-4 py-2 sm:px-6 sm:py-3 text-md sm:text-lg font-semibold text-white hover:bg-blue-700 transition duration-300 transform hover:scale-105"
                                     >
                                         <FaInfoCircle className="inline-block mr-1 sm:mr-2" />

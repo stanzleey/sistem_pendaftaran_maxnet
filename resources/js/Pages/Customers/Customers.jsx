@@ -1,12 +1,12 @@
 import React, { useEffect } from 'react';
-import { Link, useForm } from '@inertiajs/react';
+import { useForm } from '@inertiajs/react';
 import AppLayout from '@/Layouts/AppLayout';
 import { ToastContainer, toast, Slide } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Title from '@/Layouts/Title';
 
 const Customers = () => {
-    const { data, setData, post, progress, reset, errors } = useForm({
+    const { data, setData, post, reset, errors } = useForm({
         name: '',
         email: '',
         nik: '',
@@ -21,18 +21,19 @@ const Customers = () => {
 
     useEffect(() => {
         const params = new URLSearchParams(window.location.search);
-        const selectedPackage = params.get('package');
+        const setSelectedPackage = params.get('package');
         const selectedLocation = params.get('location_maps');
-
-        if (selectedPackage) {
-            setData('service_name', selectedPackage);
-        }
-
-        if (selectedLocation) {
-            setData('location_maps', selectedLocation);  // Set coordinates in the form
-        }
+    
+        console.log('URLSearchParams - package:', setSelectedPackage);
+        console.log('URLSearchParams - location_maps:', selectedLocation);
+    
+        setData((prevData) => ({
+            ...prevData,
+            service_name: setSelectedPackage || prevData.service_name,
+            location_maps: selectedLocation || prevData.location_maps,
+        }));
     }, []);
-
+     
     const handleChange = (e) => {
         const { name, value } = e.target;
         setData(name, value);
@@ -104,12 +105,12 @@ const Customers = () => {
                     <div className="max-w-4xl mx-auto p-8 bg-white shadow-xl rounded-xl border border-gray-200 mt-12 mb-10">
                         <h1 className="text-3xl font-bold mb-8 text-gray-800 text-center">Form Pendaftaran Pelanggan</h1>
 
+                        {console.log('Rendering service_name:', data.service_name)}
                         {data.service_name && (
                             <div className="mb-6 p-4 bg-blue-50 border border-blue-300 rounded-md text-center text-blue-700">
                                 <strong>Paket yang Dipilih:</strong> {data.service_name}
                             </div>
                         )}
-
                         {Object.keys(errors).length > 0 && (
                             <div className="mb-6">
                                 {Object.values(errors).map((error, index) => (

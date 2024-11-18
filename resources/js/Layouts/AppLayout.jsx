@@ -10,6 +10,7 @@ import {
     FaFacebook,
     FaGithub,
     FaDribbble,
+    FaWhatsapp,
 } from 'react-icons/fa';
 
 export default function AppLayout({ children }) {
@@ -25,11 +26,11 @@ export default function AppLayout({ children }) {
                 <div className="container mx-auto flex justify-between items-center py-2">
                     <div className="flex items-center space-x-6">
                         <small className="flex items-center text-sm hover:text-indigo-600 transition-colors duration-300">
-                            <FaPhoneAlt className="mr-2 text-indigo-600" />
+                            <FaWhatsapp className="mr-2 text-indigo-600" size={20} />
                             <a href="tel:+622713406262" className="no-underline">+62-271-340-6262</a>
                         </small>
                         <small className="flex items-center text-sm hover:text-indigo-600 transition-colors duration-300">
-                            <FaCommentAlt className="mr-2 text-indigo-600" />
+                            <FaCommentAlt className="mr-2 text-indigo-600" size={17} />
                             <a href="mailto:info@maxnetplus.id" className="no-underline">info@maxnetplus.id</a>
                         </small>
                     </div>
