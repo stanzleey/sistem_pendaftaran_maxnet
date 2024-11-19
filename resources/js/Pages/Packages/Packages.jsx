@@ -24,13 +24,13 @@ const Packages = () => {
         '/img/gambar6.jpeg',
     ];
 
-    // Fetch services data from API
     useEffect(() => {
         const fetchServices = async () => {
             try {
                 const response = await axios.get('http://127.0.0.1:8000/api/services');
-                console.log('Fetched Services:', response.data); // Debugging log
-                setServices(response.data);
+                const sortedServices = response.data.sort((a, b) => a.service_speed - b.service_speed); // Sort by speed
+                console.log('Fetched and Sorted Services:', sortedServices); 
+                setServices(sortedServices);
             } catch (error) {
                 console.error('Error fetching services:', error);
             }
@@ -38,7 +38,7 @@ const Packages = () => {
         fetchServices();
     }, []);
     
-    // Get the coordinates from the query params (passed from LocationPage)
+
     const [locationMaps, setLocationMaps] = useState('');
     useEffect(() => {
         const params = new URLSearchParams(window.location.search);
@@ -49,15 +49,6 @@ const Packages = () => {
         }
     }, []);    
 
-    //  useEffect(() => {
-    //     if (selectedPackage) {
-    //         console.log("Selected Package: ", selectedPackage);
-    //         // Redirect to the Customers page with the package and coordinates in query params
-    //         Inertia.visit(`/customers?package=${selectedPackage.service_name}&location_maps=${encodeURIComponent(locationMaps)}`);
-    //     }
-    // }, [selectedPackage]); 
-
-    // Handle selecting a package
     const handleSelectPackage = (service) => {
         console.log('Selected Service:', service.service_name); // Debugging log
         console.log('Location Maps:', locationMaps); // Debugging log
@@ -74,6 +65,10 @@ const Packages = () => {
     // Handle page change
     const handlePageChange = ({ selected }) => {
         setCurrentPage(selected);
+    };
+
+    const formatPrice = (price) => {
+        return `Rp ${new Intl.NumberFormat('id-ID').format(price)},-`;
     };
 
     // Calculate current items based on pagination
@@ -116,18 +111,19 @@ const Packages = () => {
                                     </h3>
 
                                     {/* Display service speed */}
-                                    <div className="flex items-center text-gray-600 mb-2 sm:mb-4">
-                                        <FaBolt className="text-purple-600 mr-1 sm:mr-2" />
-                                        <span className="text-sm sm:text-md">
-                                            Kecepatan: {service.service_speed} Mbps
+                                    <div className="flex items-center mb-2 sm:mb-4">
+                                        <div className="flex items-center justify-center w-8 h-8 bg-purple-100 text-purple-600 rounded-full mr-3">
+                                            <FaBolt className="text-lg" />
+                                        </div>
+                                        <span className="text-gray-800 font-medium text-sm sm:text-md">
+                                            Kecepatan: <span className="font-bold text-gray-900">{service.service_speed} Mbps</span>
                                         </span>
                                     </div>
 
                                     {/* Display service price */}
                                     <div className="flex items-center justify-center mb-4">
-                                        <FaDollarSign className="text-purple-600 mr-1 sm:mr-2" />
                                         <p className="text-lg sm:text-2xl font-bold text-purple-600 bg-gray-100 rounded-lg px-3 py-1 sm:px-4 sm:py-2">
-                                            Rp {service.service_price}
+                                            {formatPrice(service.service_price)}
                                         </p>
                                     </div>
 

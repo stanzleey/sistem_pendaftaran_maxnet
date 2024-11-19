@@ -24,14 +24,26 @@ export default function AppLayout({ children }) {
             {/* Top Contact Section */}
             <div className="bg-white text-black px-5 hidden lg:block shadow-md">
                 <div className="container mx-auto flex justify-between items-center py-2">
-                    <div className="flex items-center space-x-6">
+                <div className="flex items-center space-x-6">
                         <small className="flex items-center text-sm hover:text-indigo-600 transition-colors duration-300">
                             <FaWhatsapp className="mr-2 text-indigo-600" size={20} />
-                            <a href="tel:+622713406262" className="no-underline">+62-271-340-6262</a>
+                            <a 
+                                href="https://wa.me/628991066262" 
+                                target="_blank" 
+                                rel="noopener noreferrer" 
+                                className="no-underline"
+                            >
+                                +62-899-106-6262
+                            </a>
                         </small>
                         <small className="flex items-center text-sm hover:text-indigo-600 transition-colors duration-300">
                             <FaCommentAlt className="mr-2 text-indigo-600" size={17} />
-                            <a href="mailto:info@maxnetplus.id" className="no-underline">info@maxnetplus.id</a>
+                            <a 
+                                href="mailto:info@maxnetplus.id" 
+                                className="no-underline"
+                            >
+                                info@maxnetplus.id
+                            </a>
                         </small>
                     </div>
                     <div className="flex items-center space-x-3">
@@ -205,8 +217,13 @@ export default function AppLayout({ children }) {
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="tel:+622713406262" className="text-slate-400 hover:text-teal-400 transition-colors duration-200 flex items-center gap-2 no-underline">
-                                        <FaPhone /> +62-271-340-6262
+                                    <a 
+                                        href="https://wa.me/628991066262" 
+                                        target="_blank" 
+                                        rel="noopener noreferrer" 
+                                        className="text-slate-400 hover:text-teal-400 transition-colors duration-200 flex items-center gap-2 no-underline" 
+                                    >
+                                        <FaWhatsapp size={20} /> +62-899-106-6262
                                     </a>
                                 </li>
                             </ul>
