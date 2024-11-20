@@ -38,13 +38,10 @@ export default function Index({ customers }) {
                                 <tr className="bg-gray-100">
                                     <th className="py-3 px-4 border-b text-left text-gray-600">ID</th>
                                     <th className="py-3 px-4 border-b text-left text-gray-600">Name</th>
-                                    <th className="py-3 px-4 border-b text-left text-gray-600">NIK</th>
                                     <th className="py-3 px-4 border-b text-left text-gray-600">Phone Number</th>
                                     <th className="py-3 px-4 border-b text-left text-gray-600">Address</th>
                                     <th className="py-3 px-4 border-b text-left text-gray-600">Installation Address</th>
                                     <th className="py-3 px-4 border-b text-left text-gray-600">Location Maps</th>
-                                    <th className="py-3 px-4 border-b text-left text-gray-600">KTP Photo</th>
-                                    <th className="py-3 px-4 border-b text-left text-gray-600">House Photo</th>
                                     <th className="py-3 px-4 border-b text-left text-gray-600">Selected Service</th>
                                     <th className="py-3 px-4 border-b text-left text-gray-600">Actions</th>
                                 </tr>
@@ -55,28 +52,11 @@ export default function Index({ customers }) {
                                         <tr key={customer.id} className="hover:bg-gray-50 transition duration-150">
                                             <td className="py-3 px-4 border-b text-gray-700">{customer.id}</td>
                                             <td className="py-3 px-4 border-b text-gray-700">{customer.name}</td>
-                                            <td className="py-3 px-4 border-b text-gray-700">{customer.nik}</td>
                                             <td className="py-3 px-4 border-b text-gray-700">{customer.phone_number}</td>
                                             <td className="py-3 px-4 border-b text-gray-700">{customer.ktp_address}</td>
                                             <td className="py-3 px-4 border-b text-gray-700">{customer.installation_address}</td>
                                             {/* Display Location Maps as plain text */}
                                             <td className="py-3 px-4 border-b text-gray-700">{customer.location_maps}</td>
-                                            {/* Display KTP Photo */}
-                                            <td className="py-3 px-4 border-b">
-                                                <img
-                                                    src={customer.ktp_photo ? `/storage/${customer.ktp_photo}` : '/default-ktp.png'}
-                                                    alt="KTP"
-                                                    className="w-16 h-16 rounded object-cover"
-                                                />
-                                            </td>
-                                            {/* Display House Photo */}
-                                            <td className="py-3 px-4 border-b">
-                                                <img
-                                                    src={customer.house_photo ? `/storage/${customer.house_photo}` : '/default-house.png'}
-                                                    alt="House"
-                                                    className="w-16 h-16 rounded object-cover"
-                                                />
-                                            </td>
                                             <td className="py-3 px-4 border-b text-gray-700">{customer.service_name}</td>
                                             <td className="py-3 px-4 border-b">
                                                 <div className="flex space-x-2">

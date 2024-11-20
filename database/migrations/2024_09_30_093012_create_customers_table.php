@@ -15,11 +15,8 @@ class CreateCustomersTable extends Migration
                 $table->string('email');
                 $table->string('ktp_address');
                 $table->string('phone_number');
-                $table->string('nik');
                 $table->string('installation_address');
                 $table->string('location_maps')->nullable(); // Kolom location_maps yang nullable
-                $table->string('ktp_photo');
-                $table->string('house_photo');
                 $table->string('service_name');
                 $table->timestamps();
             });

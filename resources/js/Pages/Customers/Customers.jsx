@@ -9,13 +9,10 @@ const Customers = () => {
     const { data, setData, post, reset, errors } = useForm({
         name: '',
         email: '',
-        nik: '',
         phone_number: '',
         ktp_address: '',
         installation_address: '',
         location_maps: '',
-        ktp_photo: null,
-        house_photo: null,
         service_name: '',
     });
 
@@ -23,45 +20,23 @@ const Customers = () => {
         const params = new URLSearchParams(window.location.search);
         const setSelectedPackage = params.get('package');
         const selectedLocation = params.get('location_maps');
-    
-        console.log('URLSearchParams - package:', setSelectedPackage);
-        console.log('URLSearchParams - location_maps:', selectedLocation);
-    
+
         setData((prevData) => ({
             ...prevData,
             service_name: setSelectedPackage || prevData.service_name,
             location_maps: selectedLocation || prevData.location_maps,
         }));
     }, []);
-     
+
     const handleChange = (e) => {
         const { name, value } = e.target;
         setData(name, value);
     };
 
-    const handleFileChange = (e) => {
-        const { name } = e.target;
-        setData(name, e.target.files[0]);
-    };
-
     const handleSubmit = (e) => {
         e.preventDefault();
-
-        const formData = new FormData();
-        formData.append('name', data.name);
-        formData.append('email', data.email);
-        formData.append('nik', data.nik);
-        formData.append('phone_number', data.phone_number);
-        formData.append('ktp_address', data.ktp_address);
-        formData.append('installation_address', data.installation_address);
-        formData.append('location_maps', data.location_maps);
-        formData.append('ktp_photo', data.ktp_photo);
-        formData.append('house_photo', data.house_photo);
-        formData.append('service_name', data.service_name);
-
+    
         post('/admin/customers', {
-            data: formData,
-            forceFormData: true,
             onSuccess: () => {
                 reset();
                 toast.success('Registrasi berhasil!', {
@@ -74,8 +49,8 @@ const Customers = () => {
                     },
                 });
                 setTimeout(() => {
-                    window.location.href = '/';
-                }, 3000);
+                    window.location.href = '/customers/thankyou';
+                }, 2000); 
             },
             onError: (errors) => {
                 console.log(errors);
@@ -90,11 +65,11 @@ const Customers = () => {
                 });
             },
         });
-    };
+    };    
 
     return (
         <AppLayout>
-            <Title/>
+            <Title />
             <div className="flex flex-col min-h-screen relative">
                 {/* Background Overlay */}
                 <div className="absolute inset-0 z-0 opacity-25">
@@ -105,23 +80,27 @@ const Customers = () => {
                     <div className="max-w-4xl mx-auto p-8 bg-white shadow-xl rounded-xl border border-gray-200 mt-12 mb-10">
                         <h1 className="text-3xl font-bold mb-8 text-gray-800 text-center">Form Pendaftaran Pelanggan</h1>
 
-                        {console.log('Rendering service_name:', data.service_name)}
+                        {/* Selected Package Alert */}
                         {data.service_name && (
                             <div className="mb-6 p-4 bg-blue-50 border border-blue-300 rounded-md text-center text-blue-700">
                                 <strong>Paket yang Dipilih:</strong> {data.service_name}
                             </div>
                         )}
+
+                        {/* Error Messages */}
                         {Object.keys(errors).length > 0 && (
-                            <div className="mb-6">
+                            <div className="mb-6 space-y-2">
                                 {Object.values(errors).map((error, index) => (
                                     <div key={index} className="text-red-500 text-sm text-center">{error}</div>
                                 ))}
                             </div>
                         )}
 
+                        {/* Form */}
                         <form onSubmit={handleSubmit} className="space-y-6">
+                            {/* Row 1 */}
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                                <div className="flex flex-col">
+                                <div>
                                     <label className="block mb-2 text-sm font-medium text-gray-600">Nama</label>
                                     <input
                                         type="text"
@@ -130,10 +109,10 @@ const Customers = () => {
                                         onChange={handleChange}
                                         placeholder="Nama"
                                         required
-                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-200 ease-in-out"
+                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-200"
                                     />
                                 </div>
-                                <div className="flex flex-col">
+                                <div>
                                     <label className="block mb-2 text-sm font-medium text-gray-600">Email</label>
                                     <input
                                         type="email"
@@ -142,79 +121,64 @@ const Customers = () => {
                                         onChange={handleChange}
                                         placeholder="Email"
                                         required
-                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-200 ease-in-out"
+                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-200"
                                     />
                                 </div>
                             </div>
 
+                            {/* Row 2 */}
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                                {[
-                                    { label: 'NIK', name: 'nik', type: 'text', required: true },
-                                    { label: 'No HP', name: 'phone_number', type: 'tel', required: true },
-                                ].map(({ label, name, type, required }) => (
-                                    <div key={name} className="flex flex-col">
-                                        <label className="block mb-2 text-sm font-medium text-gray-600">{label}</label>
-                                        <input
-                                            type={type}
-                                            name={name}
-                                            value={data[name]}
-                                            onChange={handleChange}
-                                            placeholder={label}
-                                            required={required}
-                                            className="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-200 ease-in-out"
-                                        />
-                                    </div>
-                                ))}
+                                <div>
+                                    <label className="block mb-2 text-sm font-medium text-gray-600">No HP</label>
+                                    <input
+                                        type="tel"
+                                        name="phone_number"
+                                        value={data.phone_number}
+                                        onChange={handleChange}
+                                        placeholder="No HP"
+                                        required
+                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-200"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block mb-2 text-sm font-medium text-gray-600">Alamat KTP</label>
+                                    <input
+                                        type="text"
+                                        name="ktp_address"
+                                        value={data.ktp_address}
+                                        onChange={handleChange}
+                                        placeholder="Alamat KTP"
+                                        required
+                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-200"
+                                    />
+                                </div>
                             </div>
 
+                            {/* Row 3 */}
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                                {[
-                                    { label: 'Alamat KTP', name: 'ktp_address', type: 'text', required: true },
-                                    { label: 'Alamat Pemasangan', name: 'installation_address', type: 'text', required: true },
-                                ].map(({ label, name, type, required }) => (
-                                    <div key={name} className="flex flex-col">
-                                        <label className="block mb-2 text-sm font-medium text-gray-600">{label}</label>
-                                        <input
-                                            type={type}
-                                            name={name}
-                                            value={data[name]}
-                                            onChange={handleChange}
-                                            placeholder={label}
-                                            required={required}
-                                            className="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-200 ease-in-out"
-                                        />
-                                    </div>
-                                ))}
-                            </div>
-
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                                {[
-                                    { label: 'Foto KTP', name: 'ktp_photo', required: true },
-                                    { label: 'Foto Rumah', name: 'house_photo', required: true },
-                                ].map(({ label, name, required }) => (
-                                    <div key={name} className="flex flex-col">
-                                        <label className="block mb-2 text-sm font-medium text-gray-600">{label}</label>
-                                        <input
-                                            type="file"
-                                            name={name}
-                                            onChange={handleFileChange}
-                                            required={required}
-                                            className="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-200 ease-in-out"
-                                        />
-                                    </div>
-                                ))}
-                            </div>
-
-                            <div className="flex flex-col">
-                                <label className="block mb-2 text-sm font-medium text-gray-600">Location Maps (URL/Coordinate)</label>
-                                <input
-                                    type="text"
-                                    name="location_maps"
-                                    value={data.location_maps}
-                                    onChange={handleChange}
-                                    placeholder="Masukkan URL atau Koordinat Alamat Pemasangan"
-                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-200 ease-in-out"
-                                />
+                                <div>
+                                    <label className="block mb-2 text-sm font-medium text-gray-600">Alamat Pemasangan</label>
+                                    <input
+                                        type="text"
+                                        name="installation_address"
+                                        value={data.installation_address}
+                                        onChange={handleChange}
+                                        placeholder="Alamat Pemasangan"
+                                        required
+                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-200"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block mb-2 text-sm font-medium text-gray-600">Location Maps (URL/Coordinate)</label>
+                                    <input
+                                        type="text"
+                                        name="location_maps"
+                                        value={data.location_maps}
+                                        onChange={handleChange}
+                                        placeholder="Masukkan URL atau Koordinat Alamat Pemasangan"
+                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-200"
+                                    />
+                                </div>
                             </div>
 
                             <button
@@ -223,11 +187,10 @@ const Customers = () => {
                             >
                                 Daftar
                             </button>
-
                         </form>
                     </div>
                 </div>
-                 <ToastContainer
+                <ToastContainer
                     position="top-center"
                     autoClose={5000}
                     transition={Slide}
@@ -238,7 +201,7 @@ const Customers = () => {
                     pauseOnFocusLoss
                     draggable
                     pauseOnHover
-                    />
+                />
             </div>
         </AppLayout>
     );

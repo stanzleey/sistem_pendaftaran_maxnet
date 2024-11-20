@@ -67,6 +67,11 @@ Route::get('/terms-and-conditions', function () {
     ]);
 })->name('terms-and-conditions');
 
+Route::get('/customers/thankyou', function () {
+    return Inertia::render('Customers/Thankyou', [
+    ]);
+})->name('thankyou');
+
 // API route for fetching visible services
 Route::get('/api/services', function () {
     return Service::select('service_name', 'service_speed', 'service_price')

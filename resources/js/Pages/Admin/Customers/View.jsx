@@ -59,11 +59,6 @@ export default function View({ customer }) {
                         </div>
 
                         <div className="border rounded-lg bg-white shadow-sm p-6">
-                            <h2 className="text-lg font-semibold text-gray-700 mb-2">NIK</h2>
-                            <p className="p-3 border border-gray-300 rounded">{customer.nik}</p>
-                        </div>
-
-                        <div className="border rounded-lg bg-white shadow-sm p-6">
                             <h2 className="text-lg font-semibold text-gray-700 mb-2">Phone Number</h2>
                             <p className="p-3 border border-gray-300 rounded">{customer.phone_number}</p>
                         </div>
@@ -87,31 +82,7 @@ export default function View({ customer }) {
                         <div className="border rounded-lg bg-white shadow-sm p-6">
                             <h2 className="text-lg font-semibold text-gray-700 mb-2">Service Name</h2>
                             <p className="p-3 border border-gray-300 rounded">{customer.service_name}</p>
-                        </div>
-
-                        {/* KTP Photo */}
-                        <div className="border rounded-lg bg-white shadow-sm p-6">
-                            <h2 className="text-lg font-semibold text-gray-700 mb-2">KTP Photo</h2>
-                            <div className="cursor-pointer overflow-hidden" onClick={() => openModal(customer.ktp_photo ? `/storage/${customer.ktp_photo}` : '/default-ktp.png')}>
-                                <img 
-                                    src={customer.ktp_photo ? `/storage/${customer.ktp_photo}` : '/default-ktp.png'} 
-                                    alt="KTP"
-                                    className="w-full h-48 object-cover rounded-lg"
-                                />
-                            </div>
-                        </div>
-
-                        {/* House Photo */}
-                        <div className="border rounded-lg bg-white shadow-sm p-6">
-                            <h2 className="text-lg font-semibold text-gray-700 mb-2">House Photo</h2>
-                            <div className="cursor-pointer overflow-hidden" onClick={() => openModal(customer.house_photo ? `/storage/${customer.house_photo}` : '/default-house.png')}>
-                                <img 
-                                    src={customer.house_photo ? `/storage/${customer.house_photo}` : '/default-house.png'} 
-                                    alt="House"
-                                    className="w-full h-48 object-cover rounded-lg"
-                                />
-                            </div>
-                        </div>     
+                        </div>    
                     </div>
 
                     <div className="flex justify-end mt-8">
