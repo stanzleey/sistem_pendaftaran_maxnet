@@ -35,7 +35,7 @@ export default function Home() {
                     <div className="mx-auto max-w-3xl text-center">
                         {/* Title */}
                         <h1 className="bg-gradient-to-r from-indigo-500 via-purple-600 to-pink-500 bg-clip-text text-4xl font-extrabold text-white sm:text-6xl lg:text-7xl font-archivo animate-slide-in leading-tight">
-                            Internet Cepat
+                            Internet Cepat Hemat
                         </h1>
                         <h2 className="bg-gradient-to-r from-indigo-500 via-purple-600 to-pink-500 bg-clip-text text-4xl font-extrabold text-white sm:text-6xl lg:text-7xl font-archivo animate-slide-in leading-tight">
                             Anti Lemot
