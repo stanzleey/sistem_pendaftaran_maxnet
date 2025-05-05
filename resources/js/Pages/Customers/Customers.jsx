@@ -30,6 +30,21 @@ const Customers = () => {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
+         // Validasi untuk kolom No HP
+    if (name === 'phone_number') {
+        if (!/^\d*$/.test(value)) {
+            toast.error('Nomor HP hanya boleh mengandung angka!', {
+                style: {
+                    background: 'linear-gradient(45deg, #ff416c, #ff4b2b)',
+                    color: '#fff',
+                    padding: '15px',
+                    borderRadius: '10px',
+                    boxShadow: '0 0 15px rgba(0, 0, 0, 0.3)',
+                },
+            });
+            return; // Jangan update state jika input tidak valid
+        }
+    }
         setData(name, value);
     };
 
@@ -182,11 +197,12 @@ const Customers = () => {
                             </div>
 
                             <button
-                                type="submit"
-                                className="w-full rounded-lg bg-gradient-to-r from-blue-500 to-purple-600 px-5 py-3 font-medium text-white hover:bg-blue-700 transition duration-200"
-                            >
-                                Daftar
-                            </button>
+    type="submit"
+    className="w-full rounded-lg bg-gradient-to-r from-teal-400 to-sky-500 px-5 py-3 font-medium text-white hover:bg-teal-600 transition duration-200"
+>
+    Daftar
+</button>
+
                         </form>
                     </div>
                 </div>

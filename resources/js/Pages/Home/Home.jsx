@@ -19,26 +19,21 @@ export default function Home() {
             <div className="relative bg-gray-900 text-white">
                 {/* Background Video */}
                 <div className="absolute inset-0 overflow-hidden">
-                    <video
-                        autoPlay
-                        loop
-                        muted
-                        playsInline
-                        className="w-full h-full object-cover opacity-30 transition-opacity duration-500"
-                    >
-                        <source src="/img/video.mp4" type="video/mp4" />
-                        Your browser does not support the video tag.
-                    </video>
+                <img
+                                    alt="Maxnet team at work"
+                                    src="/img/streaming.jpg"
+                                    className="absolute inset-0 h-full w-full object-cover"
+                                />
                 </div>
                 {/* Content */}
                 <div className="relative mx-auto max-w-screen-xl px-4 py-24 sm:py-32 lg:py-32 lg:flex lg:h-screen lg:items-center">
                     <div className="mx-auto max-w-3xl text-center">
                         {/* Title */}
                         <h1 className="bg-gradient-to-r from-indigo-500 via-purple-600 to-pink-500 bg-clip-text text-4xl font-extrabold text-white sm:text-6xl lg:text-7xl font-archivo animate-slide-in leading-tight">
-                            Internet Cepat Hemat
+                            INTERNET
                         </h1>
                         <h2 className="bg-gradient-to-r from-indigo-500 via-purple-600 to-pink-500 bg-clip-text text-4xl font-extrabold text-white sm:text-6xl lg:text-7xl font-archivo animate-slide-in leading-tight">
-                            Anti Lemot
+                            ANTI LEMOT
                         </h2>
                         {/* Subtitle */}
                         <p className="mx-auto mt-4 max-w-md sm:max-w-xl text-base sm:text-lg lg:text-xl text-gray-300 font-archivo animate-fade-in">
@@ -48,7 +43,7 @@ export default function Home() {
                         <div className="mt-8 flex flex-wrap justify-center gap-4">
                             <Link
                                 href="/locations"
-                                className="block w-full sm:w-auto rounded bg-gradient-to-r from-purple-600 to-blue-600 px-10 py-3 text-sm font-medium text-white transition-transform transform hover:scale-105 focus:outline-none focus:ring active:bg-blue-800 font-archivo no-underline shadow-lg hover:shadow-xl"
+                                className="block w-full sm:w-auto rounded bg-gradient-to-r from-blue-600 to-blue-600 px-10 py-3 text-sm font-medium text-white transition-transform transform hover:scale-105 focus:outline-none focus:ring active:bg-blue-800 font-archivo no-underline shadow-lg hover:shadow-xl"
                             >
                                 Lihat Layanan Kami
                             </Link>

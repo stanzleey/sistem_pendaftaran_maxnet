@@ -80,7 +80,7 @@ export default function Contact({ success }) {
             />
 <section className="flex flex-col lg:flex-row items-stretch justify-center bg-gray-100 py-10 lg:space-x-6 px-4">
     <div className="lg:w-1/2 w-full relative max-w-lg h-[80vh] overflow-hidden"> {/* Mengatur tinggi dan overflow */}
-        <img src="/img/Contact.jpeg" alt="Contact Us" className="w-full h-full object-cover rounded-lg" />
+        <img src="/img/CS.jpeg" alt="Contact Us" className="w-full h-full object-cover rounded-lg" />
         <div className="absolute inset-0 bg-black opacity-40 rounded-lg"></div>
         <div className="absolute inset-0 flex flex-col justify-center items-center text-center text-white px-4 z-10">
             <h2 className="text-3xl font-bold">Get in Touch</h2>
@@ -160,7 +160,7 @@ export default function Contact({ success }) {
             <div>
                 <button
                     type="submit"
-                    className="w-full rounded-lg bg-gradient-to-r from-blue-500 to-purple-600 px-5 py-3 font-medium text-white hover:bg-blue-700 transition duration-200"
+                    className="w-full rounded-lg bg-gradient-to-r from-teal-400 to-sky-500 px-5 py-3 font-medium text-white hover:bg-teal-600 transition duration-200"
                 >
                     Kirim Pesan
                 </button>

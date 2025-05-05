@@ -39,7 +39,10 @@ class MessageController extends Controller
         $this->logActivity('created', 'Message', $message->name); // Use $message->name
 
         // Send Telegram notification
-        $this->telegramNotificationService->sendMessage("New message received: <b>{$message->name}</b> (Email: {$message->email})");
+        $this->telegramNotificationService->sendMessage("New message received: 
+            <b>{$message->name}</b> 
+            (Email: {$message->email}
+             Pesan:{$message->message})");
 
         return redirect()->route('contact')->with('success', 'Message sent successfully.');
     }

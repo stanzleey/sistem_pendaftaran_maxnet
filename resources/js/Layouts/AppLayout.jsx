@@ -21,41 +21,6 @@ export default function AppLayout({ children }) {
 
     return (
         <div className="min-h-screen flex flex-col bg-gray-50">
-            {/* Top Contact Section */}
-            <div className="bg-white text-black px-5 hidden lg:block shadow-md">
-                <div className="container mx-auto flex justify-between items-center py-2">
-                <div className="flex items-center space-x-6">
-                        <small className="flex items-center text-sm hover:text-indigo-600 transition-colors duration-300">
-                            <FaWhatsapp className="mr-2 text-indigo-600" size={20} />
-                            <a 
-                                href="https://wa.me/628991066262" 
-                                target="_blank" 
-                                rel="noopener noreferrer" 
-                                className="no-underline"
-                            >
-                                +62-899-106-6262
-                            </a>
-                        </small>
-                        <small className="flex items-center text-sm hover:text-indigo-600 transition-colors duration-300">
-                            <FaCommentAlt className="mr-2 text-indigo-600" size={17} />
-                            <a 
-                                href="mailto:info@maxnetplus.id" 
-                                className="no-underline"
-                            >
-                                info@maxnetplus.id
-                            </a>
-                        </small>
-                    </div>
-                    <div className="flex items-center space-x-3">
-                        {[FaTwitter, FaFacebookF, FaLinkedinIn, FaInstagram, FaYoutube].map((Icon, index) => (
-                            <a key={index} className="text-gray-600 hover:text-indigo-600 transition-colors duration-300" href="#" target="_blank" rel="noreferrer">
-                                <Icon className="w-6 h-6 transition-transform transform hover:scale-110" />
-                            </a>
-                        ))}
-                    </div>
-                </div>
-            </div>
-
             {/* Navbar */}
             <nav className="bg-white shadow-lg sticky top-0 z-50">
                 <div className="container mx-auto px-6 py-2 flex justify-between items-center">
@@ -86,27 +51,18 @@ export default function AppLayout({ children }) {
                             <Link 
                                 key={index}
                                 href={route}
-                                className={`shrink-0 rounded-lg p-2 text-lg font-medium transition-colors duration-300 ${isActive(route) ? 'bg-purple-600 bg-opacity-20 text-purple-600' : 'text-gray-500 hover:bg-gray-50 hover:text-gray-700'}`}
+                                className={`shrink-0 rounded-lg p-2 text-lg font-medium transition-colors duration-300 ${isActive(route) ? 'bg-blue-600 bg-opacity-20 text-blue-600' : 'text-gray-500 hover:bg-gray-50 hover:text-gray-700'}`}
                                 aria-current={isActive(route) ? 'page' : undefined}
                                 style={{ textDecoration: 'none' }}
                             >
                                 <div className="flex items-center">
-                                    {route === '/' && <FaHome className="mr-2 text-xl" />}
-                                    {route === '/locations' && <FaServicestack className="mr-2 text-xl" />}
-                                    {route === '/contact' && <FaPhoneAlt className="mr-2 text-xl" />}
-                                    {route === '/' ? 'Home' : route === '/locations' ? 'Coverage' : 'Hubungi Kami'}
+                                    {/* {route === '/' && <FaHe className="mr-2 text-xl" />} */}
+                                    {/* {route === '/locations' && <FaServicestack className="mr-2 text-xl" />} */}
+                                    {/* {route === '/contact' && <FaPhoneAlt className="mr-2 text-xl" />} */}
+                                    {route === '/' ? 'Home' : route === '/locations' ? 'Cek Lokasi' : 'Hubungi Kami'}
                                 </div>
                             </Link>
                         ))}
-                        <a 
-                            href="https://customer.maxnetplus.id/login" 
-                            target="_blank" 
-                            rel="noopener noreferrer"
-                            className="bg-gradient-to-r from-purple-600 to-blue-600 text-white px-4 py-2 rounded transition-colors duration-300 hover:bg-purple-700 shadow-lg hover:shadow-xl text-lg flex items-center"
-                            style={{ textDecoration: 'none' }}
-                        >
-                            <FaSignInAlt className="mr-2 text-xl" /> Customer Login
-                        </a>
                     </div>
                 </div>
 
@@ -140,7 +96,7 @@ export default function AppLayout({ children }) {
                                     {route === '/' && <FaHome className="mr-2 text-xl" />}
                                     {route === '/locations' && <FaServicestack className="mr-2 text-xl" />}
                                     {route === '/contact' && <FaPhoneAlt className="mr-2 text-xl" />}
-                                    {route === '/' ? 'Home' : route === '/locations' ? 'Coverage' : 'Kontak'}
+                                    {route === '/' ? 'Home' : route === '/locations' ? 'Cek Lokasi' : 'Kontak'}
                                 </div>
                             </Link>
                         ))}

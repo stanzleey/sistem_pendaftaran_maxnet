@@ -28,6 +28,7 @@ export default function Lokasi() {
     detailedAddress: "",
   });
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
+  const [isWithinRange, setIsWithinRange] = useState(false);
 
   const fetchLocations = async () => {
     try {
@@ -78,8 +79,15 @@ export default function Lokasi() {
   };
 
   const clearExistingLayers = () => {
+    if (!map) return;
+    
     map.eachLayer((layer) => {
-      if (layer instanceof L.Marker || layer instanceof L.Circle) {
+      if (
+        layer instanceof L.Marker || 
+        layer instanceof L.Circle || 
+        layer instanceof L.Polygon ||
+        layer instanceof L.Polyline
+      ) {
         map.removeLayer(layer);
       }
     });
@@ -89,9 +97,10 @@ export default function Lokasi() {
     const selectedCoords = [lat, lon];
     clearExistingLayers();
 
+    // Tambahkan marker untuk lokasi yang dipilih
     const newMarker = L.marker(selectedCoords, { draggable: true })
       .addTo(map)
-      .bindPopup(displayName)
+      .bindPopup(`<b>Lokasi Anda</b><br>${displayName}`)
       .openPopup();
 
     newMarker.on("dragend", async (event) => {
@@ -106,25 +115,74 @@ export default function Lokasi() {
       );
     });
 
-    L.circle(selectedCoords, {
-      color: "red",
-      fillColor: "#f03",
-      fillOpacity: 0.5,
-      radius: 300,
+    // Tambahkan lingkaran radius 500 meter
+    const rangeCircle = L.circle(selectedCoords, {
+      color: "#3182ce",
+      fillColor: "#3182ce",
+      fillOpacity: 0.2,
+      radius: 500, // 500 meter
     }).addTo(map);
+
+    rangeCircle.bindPopup("Jangkauan 500 meter dari lokasi Anda");
 
     let nearestDistance = Infinity;
     let nearestLoc = null;
 
+    // Tambahkan marker untuk semua ODP
     locations.forEach((location) => {
       const locationLatLng = L.latLng(location.lat, location.lon);
-      const selectedLatLng = L.latLng(lat, lon);
-      const distance = locationLatLng.distanceTo(selectedLatLng);
+      const marker = L.marker([location.lat, location.lon])
+        .addTo(map)
+        .bindPopup(`<b>${location.site_name}</b><br>${location.site_address}`);
+      
+      // Tambahkan garis penghubung ke ODP terdekat
+      const distance = locationLatLng.distanceTo(L.latLng(lat, lon));
       if (distance < nearestDistance) {
         nearestDistance = distance;
         nearestLoc = location;
       }
     });
+
+    // Jika ada ODP terdekat, tambahkan garis penghubung dan hitung jarak
+    if (nearestLoc) {
+      const nearestLatLng = L.latLng(nearestLoc.lat, nearestLoc.lon);
+      const selectedLatLng = L.latLng(lat, lon);
+      
+      // Garis penghubung ke ODP terdekat
+      const connectionLine = L.polyline([selectedLatLng, nearestLatLng], {
+        color: "#e53e3e",
+        weight: 2,
+        dashArray: "5, 5",
+      }).addTo(map);
+      
+      connectionLine.bindPopup(`Jarak ke ODP terdekat: ${nearestDistance.toFixed(2)} meter`);
+
+      // Cek apakah dalam jangkauan 500 meter
+      const withinRange = nearestDistance <= 500;
+      setIsWithinRange(withinRange);
+      
+      if (withinRange) {
+        toast.success("Lokasi Anda dalam jangkauan 500 meter dari ODP terdekat!", {
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+      } else {
+        toast.warning(`Lokasi Anda di luar jangkauan 500 meter. Jarak ke ODP terdekat: ${nearestDistance.toFixed(2)} meter`, {
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+      }
+    }
 
     setFormData({
       coordinates: `${lat}, ${lon}`,
@@ -141,6 +199,17 @@ export default function Lokasi() {
 
     setNearestLocation(nearestLoc);
     setIsButtonDisabled(false);
+    
+    // Zoom map untuk menampilkan semua marker
+    if (nearestLoc) {
+      const bounds = L.latLngBounds([
+        [lat, lon],
+        [nearestLoc.lat, nearestLoc.lon]
+      ]);
+      map.fitBounds(bounds, { padding: [50, 50] });
+    } else {
+      map.setView([lat, lon], 16);
+    }
   };
 
   const handleSelectLocation = async (lat, lon, displayName) => {
@@ -214,9 +283,15 @@ export default function Lokasi() {
         return;
     }
 
+    if (!isWithinRange) {
+      toast.error("Maaf, lokasi Anda berada di luar jangkauan 500 meter dari ODP terdekat.");
+      return;
+    }
+
     // Redirecting to Packages page, passing coordinates in query params
     Inertia.visit(`/packages?location_maps=${encodeURIComponent(formData.coordinates)}`);
-};
+  };
+
   return (
     <AuthenticatedLayout>
       <AppLayout>
@@ -276,32 +351,61 @@ export default function Lokasi() {
               id="map"
               className="map-container border border-gray-200 shadow-lg w-full h-72 md:h-96 rounded-lg mb-6"
             ></div>
-          {locationDetails && (
-            <div className="bg-white p-3 sm:p-6 rounded-lg shadow-lg mb-4 sm:mb-6 text-center">
-              <h3 className="text-lg sm:text-xl font-bold mb-4 flex items-center justify-center">
-                <span className="material-icons text-blue-600 mr-2"></span>
-                Detail Lokasi:
-              </h3>
-              <div className="text-sm sm:text-base space-y-3">
-                <p className="flex items-center justify-center mb-1">
-                  <span className="material-icons text-green-500 mr-2"></span>
-                  <strong>Alamat: </strong> {locationDetails.address}
-                </p>
-                <p className="flex items-center justify-center mb-1">
-                  <span className="material-icons text-yellow-500 mr-2"></span>
-                  <strong>Koordinat: </strong> {locationDetails.coordinates}
-                </p>
+            
+            {locationDetails && (
+              <div className="bg-white p-3 sm:p-6 rounded-lg shadow-lg mb-4 sm:mb-6 text-center">
+                <h3 className="text-lg sm:text-xl font-bold mb-4 flex items-center justify-center">
+                  <span className="material-icons text-blue-600 mr-2"></span>
+                  Detail Lokasi:
+                </h3>
+                <div className="text-sm sm:text-base space-y-3">
+                  <p className="flex items-center justify-center mb-1">
+                    <span className="material-icons text-green-500 mr-2"></span>
+                    <strong>Alamat: </strong> {locationDetails.address}
+                  </p>
+                  <p className="flex items-center justify-center mb-1">
+                    <span className="material-icons text-yellow-500 mr-2"></span>
+                    <strong>Koordinat: </strong> {locationDetails.coordinates}
+                  </p>
+                  {nearestLocation && (
+                    <>
+                      <p className="flex items-center justify-center mb-1">
+                        <span className="material-icons text-red-500 mr-2"></span>
+                        <strong>ODP Terdekat: </strong> {nearestLocation.site_name}
+                      </p>
+                      <p className="flex items-center justify-center mb-1">
+                        <span className="material-icons text-purple-500 mr-2"></span>
+                        <strong>Jarak ke ODP: </strong> {locationDetails.distanceToNearest} meter
+                      </p>
+                      <div className={`p-3 rounded-lg ${isWithinRange ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
+                        <strong>
+                          {isWithinRange ? (
+                            <>
+                              <FaCheckCircle className="inline mr-2" />
+                              Lokasi Anda dalam jangkauan 500 meter dari ODP
+                            </>
+                          ) : (
+                            <>
+                              <FaTimesCircle className="inline mr-2" />
+                              Lokasi Anda di luar jangkauan 500 meter dari ODP
+                            </>
+                          )}
+                        </strong>
+                      </div>
+                    </>
+                  )}
+                </div>
               </div>
-            </div>
-          )}
+            )}
+            
             <form onSubmit={handleSubmit} className="flex justify-center mt-6">
               <button
                 type="submit"
-                disabled={isButtonDisabled}
+                disabled={isButtonDisabled || !isWithinRange}
                 className={`w-full max-w-xs py-3 rounded-lg font-bold text-white flex items-center justify-center transition-transform transform duration-200 ${
-                  isButtonDisabled
+                  isButtonDisabled || !isWithinRange
                     ? "bg-gray-400 cursor-not-allowed"
-                    : "bg-green-500 hover:bg-green-600"
+                    : "bg-green-500 hover:bg-green-600 hover:scale-105"
                 }`}
               >
                 <FaCheckCircle className="mr-2" />
@@ -309,7 +413,18 @@ export default function Lokasi() {
               </button>
             </form>
           </div>
-          <ToastContainer transition={Slide} />
+          <ToastContainer 
+            transition={Slide} 
+            position="top-center"
+            autoClose={5000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+          />
         </div>
       </AppLayout>
     </AuthenticatedLayout>
