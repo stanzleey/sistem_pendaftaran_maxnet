@@ -61,7 +61,7 @@ export default function Home() {
                             <div className="relative h-48 sm:h-80 lg:h-full rounded-xl overflow-hidden">
                                 <img
                                     alt="Maxnet team at work"
-                                    src="/img/gambar8.jpeg"
+                                    src="/img/about us.jpg"
                                     className="absolute inset-0 h-full w-full object-cover"
                                 />
                             </div>
@@ -91,7 +91,7 @@ export default function Home() {
                                 {/* Button */}
                                 <Link
                                     href="/contact"
-                                    className="mt-6 sm:mt-8 inline-block rounded border border-indigo-600 bg-gradient-to-r from-purple-600 to-blue-600 px-8 py-2 sm:px-10 sm:py-3 text-xs sm:text-sm font-medium text-white hover:bg-transparent hover:text-indigo-600 focus:outline-none focus:ring active:text-indigo-500 no-underline"
+                                    className="mt-6 sm:mt-8 inline-block rounded border border-blue-600 bg-gradient-to-r from-blue-500 to-blue-600 px-8 py-2 sm:px-10 sm:py-3 text-xs sm:text-sm font-medium text-white hover:bg-transparent hover:text-blue-600 focus:outline-none focus:ring active:text-blue-500 no-underline"
                                 >
                                     Hubungi Kami
                                 </Link>
