@@ -117,7 +117,7 @@ export default function AppLayout({ children }) {
             <main>{children}</main>
 
             {/* Footer */}
-            <footer className="bg-slate-900 py-12 mt-20">
+            <footer className="bg-white-900  mt-20">
                 <div className="container mx-auto max-w-screen-lg px-4 lg:px-10">
                     <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-8 text-center lg:text-left">
 
@@ -131,7 +131,7 @@ export default function AppLayout({ children }) {
 
                         {/* About Us Section */}
                         <div className="flex flex-col items-center lg:items-start text-center lg:text-left mb-12 lg:mb-0 lg:ml-[-2rem]">
-                            <h3 className="text-slate-100 font-semibold mb-4">About Us</h3>
+                            <h3 className="text-blue-400 font-semibold mb-4">About Us</h3>
                             <ul className="space-y-3 pl-4 lg:pl-0">
                                 <li>
                                     <a href="#" className="text-slate-400 hover:text-teal-400 transition-colors duration-200 flex items-center gap-2 no-underline">
@@ -143,7 +143,7 @@ export default function AppLayout({ children }) {
 
                         {/* Services Section */}
                         <div className="flex flex-col items-center lg:items-start text-center lg:text-left mb-12 lg:mb-0 lg:ml-[-2rem]">
-                            <h3 className="text-slate-100 font-semibold mb-4">Our Services</h3>
+                            <h3 className="text-blue-400 font-semibold mb-4">Our Services</h3>
                             <ul className="space-y-3 pl-4 lg:pl-6">
                                 <li>
                                     <a href="#" className="text-slate-400 hover:text-teal-400 transition-colors duration-200 flex items-center gap-2 no-underline">
@@ -165,7 +165,7 @@ export default function AppLayout({ children }) {
 
                         {/* Contact Us Section */}
                         <div className="flex flex-col items-center lg:items-start text-center lg:text-left mb-12 lg:mb-1 lg:ml-[-2rem]">
-                            <h3 className="text-slate-100 font-semibold mb-4">Contact Us</h3>
+                            <h3 className="text-blue-400 font-semibold mb-4">Contact Us</h3>
                             <ul className="space-y-3 pl-4 lg:pl-6">
                                 <li>
                                     <a href="mailto:info@maxnetplus.id" className="text-slate-400 hover:text-teal-400 transition-colors duration-200 flex items-center gap-2 no-underline">

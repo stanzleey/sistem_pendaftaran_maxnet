@@ -18,35 +18,39 @@ export default function Home() {
             {/* Hero Section */}
             <div className="relative bg-gray-900 text-white">
                 {/* Background Video */}
+                
                 <div className="absolute inset-0 overflow-hidden">
                 <img
                                     alt="Maxnet team at work"
-                                    src="/img/streaming.jpg"
+                                    src="/img/bg 1.jpg"
                                     className="absolute inset-0 h-full w-full object-cover"
                                 />
                 </div>
                 {/* Content */}
                 <div className="relative mx-auto max-w-screen-xl px-4 py-24 sm:py-32 lg:py-32 lg:flex lg:h-screen lg:items-center">
-                    <div className="mx-auto max-w-3xl text-center">
+                    <div className=" max-w-3xl ">
                         {/* Title */}
-                        <h1 className="bg-gradient-to-r from-indigo-500 via-purple-600 to-pink-500 bg-clip-text text-4xl font-extrabold text-white sm:text-6xl lg:text-7xl font-archivo animate-slide-in leading-tight">
-                            INTERNET
+                        <h1 className="bg-gradient-to-r from-indigo-500 via-purple-600 to-pink-500 bg-clip-text text-4xl font text-white sm:text-6xl lg:text-7xl font-archivo animate-slide-in leading-tight">
+                        Beri Koneksi Internet 
                         </h1>
-                        <h2 className="bg-gradient-to-r from-indigo-500 via-purple-600 to-pink-500 bg-clip-text text-4xl font-extrabold text-white sm:text-6xl lg:text-7xl font-archivo animate-slide-in leading-tight">
-                            ANTI LEMOT
+                        <h2 className="bg-gradient-to-r from-indigo-500 via-purple-600 to-pink-500 bg-clip-text text-4xl font text-white sm:text-6xl lg:text-7xl font-archivo animate-slide-in leading-tight">
+                        Lebih Cepat
                         </h2>
                         {/* Subtitle */}
-                        <p className="mx-auto mt-4 max-w-md sm:max-w-xl text-base sm:text-lg lg:text-xl text-gray-300 font-archivo animate-fade-in">
+                        <h2 className="bg-gradient-to-r from-indigo-500 via-purple-600 to-pink-500 bg-clip-text text-4xl font text-white sm:text-3xl lg:text-2xl font-archivo animate-slide-in leading-tight">
+                        #pakaimaxnet
+                        </h2>
+                        <p className=" mt-4 max-w-md sm:max-w-xl text-base sm:text-lg lg:text-xl text-gray-300 font-archivo animate-fade-in">
                             Nikmati pengalaman Internetan tanpa hambatan, dengan layanan internet yang dirancang untuk rumah dan bisnis Anda.
                         </p>
                         {/* Button */}
                         <div className="mt-8 flex flex-wrap justify-center gap-4">
-                            <Link
+                            {/* <Link
                                 href="/locations"
                                 className="block w-full sm:w-auto rounded bg-gradient-to-r from-blue-600 to-blue-600 px-10 py-3 text-sm font-medium text-white transition-transform transform hover:scale-105 focus:outline-none focus:ring active:bg-blue-800 font-archivo no-underline shadow-lg hover:shadow-xl"
                             >
                                 Lihat Layanan Kami
-                            </Link>
+                            </Link> */}
                         </div>
                     </div>
                 </div>
@@ -115,15 +119,16 @@ export default function Home() {
                 <div className="container mx-auto px-6 md:px-12">
                     <h2 className="text-3xl md:text-4xl font-bold text-center mb-4 text-white flex items-center justify-center">
                         <span className="mr-3 text-5xl md:text-6xl text-indigo-500">
-                            <i className="fas fa-bolt"></i>
+                            {/* <i className="fas fa-bolt"></i> */}
                         </span>
-                        Pilihan Paket Internet Terbaik untuk Anda
+                        LAYANAN INTERNET KAMI
                         <span className="ml-3 text-5xl md:text-6xl text-indigo-500">
-                            <i className="fas fa-bolt"></i>
+                            {/* <i className="fas fa-bolt"></i> */}
                         </span>
                     </h2>
                     <p className="text-center text-gray-300 mb-8 text-base md:text-lg">
-                        Berbagai pilihan paket internet dengan kecepatan tinggi dan harga terjangkau. Dapatkan pengalaman internet tanpa batas bersama kami!
+                    Tersedia pilihan paket internet berkecepatan tinggi dengan biaya terjangkau. 
+                    Jelajahi dunia digital tanpa hambatan bersama layanan kami.
                     </p>
 
                     {/* Responsive Grid */}
@@ -132,7 +137,7 @@ export default function Home() {
                         <a href="#" className="group relative block bg-slate-700 rounded-lg overflow-hidden transition-transform transform hover:scale-105 no-underline">
                             <img
                                 alt="15 Mbps Merdeka"
-                                src="/img/gambar1.jpeg"
+                                src="/img/internet 2.jpg"
                                 className="absolute inset-0 h-full w-full object-cover opacity-50 transition-opacity group-hover:opacity-30"
                             />
                             <div className="relative p-4 sm:p-6 lg:p-8">
@@ -151,7 +156,7 @@ export default function Home() {
                         <a href="#" className="group relative block bg-slate-700 rounded-lg overflow-hidden transition-transform transform hover:scale-105 no-underline">
                             <img
                                 alt="60 Mbps Merdeka"
-                                src="/img/gambar10.jpeg"
+                                src="/img/internet 3.jpg"
                                 className="absolute inset-0 h-full w-full object-cover opacity-50 transition-opacity group-hover:opacity-30"
                             />
                             <div className="relative p-4 sm:p-6 lg:p-8">
@@ -170,7 +175,7 @@ export default function Home() {
                         <a href="#" className="group relative block bg-slate-700 rounded-lg overflow-hidden transition-transform transform hover:scale-105 no-underline">
                             <img
                                 alt="120 Mbps Premium"
-                                src="/img/gambar3.jpeg"
+                                src="/img/tv 1.jpg"
                                 className="absolute inset-0 h-full w-full object-cover opacity-50 transition-opacity group-hover:opacity-30"
                             />
                             <div className="relative p-4 sm:p-6 lg:p-8">
