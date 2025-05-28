@@ -4,7 +4,7 @@ import { Helmet } from 'react-helmet';
 const Title = () => {
     return (
         <Helmet>
-            <title>Maxnet+ #Internet By KabelTelekom</title>
+            <title>Maxnet+ </title>
             <meta 
                 name="description" 
                 content="Maxnet+ provides high-speed and reliable internet solutions for homes and businesses. Explore our services and subscribe now!" 

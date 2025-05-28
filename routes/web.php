@@ -15,6 +15,7 @@ use App\Http\Controllers\PrivacyPolicyController;
 use App\Http\Controllers\TermsAndConditionsController;
 use App\Models\Service;
 use App\Http\Controllers\Auth;
+use App\Models\PrivacyPolicy;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,9 +33,18 @@ Route::get('/', function () {
     return Inertia::render('Home/Home');
 })->name('home');
 
-Route::get('/packages', function () {
+Route::get('/tentang', function () {
+    return Inertia::render('Home/Tentang');
+})->name('tentang');
+
+Route::get('/locations/packages', function () {
     return Inertia::render('Packages/Packages');
 })->name('packages');
+
+Route::get('/packages', function () {
+    return Inertia::render('Home/Paket');
+})->name('paket');
+
 
 Route::get('/locations', function () {
     return Inertia::render('Locations/Locations');

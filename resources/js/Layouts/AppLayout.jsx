@@ -46,26 +46,64 @@ export default function AppLayout({ children }) {
                     </div>
 
                     {/* Desktop and Tablet Menu */}
-                    <div className="hidden lg:flex items-center space-x-8 ml-auto">
-                        {['/', '/locations', '/contact'].map((route, index) => (
+                    <div className="hidden lg:flex items-center space-x-4 ml-auto">
+                        {/* <div className={`no-underline shrink-0 rounded-full px-3 py-1 text-sm font-semibold transition-all duration-300 ${
+                                    isActive(route) 
+                                        ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg' 
+                                        : 'text-gray-600 hover:bg-gray-100 hover:text-blue-600'
+                                }`}>    
+                                <div className="flex items-center space-x-2">
+                                    <a href="/">Home</a>
+                                    <a href="/packages">Paket</a>
+                                    <a href="/locations">Cek Lokasi</a>
+                                    <a href="/contact">Hubungi Kami </a>
+                                </div>
+                                
+                        </div> */}
+                         
+                        {['/', '/locations', '/packages','/contact'].map((route, index) => (
                             <Link 
                                 key={index}
                                 href={route}
-                                className={`shrink-0 rounded-lg p-2 text-lg font-medium transition-colors duration-300 ${isActive(route) ? 'bg-blue-600 bg-opacity-20 text-blue-600' : 'text-gray-500 hover:bg-gray-50 hover:text-gray-700'}`}
+                                className={`no-underline shrink-0 rounded-full px-3 py-1 text-sm font-semibold transition-all duration-300 ${
+                                    isActive(route) 
+                                        ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg' 
+                                        : 'text-gray-600 hover:bg-gray-100 hover:text-blue-600'
+                                }`}
                                 aria-current={isActive(route) ? 'page' : undefined}
-                                style={{ textDecoration: 'none' }}
                             >
-                                <div className="flex items-center">
-                                    {/* {route === '/' && <FaHe className="mr-2 text-xl" />} */}
-                                    {/* {route === '/locations' && <FaServicestack className="mr-2 text-xl" />} */}
-                                    {/* {route === '/contact' && <FaPhoneAlt className="mr-2 text-xl" />} */}
-                                    {route === '/' ? 'Home' : route === '/locations' ? 'Cek Lokasi' : 'Hubungi Kami'}
+                                <div className="flex items-center space-x-2">
+                                    {route === '/' && (
+                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                            <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
+                                        </svg>
+                                    )}
+                                    {route === '/locations' && (
+                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                            <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
+                                        </svg>
+                                    )}
+                                      {route === '/packages' && (
+                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                            <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
+                                        </svg>
+                                    )} 
+                                    {route === '/contact' && (
+                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                            <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
+                                        </svg>
+                                    )}
+                                  
+                                    <span>
+                                        {route === '/' ? 'Home' : route === '/locations' ? 'Cek Lokasi' : 'Hubungi Kami'}
+                                    </span>
                                 </div>
                             </Link>
                         ))}
                     </div>
+                    
                 </div>
-
+ 
                 {/* Mobile Dropdown Menu */}
                 <div className={`lg:hidden fixed top-0 right-0 h-full w-3/4 sm:w-1/2 bg-white shadow-lg transition-transform duration-300 transform ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}>
                     <div className="flex items-center justify-start px-4 py-4 border-b">
@@ -131,11 +169,21 @@ export default function AppLayout({ children }) {
 
                         {/* About Us Section */}
                         <div className="flex flex-col items-center lg:items-start text-center lg:text-left mb-12 lg:mb-0 lg:ml-[-2rem]">
-                            <h3 className="text-blue-400 font-semibold mb-4">About Us</h3>
+                            <h3 className="text-blue-400 font-semibold mb-1 text-lg px-4">PERUSAHAAN</h3>
                             <ul className="space-y-3 pl-4 lg:pl-0">
                                 <li>
-                                    <a href="#" className="text-slate-400 hover:text-teal-400 transition-colors duration-200 flex items-center gap-2 no-underline">
-                                        <FaHistory /> Company History
+                                    <a href="/tentang" className="px-4 text-slate-400 hover:text-teal-400 transition-colors duration-200 flex items-center gap-2 no-underline">
+                                         Tentang Kami
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="/terms-and-conditions" className="px-4 text-slate-400 hover:text-teal-400 transition-colors duration-200 flex items-center gap-2 no-underline">
+                                         Syarat dan Ketentuan
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="/privacy-policy" className="px-4 text-slate-400 hover:text-teal-400 transition-colors duration-200 flex items-center gap-2 no-underline">
+                                       Kebijakan Privasi
                                     </a>
                                 </li>
                             </ul>
@@ -143,21 +191,21 @@ export default function AppLayout({ children }) {
 
                         {/* Services Section */}
                         <div className="flex flex-col items-center lg:items-start text-center lg:text-left mb-12 lg:mb-0 lg:ml-[-2rem]">
-                            <h3 className="text-blue-400 font-semibold mb-4">Our Services</h3>
-                            <ul className="space-y-3 pl-4 lg:pl-6">
+                            <h3 className="text-blue-400 font-semibold mb-1 text-lg ">PAKET</h3>
+                            <ul className="space-y-3 pl-4 lg:pl-0">
                                 <li>
-                                    <a href="#" className="text-slate-400 hover:text-teal-400 transition-colors duration-200 flex items-center gap-2 no-underline">
-                                        <FaBusinessTime /> Business SOHO
+                                    <a href="#" className="text-lg text-slate-400 hover:text-teal-400 transition-colors duration-200 flex items-center gap-2 no-underline">
+                                    Internet Business 
                                     </a>
                                 </li>
                                 <li>
                                     <a href="#" className="text-slate-400 hover:text-teal-400 transition-colors duration-200 flex items-center gap-2 no-underline">
-                                        <FaHome /> Home Internet
+                                    Home Internet
                                     </a>
                                 </li>
                                 <li>
                                     <a href="#" className="text-slate-400 hover:text-teal-400 transition-colors duration-200 flex items-center gap-2 no-underline">
-                                        <FaHeadset /> Service Support 24/7
+                                        Internet Gaming
                                     </a>
                                 </li>
                             </ul>
@@ -165,11 +213,11 @@ export default function AppLayout({ children }) {
 
                         {/* Contact Us Section */}
                         <div className="flex flex-col items-center lg:items-start text-center lg:text-left mb-12 lg:mb-1 lg:ml-[-2rem]">
-                            <h3 className="text-blue-400 font-semibold mb-4">Contact Us</h3>
-                            <ul className="space-y-3 pl-4 lg:pl-6">
+                            <h3 className="text-lg text-blue-400 font-semibold mb-1">BANTUAN DAN PANDUAN</h3>
+                            <ul className="space-y-3 pl-4 lg:pl-0">
                                 <li>
-                                    <a href="mailto:info@maxnetplus.id" className="text-slate-400 hover:text-teal-400 transition-colors duration-200 flex items-center gap-2 no-underline">
-                                        <FaEnvelope /> info@maxnetplus.id
+                                    <a href="mailto:info@maxnetplus.id" className="text-slate-400 hover:text-teal-400 transition-colors duration-200 flex items-center gap-2 no-underline text-lg">
+                                    <FaEnvelope size={20} />  info@maxnetplus.id
                                     </a>
                                 </li>
                                 <li>
@@ -184,9 +232,8 @@ export default function AppLayout({ children }) {
                                 </li>
                             </ul>
                         </div>
-
                         {/* Map Section */}
-                        <div className="flex flex-col items-center lg:items-end mt-10 lg:mt-0 text-center lg:ml-[-1rem]">
+                        {/* <div className="flex flex-col items-center lg:items-end mt-10 lg:mt-0 text-center lg:ml-[-1rem]">
                             <div className="rounded-lg overflow-hidden shadow-md p-1 bg-slate-800 w-full lg:w-[300px]">
                                 <iframe
                                     title="PT Lingkar Kabel Telekomunikasi Location"
@@ -198,7 +245,7 @@ export default function AppLayout({ children }) {
                                     className="rounded-lg border"
                                 ></iframe>
                             </div>
-                        </div>
+                        </div> */}
                     </div>
 
                     {/* Footer Bottom */}
@@ -212,9 +259,9 @@ export default function AppLayout({ children }) {
                         </div>
                         <p className="text-sm text-slate-500">
                             &copy; 2024 MaxNet. All rights reserved. 
-                            <a href="/terms-and-conditions" className="text-teal-500 hover:text-teal-400 no-underline"> Syarat & Ketentuan </a> 
+                            {/* <a href="/terms-and-conditions" className="text-teal-500 hover:text-teal-400 no-underline"> Syarat & Ketentuan </a> 
                             · 
-                            <a href="/privacy-policy" className="text-teal-500 hover:text-teal-400 no-underline"> Kebijakan Privasi </a>
+                            <a href="/privacy-policy" className="text-teal-500 hover:text-teal-400 no-underline"> Kebijakan Privasi </a> */}
                         </p>
                     </div>
                 </div>

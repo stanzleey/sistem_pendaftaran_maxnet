@@ -3,166 +3,289 @@ import axios from 'axios';
 import { Inertia } from '@inertiajs/inertia';
 import AppLayout from '@/Layouts/AppLayout';
 import ReactPaginate from 'react-paginate';
-import { FaDollarSign, FaBolt, FaInfoCircle } from 'react-icons/fa';
+import { FaDollarSign, FaBolt, FaInfoCircle, FaWifi, FaClock, FaShieldAlt } from 'react-icons/fa';
 import Title from '@/Layouts/Title';
 
 const Packages = () => {
     const [services, setServices] = useState([]);
     const [selectedPackage, setSelectedPackage] = useState(null);
+    const [isLoading, setIsLoading] = useState(true);
     
     // Pagination states
     const [currentPage, setCurrentPage] = useState(0);
     const itemsPerPage = 6;
 
-    // Default images
+    // Default images with more variety
     const defaultImages = [
-        '/img/gambar1.jpeg',
-        '/img/gambar10.jpeg',
-        '/img/gambar3.jpeg',
-        '/img/gambar11.jpeg',
-        '/img/gambar9.jpeg',
-        '/img/gambar6.jpeg',
+        '/img/gambar 1.jpg',
+        '/img/gambar 2.jpg',
+        '/img/gambar 3.jpg',
+        '/img/gambar 4.jpg',
+        '/img/gambar 5.jpg',
+        '/img/internet-6.jpg',
     ];
 
     useEffect(() => {
         const fetchServices = async () => {
             try {
+                setIsLoading(true);
                 const response = await axios.get('http://127.0.0.1:8000/api/services');
-                const sortedServices = response.data.sort((a, b) => a.service_speed - b.service_speed); // Sort by speed
-                console.log('Fetched and Sorted Services:', sortedServices); 
+                const sortedServices = response.data.sort((a, b) => a.service_speed - b.service_speed);
                 setServices(sortedServices);
             } catch (error) {
                 console.error('Error fetching services:', error);
+            } finally {
+                setIsLoading(false);
             }
         };
         fetchServices();
     }, []);
     
-
     const [locationMaps, setLocationMaps] = useState('');
     useEffect(() => {
         const params = new URLSearchParams(window.location.search);
         const location = params.get('location_maps');
-        console.log('Initial Location Maps:', location); // Debugging log
         if (location) {
-            setLocationMaps(location); // Set coordinates from URL
+            setLocationMaps(location);
         }
     }, []);    
 
     const handleSelectPackage = (service) => {
-        console.log('Selected Service:', service.service_name); // Debugging log
-        console.log('Location Maps:', locationMaps); // Debugging log
-    
-        // Redirect ke halaman Customers
         if (service.service_name && locationMaps) {
             Inertia.visit(`/customers?package=${encodeURIComponent(service.service_name)}&location_maps=${encodeURIComponent(locationMaps)}`);
-        } else {
-            console.error('Service Name or Location Maps missing!');
         }
     };    
-    
 
     // Handle page change
     const handlePageChange = ({ selected }) => {
         setCurrentPage(selected);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
     const formatPrice = (price) => {
-        return `Rp ${new Intl.NumberFormat('id-ID').format(price)},-`;
+        return `Rp ${new Intl.NumberFormat('id-ID').format(price)}/bulan`;
     };
 
     // Calculate current items based on pagination
     const offset = currentPage * itemsPerPage;
     const currentItems = services.slice(offset, offset + itemsPerPage);
 
+    // Popular packages (assuming services with speed > 100Mbps are popular)
+    const popularPackages = services.filter(service => service.service_speed > 100);
+
     return (
         <AppLayout>
-            <Title /> {/* Render the Title component here */}
+            <Title />
 
-            <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-b from-gray-50 via-gray-100 to-gray-200 text-gray-900 py-8">
-                <h1 className="text-5xl font-extrabold mb-12 text-center text-gray-800">
-                    Pilihan Paket Internet Maxnet
-                </h1>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 w-full max-w-7xl px-4 sm:px-8">
-                    {currentItems.map((service, index) => {
-                        const imageIndex = index % defaultImages.length;
-
-                        return (
-                            <div
-                                key={`${service.id}-${index}`} // Ensure unique keys
-                                className="relative group bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-all transform hover:scale-105"
-                            >
-                                {/* Animated background */}
-                                <div className="absolute inset-0 z-0 opacity-25">
-                                    <div className="animate-pulse h-full w-full bg-gradient-to-r from-indigo-300 via-purple-300 to-indigo-400 opacity-75"></div>
-                                </div>
-
-                                {/* Display service image or fallback to default image */}
-                                <img
-                                    src={service.image_url || defaultImages[imageIndex]}
-                                    alt={service.service_name}
-                                    className="h-48 sm:h-64 w-full object-cover transition duration-500 group-hover:scale-110 relative z-10"
-                                />
-
-                                <div className="p-4 sm:p-6 relative z-10">
-                                    <h3 className="text-lg sm:text-2xl font-bold text-gray-800 mb-2 sm:mb-4">
-                                        {service.service_name}
-                                    </h3>
-
-                                    {/* Display service speed */}
-                                    <div className="flex items-center mb-2 sm:mb-4">
-                                        <div className="flex items-center justify-center w-8 h-8 bg-purple-100 text-purple-600 rounded-full mr-3">
-                                            <FaBolt className="text-lg" />
-                                        </div>
-                                        <span className="text-gray-800 font-medium text-sm sm:text-md">
-                                            Kecepatan: <span className="font-bold text-gray-900">{service.service_speed} Mbps</span>
-                                        </span>
-                                    </div>
-
-                                    {/* Display service price */}
-                                    <div className="flex items-center justify-center mb-4">
-                                        <p className="text-lg sm:text-2xl font-bold text-purple-600 bg-gray-100 rounded-lg px-3 py-1 sm:px-4 sm:py-2">
-                                            {formatPrice(service.service_price)}
-                                        </p>
-                                    </div>
-
-                                    {/* Package selection button */}
-                                    <button
-                                        type="button"
-                                        onClick={() => handleSelectPackage(service)} // Ensure correct service is passed
-                                        className="w-full rounded-lg bg-gradient-to-r from-purple-600 to-blue-600 px-4 py-2 sm:px-6 sm:py-3 text-md sm:text-lg font-semibold text-white hover:bg-blue-700 transition duration-300 transform hover:scale-105"
-                                    >
-                                        <FaInfoCircle className="inline-block mr-1 sm:mr-2" />
-                                        Pilih Paket
-                                    </button>
-                                </div>
-                            </div>
-                        );
-                    })}
+            <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 text-gray-900 py-8 px-4 sm:px-6">
+                {/* Hero Section */}
+                <div className="max-w-7xl mx-auto text-center mb-12">
+                    <h1 className="text-4xl sm:text-5xl font-bold text-gray-800 mb-4">
+                        Paket Internet <span className="text-blue-600">Maxnet</span>
+                    </h1>
+                    <p className="text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto">
+                        Pilih paket internet terbaik untuk kebutuhan Anda dengan kecepatan tinggi dan harga terjangkau
+                    </p>
                 </div>
 
-                {/* Pagination component */}
-                <ReactPaginate
-                    previousLabel={'← Back'}
-                    nextLabel={'Next →'}
-                    pageCount={Math.ceil(services.length / itemsPerPage)}
-                    onPageChange={handlePageChange}
-                    containerClassName={'flex justify-center mt-8 sm:mt-12 space-x-2'}
-                    activeClassName={'bg-purple-700 text-white font-bold shadow-lg'}
-                    pageClassName={ 
-                        'py-2 px-3 bg-white text-gray-900 rounded-lg shadow-md hover:bg-gray-100 transition duration-200'
-                    }
-                    previousLinkClassName={
-                        'py-2 px-3 bg-white text-gray-900 rounded-lg shadow-md hover:bg-gray-100 transition duration-200'
-                    }
-                    nextLinkClassName={
-                        'py-2 px-3 bg-white text-gray-900 rounded-lg shadow-md hover:bg-gray-100 transition duration-200'
-                    }
-                    disabledClassName={'opacity-50 cursor-not-allowed'}
-                    pageLinkClassName={'w-full h-full flex justify-center items-center no-underline'}
-                    breakLinkClassName={'py-2 px-3 bg-white text-gray-900 rounded-lg shadow-md no-underline'} 
-                />
+                {/* Popular Packages Section */}
+                {popularPackages.length > 0 && (
+                    <div className="max-w-7xl mx-auto mb-12">
+                        <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-6 flex items-center">
+                            <FaBolt className="text-yellow-500 mr-2" />
+                            Paket Populer
+                        </h2>
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            {popularPackages.slice(0, 3).map((service, index) => (
+                                <div key={`popular-${index}`} className="bg-white rounded-xl shadow-lg overflow-hidden border-2 border-yellow-400 transform hover:scale-[1.02] transition-all">
+                                    <div className="relative h-48 overflow-hidden">
+                                        <img 
+                                            src={service.image_url || defaultImages[index % defaultImages.length]}
+                                            alt={service.service_name}
+                                            className="w-full h-full object-cover"
+                                        />
+                                        <div className="absolute top-2 right-2 bg-yellow-500 text-white text-xs font-bold px-2 py-1 rounded">
+                                            POPULER
+                                        </div>
+                                    </div>
+                                    <div className="p-6">
+                                        <h3 className="text-xl font-bold text-gray-800 mb-2">{service.service_name}</h3>
+                                        <div className="flex items-center mb-3">
+                                            <FaBolt className="text-blue-500 mr-2" />
+                                            <span className="text-gray-700">{service.service_speed} Mbps</span>
+                                        </div>
+                                        <div className="mb-4">
+                                            <span className="text-2xl font-bold text-blue-600">
+                                                {formatPrice(service.service_price)}
+                                            </span>
+                                        </div>
+                                        <button
+                                            onClick={() => handleSelectPackage(service)}
+                                            className="w-full bg-gradient-to-r from-purple-600 to-blue-600 text-white py-2 rounded-lg font-medium hover:from-purple-700 hover:to-blue-700 transition"
+                                        >
+                                            Pilih Paket
+                                        </button>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                )}
+
+                {/* All Packages Section */}
+                <div className="max-w-7xl mx-auto">
+                    <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-6 flex items-center">
+                        <FaWifi className="text-blue-500 mr-2" />
+                        Semua Paket Internet
+                    </h2>
+
+                    {isLoading ? (
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            {[...Array(6)].map((_, index) => (
+                                <div key={`skeleton-${index}`} className="bg-white rounded-xl shadow-md overflow-hidden">
+                                    <div className="animate-pulse h-48 bg-gray-200"></div>
+                                    <div className="p-6 space-y-4">
+                                        <div className="h-6 bg-gray-200 rounded"></div>
+                                        <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+                                        <div className="h-8 bg-gray-200 rounded w-1/2"></div>
+                                        <div className="h-10 bg-gray-200 rounded"></div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    ) : (
+                        <>
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                {currentItems.map((service, index) => {
+                                    const imageIndex = index % defaultImages.length;
+                                    const isPopular = service.service_speed > 100;
+
+                                    return (
+                                        <div
+                                            key={`${service.id}-${index}`}
+                                            className={`bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-[1.02] transition-all ${isPopular ? 'border-t-4 border-yellow-400' : ''}`}
+                                        >
+                                            <div className="relative h-48 overflow-hidden">
+                                                <img
+                                                    src={service.image_url || defaultImages[imageIndex]}
+                                                    alt={service.service_name}
+                                                    className="w-full h-full object-cover transition duration-500 hover:scale-110"
+                                                />
+                                                {isPopular && (
+                                                    <div className="absolute top-2 right-2 bg-yellow-500 text-white text-xs font-bold px-2 py-1 rounded">
+                                                        POPULER
+                                                    </div>
+                                                )}
+                                            </div>
+
+                                            <div className="p-6">
+                                                <h3 className="text-xl font-bold text-gray-800 mb-2">
+                                                    {service.service_name}
+                                                </h3>
+
+                                                <div className="space-y-3 mb-4">
+                                                    <div className="flex items-center">
+                                                        <FaBolt className="text-blue-500 mr-2" />
+                                                        <span className="text-gray-700">
+                                                            Kecepatan: <span className="font-semibold">{service.service_speed} Mbps</span>
+                                                        </span>
+                                                    </div>
+                                                    <div className="flex items-center">
+                                                        <FaClock className="text-blue-500 mr-2" />
+                                                        <span className="text-gray-700">
+                                                            Unlimited <span className="font-semibold">24/7</span>
+                                                        </span>
+                                                    </div>
+                                                    <div className="flex items-center">
+                                                        <FaShieldAlt className="text-blue-500 mr-2" />
+                                                        <span className="text-gray-700">
+                                                            Garansi <span className="font-semibold">99.9% uptime</span>
+                                                        </span>
+                                                    </div>
+                                                </div>
+
+                                                <div className="mb-5 text-center">
+                                                    <span className="text-2xl font-bold text-blue-600">
+                                                        {formatPrice(service.service_price)}
+                                                    </span>
+                                                </div>
+
+                                                <button
+                                                    onClick={() => handleSelectPackage(service)}
+                                                    className="w-full bg-gradient-to-r from-blue-600 to-blue-600 text-white py-2 rounded-lg font-medium hover:from-purple-700 hover:to-blue-700 transition flex items-center justify-center"
+                                                >
+                                                    <FaInfoCircle className="mr-2" />
+                                                    Pilih Paket
+                                                </button>
+                                            </div>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+
+                            {/* Pagination */}
+                            <div className="mt-10">
+                                <ReactPaginate
+                                    previousLabel={'← Sebelumnya'}
+                                    nextLabel={'Selanjutnya →'}
+                                    pageCount={Math.ceil(services.length / itemsPerPage)}
+                                    onPageChange={handlePageChange}
+                                    containerClassName={'flex justify-center items-center space-x-2'}
+                                    activeClassName={'bg-purple-600 text-white'}
+                                    pageClassName={
+                                        'flex items-center justify-center w-10 h-10 rounded-full bg-white shadow-sm hover:bg-gray-100 transition'
+                                    }
+                                    previousClassName={
+                                        'px-4 py-2 rounded-lg bg-white shadow-sm hover:bg-gray-100 transition'
+                                    }
+                                    nextClassName={
+                                        'px-4 py-2 rounded-lg bg-white shadow-sm hover:bg-gray-100 transition'
+                                    }
+                                    disabledClassName={'opacity-50 cursor-not-allowed'}
+                                    breakClassName={
+                                        'flex items-center justify-center w-10 h-10 rounded-full bg-white shadow-sm'
+                                    }
+                                />
+                            </div>
+                        </>
+                    )}
+                </div>
+
+                {/* Features Section */}
+                <div className="max-w-7xl mx-auto mt-16 bg-white rounded-xl shadow-md p-8">
+                    <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-8 text-center">
+                        Keunggulan Layanan Maxnet
+                    </h2>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        <div className="text-center">
+                            <div className="flex justify-center mb-4">
+                                <div className="bg-purple-100 p-4 rounded-full">
+                                    <FaBolt className="text-purple-600 text-2xl" />
+                                </div>
+                            </div>
+                            <h3 className="text-xl font-bold text-gray-800 mb-2">Kecepatan Tinggi</h3>
+                            <p className="text-gray-600">Internet super cepat dengan bandwidth dedicated untuk pengalaman tanpa buffering</p>
+                        </div>
+                        <div className="text-center">
+                            <div className="flex justify-center mb-4">
+                                <div className="bg-blue-100 p-4 rounded-full">
+                                    <FaClock className="text-blue-600 text-2xl" />
+                                </div>
+                            </div>
+                            <h3 className="text-xl font-bold text-gray-800 mb-2">Stabil 24/7</h3>
+                            <p className="text-gray-600">Layanan uptime 99.9% dengan jaringan fiber optic yang stabil</p>
+                        </div>
+                        <div className="text-center">
+                            <div className="flex justify-center mb-4">
+                                <div className="bg-green-100 p-4 rounded-full">
+                                    <FaShieldAlt className="text-green-600 text-2xl" />
+                                </div>
+                            </div>
+                            <h3 className="text-xl font-bold text-gray-800 mb-2">Aman & Terjamin</h3>
+                            <p className="text-gray-600">Dilengkapi firewall dan proteksi untuk keamanan data Anda</p>
+                        </div>
+                    </div>
+                </div>
             </div>
         </AppLayout>
     );
