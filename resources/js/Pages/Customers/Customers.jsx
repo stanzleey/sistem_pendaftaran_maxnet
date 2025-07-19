@@ -600,5 +600,6 @@ const Customers = () => {
             </div>
         </AppLayout>
     );
+    
 };
 export default Customers;
