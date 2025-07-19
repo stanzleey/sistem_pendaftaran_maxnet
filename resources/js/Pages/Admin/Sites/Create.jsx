@@ -1,16 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Inertia } from '@inertiajs/inertia';
 import Sidebar from '@/Components/Sidebar';
 import { Head, usePage } from '@inertiajs/react';
-import Swal from 'sweetalert2'; // Import SweetAlert
+import Swal from 'sweetalert2';
+import L from 'leaflet';
+import 'leaflet/dist/leaflet.css';
 
 const Create = () => {
-    // Retrieve site_id from Inertia props sent from the backend
     const { props } = usePage(); 
     const { site_id } = props;
 
     const [formData, setFormData] = useState({
-        site_id: site_id, // Include site_id in formData
+        site_id: site_id,
         site_name: '',
         site_parent: '',
         site_description: '',
@@ -20,6 +21,12 @@ const Create = () => {
         site_port_capacity: '',
         site_picture: null,
     });
+
+    // State untuk map
+    const [map, setMap] = useState(null);
+    const [mapInitialized, setMapInitialized] = useState(false);
+    const [selectedLocation, setSelectedLocation] = useState(null);
+    const [showMapModal, setShowMapModal] = useState(false);
 
     const handleChange = (e) => {
         const { name, value, files } = e.target;
@@ -40,7 +47,6 @@ const Create = () => {
         Inertia.post(route('sites.store'), form, {
             forceFormData: true,
             onSuccess: () => {
-                // Show success notification
                 Swal.fire({
                     position: "center",
                     icon: "success",
@@ -54,7 +60,61 @@ const Create = () => {
             },
         });
     };
-    
+
+    // Fungsi untuk inisialisasi peta
+    useEffect(() => {
+        if (showMapModal && !mapInitialized) {
+            const initialMap = L.map('location-map').setView([-7.5801076, 110.765559], 13);
+            
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(initialMap);
+
+            // Tambahkan event click ke peta
+            initialMap.on('click', (e) => {
+                const { lat, lng } = e.latlng;
+                setSelectedLocation({ lat, lng });
+                
+                // Hapus marker sebelumnya jika ada
+                initialMap.eachLayer(layer => {
+                    if (layer instanceof L.Marker) {
+                        initialMap.removeLayer(layer);
+                    }
+                });
+                
+                // Tambahkan marker baru
+                L.marker([lat, lng]).addTo(initialMap)
+                    .bindPopup(`Lokasi Terpilih: ${lat.toFixed(6)}, ${lng.toFixed(6)}`)
+                    .openPopup();
+            });
+
+            setMap(initialMap);
+            setMapInitialized(true);
+        }
+
+        return () => {
+            if (map) {
+                map.remove();
+            }
+        };
+    }, [showMapModal, mapInitialized]);
+
+    // Fungsi untuk memilih lokasi dari peta
+    const handleSelectLocation = () => {
+        if (selectedLocation) {
+            setFormData(prev => ({
+                ...prev,
+                site_location_maps: `${selectedLocation.lat},${selectedLocation.lng}`
+            }));
+            setShowMapModal(false);
+        } else {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Peringatan',
+                text: 'Silakan pilih lokasi di peta terlebih dahulu',
+            });
+        }
+    };
 
     return (
         <div className="flex">
@@ -135,16 +195,28 @@ const Create = () => {
                             </div>
 
                             {/* Site Location Maps */}
-                            <div>
+                            <div className="sm:col-span-2">
                                 <label htmlFor="site_location_maps" className="block text-sm font-medium text-gray-700">Site Location Maps</label>
-                                <input
-                                    id="site_location_maps"
-                                    name="site_location_maps"
-                                    type="text"
-                                    value={formData.site_location_maps}
-                                    onChange={handleChange}
-                                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                                />
+                                <div className="mt-1 flex rounded-md shadow-sm">
+                                    <input
+                                        id="site_location_maps"
+                                        name="site_location_maps"
+                                        type="text"
+                                        value={formData.site_location_maps}
+                                        onChange={handleChange}
+                                        required
+                                        readOnly
+                                        className="flex-1 block w-full rounded-none rounded-l-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                        placeholder="Pilih lokasi dari peta"
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowMapModal(true)}
+                                        className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-r-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                    >
+                                        Pilih di Peta
+                                    </button>
+                                </div>
                             </div>
 
                             {/* Site Address */}
@@ -198,6 +270,40 @@ const Create = () => {
                     </form>
                 </div>
             </div>
+
+            {/* Modal Peta */}
+            {showMapModal && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+                    <div className="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] flex flex-col">
+                        <div className="px-6 py-4 border-b border-gray-200">
+                            <h3 className="text-lg font-medium text-gray-900">Pilih Lokasi di Peta</h3>
+                        </div>
+                        <div className="p-4 flex-grow">
+                            <div id="location-map" className="w-full h-96 rounded-md"></div>
+                            <div className="mt-4 text-sm text-gray-500">
+                                Klik pada peta untuk memilih lokasi. Koordinat yang dipilih: 
+                                {selectedLocation ? ` ${selectedLocation.lat.toFixed(6)}, ${selectedLocation.lng.toFixed(6)}` : ' Belum dipilih'}
+                            </div>
+                        </div>
+                        <div className="px-6 py-4 border-t border-gray-200 flex justify-end space-x-3">
+                            <button
+                                type="button"
+                                onClick={() => setShowMapModal(false)}
+                                className="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                            >
+                                Batal
+                            </button>
+                            <button
+                                type="button"
+                                onClick={handleSelectLocation}
+                                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                            >
+                                Pilih Lokasi Ini
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

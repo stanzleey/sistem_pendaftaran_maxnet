@@ -80,9 +80,9 @@ export default function Contact({ success }) {
             />
 <section className="flex flex-col lg:flex-row items-stretch justify-center bg-gray-100 py-10 lg:space-x-6 px-4">
     <div className="lg:w-1/2 w-full relative max-w-lg h-[80vh] overflow-hidden"> {/* Mengatur tinggi dan overflow */}
-        <img src="/img/CS.jpeg" alt="Contact Us" className="w-full h-full object-cover rounded-lg" />
+        <img src="/img/Cust Serv.jpg" alt="Contact Us" className="w-full h-full object-cover rounded-lg" />
         <div className="absolute inset-0 bg-black opacity-40 rounded-lg"></div>
-        <div className="absolute inset-0 flex flex-col justify-center items-center text-center text-white px-4 z-10">
+        {/* <div className="absolute inset-0 flex flex-col justify-center items-center text-center text-white px-4 z-10">
             <h2 className="text-3xl font-bold">Get in Touch</h2>
             <p className="mt-3 text-base">
                 Kami selalu siap sedia untuk kenyamanan dan kepuasan dalam melayani anda dalam menjelajah internet. Silahkan hubungi kami jika ada kendala.
@@ -93,7 +93,7 @@ export default function Contact({ success }) {
             <address className="mt-1 text-gray-200 not-italic text-sm">
                 Ruko Puri Indrasta No.1, Jl. Mangesti Raya, Gentan, Solo
             </address>
-        </div>
+        </div> */}
     </div>
 
     <div className="lg:w-2/5 w-full p-8 bg-white rounded-lg shadow-lg flex flex-col justify-center max-w-lg"> {/* Mengatur tinggi tanpa overflow */}

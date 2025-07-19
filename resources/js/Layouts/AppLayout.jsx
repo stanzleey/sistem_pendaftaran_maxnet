@@ -47,60 +47,49 @@ export default function AppLayout({ children }) {
 
                     {/* Desktop and Tablet Menu */}
                     <div className="hidden lg:flex items-center space-x-4 ml-auto">
-                        {/* <div className={`no-underline shrink-0 rounded-full px-3 py-1 text-sm font-semibold transition-all duration-300 ${
-                                    isActive(route) 
-                                        ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg' 
-                                        : 'text-gray-600 hover:bg-gray-100 hover:text-blue-600'
-                                }`}>    
-                                <div className="flex items-center space-x-2">
-                                    <a href="/">Home</a>
-                                    <a href="/packages">Paket</a>
-                                    <a href="/locations">Cek Lokasi</a>
-                                    <a href="/contact">Hubungi Kami </a>
-                                </div>
-                                
-                        </div> */}
-                         
-                        {['/', '/locations', '/packages','/contact'].map((route, index) => (
-                            <Link 
-                                key={index}
-                                href={route}
-                                className={`no-underline shrink-0 rounded-full px-3 py-1 text-sm font-semibold transition-all duration-300 ${
-                                    isActive(route) 
-                                        ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg' 
-                                        : 'text-gray-600 hover:bg-gray-100 hover:text-blue-600'
-                                }`}
-                                aria-current={isActive(route) ? 'page' : undefined}
-                            >
-                                <div className="flex items-center space-x-2">
-                                    {route === '/' && (
-                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                                            <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
-                                        </svg>
-                                    )}
-                                    {route === '/locations' && (
-                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                                            <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
-                                        </svg>
-                                    )}
-                                      {route === '/packages' && (
-                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                                            <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
-                                        </svg>
-                                    )} 
-                                    {route === '/contact' && (
-                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                                            <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
-                                        </svg>
-                                    )}
-                                  
-                                    <span>
-                                        {route === '/' ? 'Home' : route === '/locations' ? 'Cek Lokasi' : 'Hubungi Kami'}
-                                    </span>
-                                </div>
-                            </Link>
-                        ))}
-                    </div>
+    {['/', '/locations', '/packages', '/contact'].map((route, index) => (
+        <Link 
+            key={index}
+            href={route}
+            className={`no-underline shrink-0 rounded-full px-3 py-1 text-sm font-semibold transition-all duration-300 ${
+                isActive(route) 
+                    ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg' 
+                    : 'text-gray-600 hover:bg-gray-100 hover:text-blue-600'
+            }`}
+            aria-current={isActive(route) ? 'page' : undefined}
+        >
+            <div className="flex items-center space-x-2">
+                {route === '/' && (
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                        <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
+                    </svg>
+                )}
+                {route === '/locations' && (
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                        <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
+                    </svg>
+                )}
+                {route === '/packages' && (
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                        <path fillRule="evenodd" d="M10 2a4 4 0 00-4 4v1H5a1 1 0 00-.994.89l-1 9A1 1 0 004 18h12a1 1 0 00.994-1.11l-1-9A1 1 0 0015 7h-1V6a4 4 0 00-4-4zm2 5V6a2 2 0 10-4 0v1h4zm-6 3a1 1 0 112 0 1 1 0 01-2 0zm7-1a1 1 0 100 2 1 1 0 000-2z" clipRule="evenodd" />
+                    </svg>
+                )}
+                {route === '/contact' && (
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                        <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
+                    </svg>
+                )}
+                
+                <span>
+                    {route === '/' ? 'Home' : 
+                     route === '/locations' ? 'Cek Lokasi' : 
+                     route === '/packages' ? 'Paket' : 
+                     'Hubungi Kami'}
+                </span>
+            </div>
+        </Link>
+    ))}
+</div>
                     
                 </div>
  

@@ -33,6 +33,7 @@ class CustomerController extends Controller
             'installation_address' => 'required|string|max:255',
             'location_maps' => 'nullable|string|max:255',
             'service_name' => 'required|exists:services,service_name',
+            'service_price' => 'required|exists:services,service_price',
         ]);
 
         // Create a new customer instance
@@ -44,6 +45,7 @@ class CustomerController extends Controller
             'installation_address' => $request->installation_address,
             'location_maps' => $request->location_maps,
             'service_name' => $request->service_name,
+            'service_price' => $request->service_price,
         ]);
 
         // Log activity

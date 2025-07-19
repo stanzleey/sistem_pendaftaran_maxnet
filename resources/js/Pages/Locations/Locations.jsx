@@ -13,11 +13,13 @@ import {
   FaTimesCircle,
   FaSearch,
   FaLocationArrow,
+  FaLink,
 } from "react-icons/fa";
 import Title from "@/Layouts/Title";
 
 export default function Lokasi() {
   const [searchTerm, setSearchTerm] = useState("");
+  const [gMapsLink, setGMapsLink] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [map, setMap] = useState(null);
   const [locations, setLocations] = useState([]);
@@ -30,6 +32,7 @@ export default function Lokasi() {
   });
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
   const [isWithinRange, setIsWithinRange] = useState(false);
+  const [selectedLocationName, setSelectedLocationName] = useState("");
 
   const fetchLocations = async () => {
     try {
@@ -55,12 +58,34 @@ export default function Lokasi() {
   const handleSearch = async (event) => {
     const query = event.target.value;
     setSearchTerm(query);
+    
     if (query.length > 2) {
-      const response = await fetch(
-        `https://nominatim.openstreetmap.org/search?format=json&q=${query}`
-      );
-      const data = await response.json();
-      setSearchResults(data);
+      try {
+        const response = await fetch(
+          `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&countrycodes=id&limit=5`
+        );
+        const data = await response.json();
+        
+        if (data.length === 0) {
+          // Jika tidak ditemukan, coba tanpa kode pos/RT/RW
+          const simplifiedQuery = query.replace(/,.*\d{5}/, "").replace(/RT.*RW.*,/, "").trim();
+          if (simplifiedQuery !== query) {
+            const retryResponse = await fetch(
+              `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(simplifiedQuery)}&countrycodes=id&limit=5`
+            );
+            const retryData = await retryResponse.json();
+            setSearchResults(retryData);
+          } else {
+            setSearchResults([]);
+            toast.info("Alamat tidak ditemukan. Coba format yang lebih sederhana.");
+          }
+        } else {
+          setSearchResults(data);
+        }
+      } catch (error) {
+        console.error("Error fetching locations:", error);
+        toast.error("Gagal mencari alamat. Coba lagi nanti.");
+      }
     } else {
       setSearchResults([]);
     }
@@ -94,9 +119,60 @@ export default function Lokasi() {
     });
   };
 
+  const extractCoordinatesFromGMapsLink = async (url) => {
+    try {
+      // Jika URL adalah short link (goo.gl/maps/... atau maps.app.goo.gl/...)
+      if (url.includes('goo.gl/maps/') || url.includes('maps.app.goo.gl/')) {
+        // Lakukan request untuk mendapatkan URL akhir (redirect URL)
+        const response = await fetch(url, { redirect: 'manual' });
+        if (response.ok) {
+          const finalUrl = response.url || url;
+          return extractCoordinatesFromGMapsLink(finalUrl); // Parse lagi dengan URL lengkap
+        }
+      }
+  
+      // Format 1: https://www.google.com/maps/place/.../@lat,lon,z
+      let match = url.match(/@(-?\d+\.\d+),(-?\d+\.\d+)/);
+      if (match) return { lat: parseFloat(match[1]), lon: parseFloat(match[2]) };
+  
+      // Format 2: https://www.google.com/maps?q=lat,lon
+      match = url.match(/q=(-?\d+\.\d+),(-?\d+\.\d+)/);
+      if (match) return { lat: parseFloat(match[1]), lon: parseFloat(match[2]) };
+  
+      return null;
+    } catch (error) {
+      console.error("Error parsing Google Maps URL:", error);
+      return null;
+    }
+  };
+
+  const handleGMapsLinkSubmit = async (e) => {
+    e.preventDefault();
+    
+    if (!gMapsLink) {
+      toast.error("Masukkan link Google Maps terlebih dahulu");
+      return;
+    }
+    
+    const coords = await extractCoordinatesFromGMapsLink(gMapsLink);
+    
+    if (!coords) {
+      toast.error("Format link Google Maps tidak valid. Pastikan link mengandung koordinat lokasi.");
+      return;
+    }
+    
+    const address = await getAddressFromCoordinates(coords.lat, coords.lon);
+    await updateMapLocation(coords.lat, coords.lon, address || "Lokasi dari Google Maps");
+    setGMapsLink("");
+  };
+
   const updateMapLocation = async (lat, lon, displayName) => {
     const selectedCoords = [lat, lon];
     clearExistingLayers();
+
+    // Update search term with the selected location name
+    setSearchTerm(displayName);
+    setSelectedLocationName(displayName);
 
     // Custom icon for user location
     const userIcon = L.divIcon({
@@ -141,23 +217,9 @@ export default function Lokasi() {
     let nearestDistance = Infinity;
     let nearestLoc = null;
 
-    // Custom icon for ODP locations
-    const odpIcon = L.divIcon({
-      className: 'odp-location-icon',
-      html: `<div class="w-6 h-6 bg-green-600 rounded-full flex items-center justify-center text-white"><FaMapMarkerAlt class="text-sm"/></div>`,
-      iconSize: [24, 24],
-      iconAnchor: [12, 24]
-    });
-
-    // Add markers for all ODPs
+    // Calculate nearest ODP without displaying it on the map
     locations.forEach((location) => {
       const locationLatLng = L.latLng(location.lat, location.lon);
-      const marker = L.marker([location.lat, location.lon], {
-        icon: odpIcon
-      })
-        .addTo(map)
-        .bindPopup(`<b>${location.site_name}</b><br>${location.site_address}`);
-      
       const distance = locationLatLng.distanceTo(L.latLng(lat, lon));
       if (distance < nearestDistance) {
         nearestDistance = distance;
@@ -165,47 +227,33 @@ export default function Lokasi() {
       }
     });
 
-    // If nearest ODP exists, add connection line
-    if (nearestLoc) {
-      const nearestLatLng = L.latLng(nearestLoc.lat, nearestLoc.lon);
-      const selectedLatLng = L.latLng(lat, lon);
-      
-      const connectionLine = L.polyline([selectedLatLng, nearestLatLng], {
-        color: "#ef4444",
-        weight: 3,
-        dashArray: "8, 8",
-      }).addTo(map);
-      
-      connectionLine.bindPopup(`Jarak ke ODP terdekat: ${nearestDistance.toFixed(2)} meter`);
-
-      const withinRange = nearestDistance <= 500;
-      setIsWithinRange(withinRange);
-      
-      if (withinRange) {
-        toast.success("🎉 Lokasi Anda dalam jangkauan 500 meter dari ODP terdekat!", {
-          position: "top-center",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "colored",
-          className: "bg-green-600 text-white"
-        });
-      } else {
-        toast.warning(`⚠️ Lokasi Anda ${nearestDistance.toFixed(2)} meter dari ODP terdekat (di luar jangkauan 500m)`, {
-          position: "top-center",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "colored",
-          className: "bg-yellow-600 text-white"
-        });
-      }
+    const withinRange = nearestDistance <= 500;
+    setIsWithinRange(withinRange);
+    
+    if (withinRange) {
+      toast.success("🎉 Lokasi Anda dalam jangkauan 500 meter dari ODP terdekat!", {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+        className: "bg-green-600 text-white"
+      });
+    } else {
+      toast.error(`🚨 Lokasi Anda ${Math.round(nearestDistance)} meter dari ODP terdekat (di luar jangkauan 500m)`, {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+        className: "bg-red-600 text-white"
+      });
     }
 
     setFormData({
@@ -224,16 +272,8 @@ export default function Lokasi() {
     setNearestLocation(nearestLoc);
     setIsButtonDisabled(false);
     
-    // Zoom map to show all markers
-    if (nearestLoc) {
-      const bounds = L.latLngBounds([
-        [lat, lon],
-        [nearestLoc.lat, nearestLoc.lon]
-      ]);
-      map.fitBounds(bounds, { padding: [50, 50] });
-    } else {
-      map.setView([lat, lon], 16);
-    }
+    // Zoom map to show user location
+    map.setView([lat, lon], 16);
   };
 
   const handleSelectLocation = async (lat, lon, displayName) => {
@@ -279,6 +319,7 @@ export default function Lokasi() {
       setMap(initialMap);
       fetchLocations();
 
+      // Add click event to the map
       initialMap.on("click", async (e) => {
         const clickedLat = e.latlng.lat;
         const clickedLon = e.latlng.lng;
@@ -325,7 +366,7 @@ export default function Lokasi() {
                 <span className="absolute bottom-0 left-0 w-full h-2 bg-indigo-100 rounded-full"></span>
               </h1>
               <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-                Masukkan alamat atau gunakan lokasi Anda saat ini untuk memeriksa ketersediaan layanan kami
+                Masukkan alamat, link Google Maps, atau gunakan lokasi Anda saat ini untuk memeriksa ketersediaan layanan kami
               </p>
             </div>
 
@@ -366,6 +407,30 @@ export default function Lokasi() {
                       )}
                     </div>
 
+                    <form onSubmit={handleGMapsLinkSubmit} className="mb-6">
+                      <div className="relative">
+                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
+                          <FaLink className="text-lg" />
+                        </div>
+                        <input
+                          type="text"
+                          value={gMapsLink}
+                          onChange={(e) => setGMapsLink(e.target.value)}
+                          placeholder="Masukkan link Google Maps..."
+                          className="block w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-gray-700 placeholder-gray-400 transition duration-150"
+                        />
+                        <button
+                          type="submit"
+                          className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-indigo-600 text-white px-3 py-1 rounded-md text-sm hover:bg-indigo-700 transition duration-150"
+                        >
+                          Cari
+                        </button>
+                      </div>
+                      <p className="text-xs text-gray-500 mt-1">
+                        Contoh: https://www.google.com/maps/place/.../@lat,lon
+                      </p>
+                    </form>
+
                     <button
                       onClick={handleUseCurrentLocation}
                       className="w-full flex items-center justify-center space-x-2 bg-gradient-to-r from-indigo-500 to-blue-500 hover:from-indigo-600 hover:to-blue-600 text-white font-medium py-3 px-6 rounded-lg shadow-md hover:shadow-lg transition duration-200 transform hover:-translate-y-0.5 mb-6"
@@ -386,7 +451,7 @@ export default function Lokasi() {
                               <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                             </svg>
                           </span>
-                          Cari alamat atau klik pada peta untuk menentukan lokasi
+                          Cari alamat, masukkan link Google Maps, atau klik pada peta
                         </li>
                         <li className="flex items-start">
                           <span className="inline-block bg-indigo-100 text-indigo-800 rounded-full p-1 mr-2">
@@ -402,7 +467,7 @@ export default function Lokasi() {
                               <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                             </svg>
                           </span>
-                          Titik hijau menunjukkan lokasi ODP terdekat
+                          Sistem akan menghitung jarak ke ODP terdekat secara otomatis
                         </li>
                       </ul>
                     </div>
@@ -410,6 +475,9 @@ export default function Lokasi() {
 
                   <div className="flex-1">
                     <div id="map" className="h-96 w-full rounded-lg border border-gray-200 shadow-sm"></div>
+                    <div className="mt-2 text-sm text-gray-500 text-center">
+                      Klik pada peta untuk memilih lokasi Anda
+                    </div>
                   </div>
                 </div>
               </div>
@@ -439,7 +507,7 @@ export default function Lokasi() {
                     </div>
 
                     {nearestLocation && (
-                      <div className={`p-5 rounded-lg border ${isWithinRange ? 'bg-green-50 border-green-100' : 'bg-yellow-50 border-yellow-100'}`}>
+                      <div className={`p-5 rounded-lg border ${isWithinRange ? 'bg-green-50 border-green-100' : 'bg-red-50 border-red-100'}`}>
                         <h4 className="font-semibold mb-3 flex items-center">
                           {isWithinRange ? (
                             <>
@@ -448,8 +516,8 @@ export default function Lokasi() {
                             </>
                           ) : (
                             <>
-                              <FaExclamationTriangle className="text-yellow-500 mr-2" />
-                              <span className="text-yellow-800">ODP Terdekat</span>
+                              <FaTimesCircle className="text-red-500 mr-2" />
+                              <span className="text-red-800">ODP Terdekat</span>
                             </>
                           )}
                         </h4>
@@ -459,10 +527,14 @@ export default function Lokasi() {
                             <p className="font-medium text-gray-900">{nearestLocation.site_name}</p>
                           </div>
                           <div>
+                            <p className="text-sm text-gray-600">Alamat ODP</p>
+                            <p className="font-medium text-gray-900">{nearestLocation.site_address}</p>
+                          </div>
+                          <div>
                             <p className="text-sm text-gray-600">Jarak</p>
                             <p className="font-medium text-gray-900">{locationDetails.distanceToNearest} meter</p>
                           </div>
-                          <div className={`mt-4 p-3 rounded-md text-center ${isWithinRange ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}`}>
+                          <div className={`mt-4 p-3 rounded-md text-center ${isWithinRange ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
                             <p className="font-semibold">
                               {isWithinRange ? (
                                 "Lokasi Anda dalam jangkauan layanan"
@@ -492,6 +564,15 @@ export default function Lokasi() {
                 <FaCheckCircle className="mr-3" />
                 Lanjutkan ke Pilihan Paket
               </button>
+              
+              {!isWithinRange && locationDetails && (
+                <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg text-red-800">
+                  <p className="font-medium flex items-center justify-center">
+                    <FaTimesCircle className="mr-2" />
+                    Maaf, lokasi Anda berada di luar jangkauan layanan kami (500m dari ODP terdekat)
+                  </p>
+                </div>
+              )}
             </div>
           </div>
 

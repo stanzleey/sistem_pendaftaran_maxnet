@@ -16,5 +16,6 @@ class Customer extends Model
         'installation_address',
         'location_maps',
         'service_name',
+        'service_price'
     ];
 }

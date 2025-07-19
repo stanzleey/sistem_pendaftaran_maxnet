@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\MidtransController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 // use App\Http\Controllers\LocationController;
@@ -33,7 +34,7 @@ Route::get('/privacy-policy', [PrivacyPolicyController::class, 'getContent']);
 Route::get('/terms-and-conditions', [TermsAndConditionsController::class, 'getContent']);
 // Route::post('/messages', [MessageController::class, 'store']);
 // Route::post('/register-package', [CustomerController::class, 'store']);
-
+// Route::post('/midtrans/snap-token', [MidtransController::class, 'getSnapToken']);
 
 // API untuk mendapatkan lokasi dari database (dapat diakses tanpa autentikasi)
 // Route::get('/locations', [SiteController::class, 'getLocations']);

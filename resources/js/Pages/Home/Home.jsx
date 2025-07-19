@@ -12,14 +12,12 @@ export default function Home() {
     useEffect(() => {
         AOS.init({ duration: 1000 });
     }, []);
-
     return (
         <AppLayout>
              <Title /> 
             {/* Hero Section */}
             <div className="relative bg-gray-900 text-white">
                 {/* Background Video */}
-                
                 <div className="absolute inset-0 overflow-hidden">
                 <img
                                     alt="Maxnet team at work"
@@ -46,12 +44,6 @@ export default function Home() {
                         </p>
                         {/* Button */}
                         <div className="mt-8 flex flex-wrap justify-center gap-4">
-                            {/* <Link
-                                href="/locations"
-                                className="block w-full sm:w-auto rounded bg-gradient-to-r from-blue-600 to-blue-600 px-10 py-3 text-sm font-medium text-white transition-transform transform hover:scale-105 focus:outline-none focus:ring active:bg-blue-800 font-archivo no-underline shadow-lg hover:shadow-xl"
-                            >
-                                Lihat Layanan Kami
-                            </Link> */}
                         </div>
                     </div>
                 </div>
