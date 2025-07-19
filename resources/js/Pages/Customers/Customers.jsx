@@ -603,3 +603,6 @@ const Customers = () => {
 };
 
 export default Customers;
+// git remote add origin https://github.com/stanzleey/sistem_pendaftaran.git
+// git branch -M main
+// git push -u origin main
