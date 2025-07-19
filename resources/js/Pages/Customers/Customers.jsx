@@ -601,4 +601,5 @@ const Customers = () => {
         </AppLayout>
     );
 };
+
 export default Customers;
