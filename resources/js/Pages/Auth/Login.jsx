@@ -124,13 +124,13 @@ export default function Login({ status, canResetPassword }) {
                         </div>
                     </form>
 
-                    {/* <div className="mt-6 text-center text-sm text-gray-600">
+                    <div className="mt-6 text-center text-sm text-gray-600">
                         <p>Don't have an account?{' '}
                             <Link href={route('register')} className="font-medium text-blue-600 hover:text-blue-500 hover:underline">
                                 Register here
                             </Link>
                         </p>
-                    </div> */}
+                    </div>
                 </div>
             </div>
         </GuestLayout>

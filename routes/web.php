@@ -15,6 +15,11 @@ use App\Http\Controllers\PrivacyPolicyController;
 use App\Http\Controllers\TermsAndConditionsController;
 use App\Models\Service;
 use App\Http\Controllers\Auth;
+use App\Http\Controllers\Auth\CustomerAuthController;
+use App\Http\Controllers\Auth\CustomerRegisterController;
+// use App\Http\Controllers\Auth\CustomerAuthController as AuthCustomerAuthController;
+// use App\Http\Controllers\CustomerAuthController;
+// use App\Http\Controllers\Auth\CustomerAuthController;
 use App\Models\PrivacyPolicy;
 
 /*
@@ -29,11 +34,66 @@ use App\Models\PrivacyPolicy;
 */
 
 // Public routes
+// Route::prefix('customer')->group(function() {
+//     Route::get('/login customer', [CustomerAuthController::class, 'showLoginForm'])->name('customer.login');
+//     Route::post('/login customer', [CustomerAuthController::class, 'login'])->name('customer.login.submit');
+//     Route::post('/logout', [CustomerAuthController::class, 'logout'])->name('customer.logout');
+// });
+// Login Customer
+// Route::get('/login-customer', function () {
+//     return Inertia::render('Auth/CustomerLogin');
+// })->name('customer.login');
+// Route::post('/login-customer', [CustomerAuthController::class, 'login']);
+
+// Route::get('/register-customer', function () {
+//     return Inertia::render('Auth/CustomerRegister');
+// })->name('customer.register');
+// Route::post('/register-customer', [CustomerAuthController::class, 'register']);
+
+// Auth Customer Routes
+// Route::prefix('customer')->group(function () {
+//     Route::get('/login', [CustomerAuthController::class, 'showLoginForm'])->name('customer.login');
+//     Route::post('/login', [CustomerAuthController::class, 'login']);
+//     Route::get('/register', [CustomerAuthController::class, 'showRegisterForm'])->name('customer.register');
+//     Route::post('/register', [CustomerAuthController::class, 'register']);
+//     Route::post('/logout', [CustomerAuthController::class, 'logout'])->name('customer.logout');
+// });
+
+// Customer Auth Routes
+// Customer Auth Routes
+Route::prefix('customer')->group(function () {
+    // Login Routes
+    Route::get('/login', [CustomerAuthController::class, 'showLoginForm'])
+         ->name('customer.login')
+         ->middleware('guest:customer');
+         
+    Route::post('/login', [CustomerAuthController::class, 'login']);
+    
+    // Logout Route
+    Route::post('/logout', [CustomerAuthController::class, 'logout'])
+         ->name('customer.logout');
+    
+    // Registration Routes
+    Route::get('/register', [CustomerRegisterController::class, 'showRegistrationForm'])
+         ->name('customer.register')
+         ->middleware('guest:customer');
+         
+    Route::post('/register', [CustomerRegisterController::class, 'register']);
+});
+
 Route::get('/', function () {
     return Inertia::render('Home/Home');
 })->name('home');
 
-Route::get('/tentang', function () {
+// Route::get('/', function () {
+//     return redirect()->route('customer.login');
+// });
+
+Route::get('/home', function () {
+    return Inertia::render('Home/Home');
+})->name('home')->middleware('auth:customer');
+
+Route::get('/tentang',   function () {
     return Inertia::render('Home/Tentang');
 })->name('tentang');
 

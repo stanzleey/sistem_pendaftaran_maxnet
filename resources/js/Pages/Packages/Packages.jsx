@@ -119,12 +119,12 @@ const Packages = () => {
                                                 {formatPrice(service.service_price)}
                                             </span>
                                         </div>
-                                        <button
+                                        {/* <button
                                             onClick={() => handleSelectPackage(service)}
                                             className="w-full bg-gradient-to-r from-purple-600 to-blue-600 text-white py-2 rounded-lg font-medium hover:from-purple-700 hover:to-blue-700 transition"
                                         >
                                             Pilih Paket
-                                        </button>
+                                        </button> */}
                                     </div>
                                 </div>
                             ))}

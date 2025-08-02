@@ -11,6 +11,7 @@ class CreateCustomersTable extends Migration
         if (!Schema::hasTable('customers')) {
             Schema::create('customers', function (Blueprint $table) {
                 $table->id();
+                $table->string('invoice_number')->unique()->after('id');
                 $table->string('name');
                 $table->string('email');
                 $table->string('ktp_address');

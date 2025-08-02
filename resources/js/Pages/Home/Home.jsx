@@ -92,9 +92,9 @@ export default function Home() {
                         <span className="ml-2 text-blue-200">/bulan</span>
                     </div>
                     <div className="mt-6">
-                        <button className="w-full py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-all duration-300 transform hover:translate-y-1">
+                        {/* <button className="w-full py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-all duration-300 transform hover:translate-y-1">
                             Pilih Paket
-                        </button>
+                        </button> */}
                     </div>
                 </div>
             </div>
@@ -114,11 +114,11 @@ export default function Home() {
                         <span className="text-2xl font-bold text-indigo-400">Rp 250.000</span>
                         <span className="ml-2 text-indigo-200">/bulan</span>
                     </div>
-                    <div className="mt-6">
+                    {/* <div className="mt-6">
                         <button className="w-full py-2 px-4 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-lg transition-all duration-300 transform hover:translate-y-1">
                             Pilih Paket
                         </button>
-                    </div>
+                    </div> */}
                 </div>
             </div>
 
@@ -137,11 +137,11 @@ export default function Home() {
                         <span className="text-2xl font-bold text-purple-400">Rp 100.000</span>
                         <span className="ml-2 text-purple-200">/bulan</span>
                     </div>
-                    <div className="mt-6">
+                    {/* <div className="mt-6">
                         <button className="w-full py-2 px-4 bg-purple-600 hover:bg-purple-700 text-white font-medium rounded-lg transition-all duration-300 transform hover:translate-y-1">
                             Pilih Paket
                         </button>
-                    </div>
+                    </div> */}
                 </div>
             </div>
         </div>
