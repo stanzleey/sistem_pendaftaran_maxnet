@@ -46,7 +46,7 @@ class CustomerRegisterController extends Controller
             'city' => $request->city,
             'postal_code' => $request->postal_code,
         ]);
-
+        
         event(new Registered($customer));
 
         // Redirect ke halaman login dengan pesan sukses

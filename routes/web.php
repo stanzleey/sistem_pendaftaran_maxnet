@@ -89,10 +89,13 @@ Route::get('/', function () {
 //     return redirect()->route('customer.login');
 // });
 
-Route::get('/home', function () {
-    return Inertia::render('Home/Home');
-})->name('home')->middleware('auth:customer');
-
+// Route::get('/home', function () {
+//     return Inertia::render('Home/Home');
+// })->name('home')->middleware('auth:customer');
+// routes/web.php
+Route::post('/admin/customers/{customer}/upload-payment', [CustomerController::class, 'uploadPaymentProof'])
+    ->name('customers.upload-payment');
+    
 Route::get('/tentang',   function () {
     return Inertia::render('Home/Tentang');
 })->name('tentang');

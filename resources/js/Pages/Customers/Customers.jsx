@@ -4,7 +4,7 @@ import AppLayout from '@/Layouts/AppLayout';
 import { ToastContainer, toast, Slide } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Title from '@/Layouts/Title';
-import { FaCheckCircle, FaArrowLeft, FaWifi, FaMoneyBillWave, FaBolt, FaFileInvoice } from 'react-icons/fa';
+import { FaCheckCircle, FaArrowLeft, FaWifi, FaMoneyBillWave, FaBolt, FaFileInvoice, FaCopy } from 'react-icons/fa';
 
 const Customers = () => {
     const { data, setData, post, reset, errors } = useForm({
@@ -22,6 +22,12 @@ const Customers = () => {
     const [selectedPackage, setSelectedPackage] = useState(null);
     const [showInvoice, setShowInvoice] = useState(false);
     const [invoiceData, setInvoiceData] = useState(null);
+    const [paymentConfirmed, setPaymentConfirmed] = useState(false);
+    const [selectedBank, setSelectedBank] = useState('bca');
+    const [copyStatus, setCopyStatus] = useState({});
+
+    const [paymentProof, setPaymentProof] = useState(null);
+const [uploading, setUploading] = useState(false);
 
     useEffect(() => {
         const params = new URLSearchParams(window.location.search);
@@ -71,6 +77,7 @@ const Customers = () => {
     
         post('/admin/customers', {
             onSuccess: () => {
+                const totalPayment = parseInt(data.service_price) + 250000;
                 setInvoiceData({
                     ...data,
                     invoiceNumber: `INV-${Date.now()}`,
@@ -78,10 +85,12 @@ const Customers = () => {
                         day: 'numeric',
                         month: 'long',
                         year: 'numeric'
-                    })
+                    }),
+                    totalPayment: totalPayment,
+                    paymentStatus: 'pending'
                 });
                 setShowInvoice(true);
-                toast.success('Registrasi berhasil!');
+                toast.success('Registrasi berhasil! Silahkan lakukan pembayaran.');
             },
             onError: (errors) => {
                 console.log(errors);
@@ -91,12 +100,68 @@ const Customers = () => {
     };
 
     const formatPrice = (price) => {
-        return `Rp ${new Intl.NumberFormat('id-ID').format(price)}/bulan`;
+        return `Rp ${new Intl.NumberFormat('id-ID').format(price)}`;
     };
 
     const goBackToPackages = () => {
         window.location.href = `/packages${data.location_maps ? `?location_maps=${encodeURIComponent(data.location_maps)}` : ''}`;
     };
+
+    const handleBankSelect = (bank) => {
+        setSelectedBank(bank);
+    };
+
+    const copyToClipboard = (text, fieldName) => {
+        navigator.clipboard.writeText(text).then(() => {
+            setCopyStatus({...copyStatus, [fieldName]: true});
+            setTimeout(() => {
+                setCopyStatus({...copyStatus, [fieldName]: false});
+            }, 2000);
+        });
+    };
+
+    const confirmPayment = () => {
+        // In a real app, you would send this to your backend
+        setPaymentConfirmed(true);
+        setInvoiceData({
+            ...invoiceData,
+            paymentStatus: 'paid',
+            paymentDate: new Date().toLocaleDateString('id-ID', {
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            })
+        });
+        toast.success('Pembayaran berhasil dikonfirmasi!');
+    };
+
+    const banks = [
+        {
+            id: 'bca',
+            name: 'Bank BCA',
+            accountNumber: '1234567890',
+            accountName: 'PT. Internet Cepat',
+            logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Bank_Central_Asia.svg/1200px-Bank_Central_Asia.svg.png'
+        },
+        {
+            id: 'mandiri',
+            name: 'Bank Mandiri',
+            accountNumber: '0987654321',
+            accountName: 'PT. Internet Cepat',
+            logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/Bank_Mandiri_logo_2016.svg/1200px-Bank_Mandiri_logo_2016.svg.png'
+        },
+        {
+            id: 'bri',
+            name: 'Bank BRI',
+            accountNumber: '1122334455',
+            accountName: 'PT. Internet Cepat',
+            logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/BRI_2020.svg/1200px-BRI_2020.svg.png'
+        }
+    ];
+
+    const selectedBankData = banks.find(bank => bank.id === selectedBank);
 
     return (
         <AppLayout>
@@ -126,6 +191,9 @@ const Customers = () => {
                                             <p className="text-sm font-medium">No. Invoice</p>
                                             <p className="text-lg font-bold">{invoiceData.invoiceNumber}</p>
                                             <p className="text-sm mt-1">{invoiceData.date}</p>
+                                            <div className={`mt-2 px-2 py-1 rounded-full text-xs font-semibold ${invoiceData.paymentStatus === 'paid' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}`}>
+                                                {invoiceData.paymentStatus === 'paid' ? 'Lunas' : 'Menunggu Pembayaran'}
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -183,7 +251,7 @@ const Customers = () => {
                                                             </div>
                                                         </td>
                                                         <td className="px-6 py-4 whitespace-nowrap text-gray-900 font-medium">
-                                                            {formatPrice(invoiceData.service_price)}
+                                                            {formatPrice(invoiceData.service_price)}/bulan
                                                         </td>
                                                     </tr>
                                                 </tbody>
@@ -191,7 +259,7 @@ const Customers = () => {
                                         </div>
                                     </div>
 
-                                    <div className="bg-gray-50 p-6 rounded-lg">
+                                    <div className="bg-gray-50 p-6 rounded-lg mb-8">
                                         <h3 className="text-lg font-semibold text-gray-800 mb-4">Ringkasan Pembayaran</h3>
                                         <div className="space-y-3">
                                             <div className="flex justify-between">
@@ -205,40 +273,136 @@ const Customers = () => {
                                             <div className="flex justify-between border-t border-gray-200 pt-3 mt-3">
                                                 <span className="text-lg font-semibold">Total Pembayaran</span>
                                                 <span className="text-lg font-bold text-teal-600">
-                                                    Rp {new Intl.NumberFormat('id-ID').format(parseInt(invoiceData.service_price) + 250000)}
+                                                    {formatPrice(invoiceData.totalPayment)}
                                                 </span>
                                             </div>
                                         </div>
                                     </div>
 
-                                    <div className="mt-8 p-6 bg-blue-50 rounded-lg border border-blue-100">
-                                        <h3 className="text-lg font-semibold text-blue-800 mb-3">Instruksi Pembayaran</h3>
-                                        <ol className="list-decimal list-inside space-y-2 text-sm text-gray-700">
-                                            <li>Total pembayaran dapat ditransfer melalui bank berikut:</li>
-                                            <div className="ml-5 mt-2 grid grid-cols-1 md:grid-cols-2 gap-4">
-                                                <div className="bg-white p-3 rounded shadow-sm">
-                                                    <p className="font-medium">Bank BCA</p>
-                                                    <p>No. Rekening: 1234567890</p>
-                                                    <p>Atas Nama: PT. Internet Cepat</p>
+                                    {invoiceData.paymentStatus !== 'paid' ? (
+                                        <>
+                                            <div className="mb-8 p-6 bg-blue-50 rounded-lg border border-blue-100">
+                                                <h3 className="text-lg font-semibold text-blue-800 mb-4">Metode Pembayaran</h3>
+                                                
+                                                <div className="mb-6">
+                                                    <h4 className="font-medium text-gray-700 mb-3">Pilih Bank Tujuan:</h4>
+                                                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                                                        {banks.map(bank => (
+                                                            <div 
+                                                                key={bank.id}
+                                                                onClick={() => handleBankSelect(bank.id)}
+                                                                className={`p-4 border rounded-lg cursor-pointer transition-all ${selectedBank === bank.id ? 'border-teal-500 bg-teal-50' : 'border-gray-200 hover:border-gray-300'}`}
+                                                            >
+                                                                <div className="flex items-center">
+                                                                    <img 
+                                                                        src={bank.logo} 
+                                                                        alt={bank.name} 
+                                                                        className="h-8 mr-3 object-contain"
+                                                                    />
+                                                                    <span className="font-medium">{bank.name}</span>
+                                                                </div>
+                                                            </div>
+                                                        ))}
+                                                    </div>
                                                 </div>
-                                                <div className="bg-white p-3 rounded shadow-sm">
-                                                    <p className="font-medium">Bank Mandiri</p>
-                                                    <p>No. Rekening: 0987654321</p>
-                                                    <p>Atas Nama: PT. Internet Cepat</p>
+
+                                                <div className="bg-white p-5 rounded-lg shadow-sm border border-gray-200">
+                                                    <h4 className="font-medium text-gray-700 mb-3">Informasi Rekening:</h4>
+                                                    <div className="space-y-4">
+                                                        <div>
+                                                            <p className="text-sm text-gray-500">Nama Bank</p>
+                                                            <p className="font-medium">{selectedBankData.name}</p>
+                                                        </div>
+                                                        <div>
+                                                            <p className="text-sm text-gray-500">Nomor Rekening</p>
+                                                            <div className="flex items-center">
+                                                                <p className="font-medium mr-2">{selectedBankData.accountNumber}</p>
+                                                                <button 
+                                                                    onClick={() => copyToClipboard(selectedBankData.accountNumber, 'accountNumber')}
+                                                                    className="text-teal-600 hover:text-teal-800"
+                                                                >
+                                                                    <FaCopy className="inline" />
+                                                                    {copyStatus.accountNumber && <span className="ml-1 text-xs text-gray-500">Tersalin!</span>}
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                        <div>
+                                                            <p className="text-sm text-gray-500">Atas Nama</p>
+                                                            <p className="font-medium">{selectedBankData.accountName}</p>
+                                                        </div>
+                                                        <div>
+                                                            <p className="text-sm text-gray-500">Jumlah Transfer</p>
+                                                            <div className="flex items-center">
+                                                                <p className="font-medium text-teal-600 mr-2">{formatPrice(invoiceData.totalPayment)}</p>
+                                                                <button 
+                                                                    onClick={() => copyToClipboard(invoiceData.totalPayment.toString(), 'amount')}
+                                                                    className="text-teal-600 hover:text-teal-800"
+                                                                >
+                                                                    <FaCopy className="inline" />
+                                                                    {copyStatus.amount && <span className="ml-1 text-xs text-gray-500">Tersalin!</span>}
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div className="mt-6">
+                                                    <h4 className="font-medium text-gray-700 mb-2">Instruksi Pembayaran:</h4>
+                                                    <ol className="list-decimal list-inside space-y-2 text-sm text-gray-700 pl-2">
+                                                        <li>Transfer tepat sejumlah <strong>{formatPrice(invoiceData.totalPayment)}</strong> ke rekening {selectedBankData.name} di atas</li>
+                                                        <li>Simpan bukti transfer yang Anda lakukan</li>
+                                                        <li>Setelah transfer, klik tombol "Konfirmasi Pembayaran" di bawah ini</li>
+                                                        <li>Upload bukti transfer pada form konfirmasi</li>
+                                                        <li>Tim kami akan memverifikasi pembayaran Anda dalam 1x24 jam</li>
+                                                    </ol>
                                                 </div>
                                             </div>
-                                            <li>Setelah melakukan pembayaran, harap konfirmasi melalui WhatsApp ke nomor 08123456789 dengan menyertakan bukti transfer.</li>
-                                            <li>Pemasangan akan dilakukan dalam 1-3 hari kerja setelah pembayaran dikonfirmasi.</li>
-                                        </ol>
-                                    </div>
 
-                                    <div className="mt-8 flex justify-end">
-                                        <a href="/">
-                                            <button className="px-6 py-3 border border-transparent rounded-lg shadow-sm text-white bg-gradient-to-r from-teal-500 to-sky-600 hover:from-teal-600 hover:to-sky-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition duration-200">
-                                                SELESAI
-                                            </button>
-                                        </a>
-                                    </div>
+                                            <div className="flex flex-col sm:flex-row justify-end space-y-3 sm:space-y-0 sm:space-x-4">
+                                                <button 
+                                                    onClick={() => setShowInvoice(false)}
+                                                    className="px-6 py-3 border border-gray-300 rounded-lg shadow-sm text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition duration-200"
+                                                >
+                                                    Kembali ke Form
+                                                </button>
+                                                <button 
+                                                    onClick={confirmPayment}
+                                                    className="px-6 py-3 border border-transparent rounded-lg shadow-sm text-white bg-gradient-to-r from-teal-500 to-sky-600 hover:from-teal-600 hover:to-sky-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition duration-200"
+                                                >
+                                                    Konfirmasi Pembayaran
+                                                </button>
+                                                
+                                            </div>
+                                        </>
+                                    ) : (
+                                        <div className="mb-8 p-6 bg-green-50 rounded-lg border border-green-100">
+                                            <div className="flex items-start">
+                                                <div className="flex-shrink-0">
+                                                    <svg className="h-5 w-5 text-green-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                                                    </svg>
+                                                </div>
+                                                <div className="ml-3">
+                                                    <h3 className="text-lg font-medium text-green-800">Pembayaran Berhasil!</h3>
+                                                    <div className="mt-2 text-sm text-green-700">
+                                                        <p>
+                                                            Pembayaran Anda telah kami terima pada {invoiceData.paymentDate}. 
+                                                            Tim kami akan menghubungi Anda dalam 1x24 jam untuk proses instalasi.
+                                                        </p>
+                                                    </div>
+                                                    
+                                                    <div className="mt-4">
+                                                        <a 
+                                                            href="/" 
+                                                            className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+                                                        >
+                                                            Kembali ke Beranda
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                         ) : (
@@ -282,7 +446,7 @@ const Customers = () => {
                                                         <span className="font-medium">Harga</span>
                                                     </div>
                                                     <p className="mt-1 text-gray-800 font-semibold">
-                                                        {formatPrice(selectedPackage.service_price)}
+                                                        {formatPrice(selectedPackage.service_price)}/bulan
                                                     </p>
                                                 </div>
                                             </div>

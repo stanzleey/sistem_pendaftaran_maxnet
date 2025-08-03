@@ -55,7 +55,7 @@ class CustomerController extends Controller
         $customerDetailUrl = "http://127.0.0.1:8000/Admin/customers/{$customer->id}";
 
         // Format the Telegram message
-        $telegramMessage = "New Customer Request:\n" .
+        $telegramMessage = "Pelanggan Baru:\n".
                            "{$customer->name}\n" .
                            "{$customer->installation_address}\n" .
                            "{$customer->service_name}\n" .
@@ -112,4 +112,43 @@ class CustomerController extends Controller
         // Save back to session
         session(['recent_activities' => $activities]);
     }
+    // app/Http/Controllers/CustomerController.php
+public function uploadPaymentProof(Request $request, $id)
+{
+    $request->validate([
+        'payment_proof' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+        function ($attribute,$value, $fail){
+          $image= getimagesize($value);
+          if ($image[0]<300 || $image[1] <300 ){
+            $fail('Resolusi gambar terlalu kecil. Minimal 300x300 piksel.');
+          }  
+        }
+    ]);
+
+    $customer = Customer::findOrFail($id);
+
+    if ($request->hasFile('payment_proof')) {
+        $image = $request->file('payment_proof');
+        $imageName = time().'.'.$image->extension();
+        $image->storeAs('public/payment_proofs', $imageName);
+        
+        $customer->update([
+            'payment_proof' => $imageName,
+            'payment_status' => 'pending_verification'
+        ]);
+
+        // Kirim notifikasi ke Telegram
+        $telegramMessage = "Bukti Pembayaran Baru:\n".
+                         "Pelanggan: {$customer->name}\n" .
+                         "Paket: {$customer->service_name}\n" .
+                         "Jumlah: Rp " . number_format($customer->service_price + 250000, 0, ',', '.') . "\n\n" .
+                         "Detail: http://127.0.0.1:8000/Admin/customers/{$customer->id}";
+
+        $this->telegramNotificationService->sendMessage($telegramMessage);
+
+        return redirect()->back()->with('success', 'Bukti pembayaran berhasil diupload!');
+    }
+
+    return redirect()->back()->with('error', 'Gagal mengupload bukti pembayaran.');
+}
 }

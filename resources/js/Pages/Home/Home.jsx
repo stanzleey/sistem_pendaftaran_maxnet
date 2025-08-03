@@ -144,6 +144,7 @@ export default function Home() {
                     </div> */}
                 </div>
             </div>
+            
         </div>
 
         <div className="mt-16 text-center space-y-4">
@@ -156,7 +157,7 @@ export default function Home() {
             </a>
             <div>
                 <a
-                    href="/locations"
+                    href="/packages"
                     className="inline-block text-blue-300 hover:text-white transition-colors duration-300"
                 >
                     Lihat semua paket lainnya →

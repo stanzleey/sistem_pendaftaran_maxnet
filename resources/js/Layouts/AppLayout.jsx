@@ -43,7 +43,7 @@ export default function AppLayout({ children }) {
 
                     {/* Desktop and Tablet Menu */}
                     <div className="hidden lg:flex items-center space-x-4 ml-auto">
-                        {['/home', '/locations', '/packages', '/contact'].map((route, index) => (
+                        {['/', '/locations', '/packages', '/contact'].map((route, index) => (
                             <Link 
                                 key={index}
                                 href={route}
@@ -55,7 +55,7 @@ export default function AppLayout({ children }) {
                                 aria-current={isActive(route) ? 'page' : undefined}
                             >
                                 <div className="flex items-center space-x-2">
-                                    {route === '/home' && (
+                                    {route === '/' && (
                                         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                                             <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
                                         </svg>
@@ -77,7 +77,7 @@ export default function AppLayout({ children }) {
                                     )}
                                     
                                     <span>
-                                        {route === '/home' ? 'Home' : 
+                                        {route === '/' ? 'Home' : 
                                          route === '/locations' ? 'Cek Lokasi' : 
                                          route === '/packages' ? 'Paket' : 
                                          'Hubungi Kami'}
@@ -91,13 +91,13 @@ export default function AppLayout({ children }) {
                         {isCustomerLoggedIn ? (
                             <div className="flex items-center space-x-4">
                                 {/* Button Histori Pemesanan */}
-                                <Link 
+                                {/* <Link 
                                         href="/orders/history"
                                         className="flex items-center space-x-2 bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition-colors"
                                     >
                                         <FaShoppingBag />
                                         <span>Histori</span>
-                                </Link>
+                                </Link> */}
                                 <div className="flex items-center space-x-2">
                                     <FaUserCircle className="text-blue-600 text-xl" />
                                     <span className="text-gray-700">{auth.customer.name}</span>
